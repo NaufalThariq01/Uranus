@@ -1,11 +1,8 @@
-# Welcome to your Jupyter Book
+# Profil Saya
 
-This is a small sample book to give you a feel for how book content is
-structured.
-It shows off a few of the major file types, as well as some sample content.
-It does not go in-depth into any particular topic - check out [the Jupyter Book documentation](https://jupyterbook.org) for more information.
+Saya Moh Naufal Thariq, mahasiswa Teknik Informatika di Universitas Trunojoyo Madura. Saya tertarik pada bidang Teknik Informatika karena ingin mendalami pengolahan data dari video, misalnya rekaman CCTV yang dapat mendeteksi kendaraan atau manusia, serta video yang merekam gerakan tangan seperti bahasa isyarat. Menurut saya, kemampuan komputer untuk memahami informasi dari video sangat menarik dan bermanfaat, baik untuk keamanan maupun membantu komunikasi. .
 
-Check out the content pages bundled with this sample book to see more.
+Dikala waktu libur atau waktu senggang saya tidak suka keluar rumah,saya lebih suka menghabiskan waktu dirumah dengan bermain game atau menonton film.
 
 ```{tableofcontents}
 ```
