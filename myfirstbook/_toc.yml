@@ -3,7 +3,12 @@
 
 format: jb-book
 root: intro
+title: Home
 chapters:
-- file: markdown
-- file: notebooks
-- file: markdown-notebooks
+  - file: bisnis
+    title: Memahami Bisnis
+  - file: data
+    title: Data Understanding
+    sections:
+      - file: data/eksplorasi-data
+        title: Eksplorasi Data
