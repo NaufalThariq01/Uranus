@@ -24,15 +24,15 @@ CREATE TABLE iris (
     species varchar(50)
 );
 
-![ini adalah tabel data iris yang saya simpan di myqsl lokal](/_static/images/data_iris_mysql.png)
+![ini adalah tabel data iris yang saya simpan di myqsl lokal](images/data_iris_mysql.png)
 
-![ini adalah tabel data iris yang saya simpan di postgre lokal](/_static/images/data_iris_postgre.png)
+![ini adalah tabel data iris yang saya simpan di postgre lokal](images/data_iris_postgre.png)
 
 Lalu saya melakukan eksplorasi data menggunakan POWER BI dimana saya mencari 
 - min max dari setiap kolom
 - rata rata dari setiap kolom
 - jumlah setiap kelas ditampilkan dalam grafik batang
 
-![ini adalah hasil eksplorasi data di power BI menggunakan database mysql](/_static/images/eksplorasi_data_mysql.png)
+![ini adalah hasil eksplorasi data di power BI menggunakan database mysql](images/eksplorasi_data_mysql.png)
 
-![ini adalah hasil eksplorasi data di power BI menggunakan database postgre](/_static/images/eksplorasi_data_postgre.png)
+![ini adalah hasil eksplorasi data di power BI menggunakan database postgre](images/eksplorasi_data_postgre.png)
