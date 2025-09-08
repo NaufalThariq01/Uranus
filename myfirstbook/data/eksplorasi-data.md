@@ -24,7 +24,7 @@ CREATE TABLE iris (
     species varchar(50)
 );
 
-![ini adalah tabel data iris yang saya simpan di myqsl lokal](_static/images/data_iris_mysql.png)
+![ini adalah tabel data iris yang saya simpan di myqsl lokal](_build/html/_static/images/data_iris_mysql.png)
 
 ![ini adalah tabel data iris yang saya simpan di postgre lokal](_static/images/data_iris_postgre.png)
 
