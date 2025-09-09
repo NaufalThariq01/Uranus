@@ -20,7 +20,7 @@ Daftar kolom dan tipe data:
 | petal_width  | FLOAT         | Numerikal     |
 | species      | VARCHAR(50)   | Kategorikal   |
 
-![Tabel Iris di MySQL](../_build/html/_static/images/data_iris_mysql.png)
+![Tabel Iris di MySQL](_build/html/_static/images/data_iris_mysql.png)
 
 ---
 
@@ -33,7 +33,7 @@ Daftar kolom dan tipe data:
 | petal_width  | DOUBLE PRECISION| Numerikal     |
 | species      | TEXT            | Kategorikal   |
 
-![Tabel Iris di PostgreSQL](../_build/html/_static/images/data_iris_postgre.png)
+![Tabel Iris di PostgreSQL](_build/html/_static/images/data_iris_postgre.png)
 
 ---
 
