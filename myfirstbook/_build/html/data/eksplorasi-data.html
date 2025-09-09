@@ -182,6 +182,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../bisnis.html">Memahami Bisnis</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../data.html">Data Understanding</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Eksplorasi Data</a></li>
+
+
 </ul>
 </details></li>
 </ul>
@@ -356,7 +358,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -372,6 +376,30 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Eksplorasi Data</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#statistik-deskriptif">Statistik Deskriptif</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier">Deteksi Outlier</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#head">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#untuk-mendeteksi-outlier-dibuat-scatter-chart-dengan-kombinasi-variabel-numerikal">Untuk mendeteksi outlier, dibuat scatter chart dengan kombinasi variabel numerikal:</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi">Visualisasi</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-visualisasi">Hasil Visualisasi</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#insight-awal">Insight Awal</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan">Ringkasan</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -383,34 +411,179 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="eksplorasi-data">
 <h1>Eksplorasi Data<a class="headerlink" href="#eksplorasi-data" title="Link to this heading">#</a></h1>
-<p>Saya menggunakan data iris yang saya ambil dari kaggle untuk saya upload ke database lokal di postgree dan mysql</p>
-<p>struktur dari table nya adalah sebagai berikut:</p>
-<p>MYSQL:</p>
-<p>CREATE TABLE iris (
-sepal_length FLOAT,
-sepal_width FLOAT,
-petal_length FLOAT,
-petal_width FLOAT,
-species VARCHAR(50)
-);</p>
-<p>POSTGRE:</p>
-<p>CREATE TABLE iris (
-sepal_length double precision,
-sepal_width double precision,
-petal_length double precision,
-petal_width double precision,
-species varchar(50)
-);</p>
-<p><img alt="ini adalah tabel data iris yang saya simpan di myqsl lokal" src="_build/html/_static/images/data_iris_mysql.png" /></p>
-<p><img alt="ini adalah tabel data iris yang saya simpan di postgre lokal" src="_build/html/_static/images/data_iris_postgre.png" /></p>
-<p>Lalu saya melakukan eksplorasi data menggunakan POWER BI dimana saya mencari</p>
+<p>Setelah memahami struktur dataset, langkah berikutnya adalah melakukan eksplorasi data untuk mendapatkan wawasan lebih dalam mengenai pola dan karakteristik data.</p>
+<hr class="docutils" />
+<section id="statistik-deskriptif">
+<h2>Statistik Deskriptif<a class="headerlink" href="#statistik-deskriptif" title="Link to this heading">#</a></h2>
+<p><img alt="Tabel Iris di PostgreSQL yang menampilkan deteksi outlier" src="../_images/statistik_deskriptif_postgre.png" /></p>
+</section>
+<section id="deteksi-outlier">
+<h2>Deteksi Outlier<a class="headerlink" href="#deteksi-outlier" title="Link to this heading">#</a></h2>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="head">
+<h1>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+<img alt="Tabel Iris di PostgreSQL yang menampilkan deteksi outlier" src="../_images/deteksi_outlier_postgre.png" /><a class="headerlink" href="#head" title="Link to this heading">#</a></h1>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+<img alt="Tabel Iris di PostgreSQL yang menampilkan deteksi outlier" src="../_images/deteksi_outlier_postgre.png" /></p>
+<blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><p>bc748fc (Save progress before switching Codespaces)</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="untuk-mendeteksi-outlier-dibuat-scatter-chart-dengan-kombinasi-variabel-numerikal">
+<h1>Untuk mendeteksi outlier, dibuat scatter chart dengan kombinasi variabel numerikal:<a class="headerlink" href="#untuk-mendeteksi-outlier-dibuat-scatter-chart-dengan-kombinasi-variabel-numerikal" title="Link to this heading">#</a></h1>
+<p><img alt="ini adalah tabel data iris yang saya simpan di myqsl lokal" src="../_images/data_iris_mysql.png" /></p>
+<p><img alt="ini adalah tabel data iris yang saya simpan di postgre lokal" src="../_images/data_iris_postgre.png" /></p>
+<blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><p>f40dd28 (Jupyter-book)</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<ol class="arabic simple">
+<li><p><strong>Sepal length vs sepal width</strong></p>
 <ul class="simple">
-<li><p>min max dari setiap kolom</p></li>
-<li><p>rata rata dari setiap kolom</p></li>
-<li><p>jumlah setiap kelas ditampilkan dalam grafik batang</p></li>
+<li><p>Titik data dari ketiga spesies menyebar rapat.</p></li>
+<li><p>Tidak ditemukan nilai yang menyendiri jauh dari kelompok → tidak ada outlier ekstrim.</p></li>
 </ul>
-<p><img alt="ini adalah hasil eksplorasi data di power BI menggunakan database mysql" src="_build/html/_static/images/eksplorasi_data_mysql.png" /></p>
-<p><img alt="ini adalah hasil eksplorasi data di power BI menggunakan database postgre" src="_build/html/_static/images/eksplorasi_data_postgre.png" /></p>
+</li>
+</ol>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+2. <strong>Petal length vs petal width</strong></p>
+<ul class="simple">
+<li><p>Terlihat bahwa <em>Iris-setosa</em> membentuk kluster terpisah dengan ukuran kelopak lebih kecil.<br />
+=======
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>Petal length vs petal width</p>
+<ul class="simple">
+<li><p>Terlihat bahwa Iris-setosa membentuk kluster terpisah dengan ukuran kelopak lebih kecil.</p></li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><p>bc748fc (Save progress before switching Codespaces)</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<ul class="simple">
+<li><p>Hal ini bukan outlier kesalahan data, melainkan perbedaan alami antar spesies.</p></li>
+</ul>
+<p>Dengan demikian, tidak ada data yang perlu dihapus karena outlier pada dataset ini merupakan bagian dari variasi kelas.</p>
+<hr class="docutils" />
+<section id="visualisasi">
+<h2>Visualisasi<a class="headerlink" href="#visualisasi" title="Link to this heading">#</a></h2>
+<p>Eksplorasi dilakukan menggunakan <strong>Power BI</strong> dengan fokus pada:</p>
+<ul class="simple">
+<li><p>Nilai minimum dan maksimum setiap kolom</p></li>
+<li><p>Nilai rata-rata setiap kolom</p></li>
+<li><p>Distribusi jumlah tiap kelas (ditampilkan dalam grafik batang)</p></li>
+</ul>
+<section id="hasil-visualisasi">
+<h3>Hasil Visualisasi<a class="headerlink" href="#hasil-visualisasi" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>MySQL</strong><br />
+<img alt="Eksplorasi dengan MySQL" src="../_images/eksplorasi_data_mysql.png" /></p></li>
+<li><p><strong>PostgreSQL</strong><br />
+<img alt="Eksplorasi dengan PostgreSQL" src="../_images/eksplorasi_data_postgre.png" /></p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="insight-awal">
+<h2>Insight Awal<a class="headerlink" href="#insight-awal" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Jumlah Data</strong></p>
+<ul class="simple">
+<li><p>Dataset terdiri dari 150 baris dan 5 kolom (4 numerikal, 1 kategorikal).</p></li>
+<li><p>Setiap kelas spesies (<code class="docutils literal notranslate"><span class="pre">Setosa</span></code>, <code class="docutils literal notranslate"><span class="pre">Versicolor</span></code>, <code class="docutils literal notranslate"><span class="pre">Virginica</span></code>) berjumlah 50 data → seimbang.</p></li>
+</ul>
+</li>
+<li><p><strong>Sebaran Variabel Numerikal</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sepal_length</span></code>: rata-rata 5.84, dengan variasi moderat (std ~0.83).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sepal_width</span></code>: rata-rata 3.05, relatif sempit (std ~0.43).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">petal_length</span></code>: variasi paling besar (min 1.0, max 6.9, std ~1.76).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">petal_width</span></code>: juga bervariasi (min 0.1, max 2.5, std ~0.76).</p></li>
+</ul>
+</li>
+<li><p><strong>Perbedaan Antar Spesies</strong></p>
+<ul class="simple">
+<li><p><em>Iris Setosa</em> memiliki <strong>petal lebih kecil</strong> dibanding dua spesies lain → terlihat jelas pada scatter plot.</p></li>
+<li><p><em>Versicolor</em> dan <em>Virginica</em> memiliki area yang tumpang tindih, namun Virginica cenderung lebih besar ukuran petalnya.</p></li>
+</ul>
+</li>
+<li><p><strong>Outlier</strong></p>
+<ul class="simple">
+<li><p>Tidak ada outlier ekstrim yang menyendiri.</p></li>
+<li><p>Nilai ekstrem lebih disebabkan oleh variasi alami antar spesies, bukan kesalahan data.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="ringkasan">
+<h2>Ringkasan<a class="headerlink" href="#ringkasan" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Dataset <strong>Iris</strong> cocok untuk eksplorasi dasar machine learning karena sederhana namun tetap informatif.</p></li>
+<li><p>Variabel <strong>petal_length</strong> dan <strong>petal_width</strong> adalah fitur paling signifikan dalam membedakan spesies.</p></li>
+<li><p>Distribusi kelas seimbang (50:50:50) sehingga tidak ada masalah <em>class imbalance</em>.</p></li>
+<li><p>Tidak ditemukan <em>missing value</em> maupun outlier ekstrim → dataset bersih dan siap digunakan untuk analisis lebih lanjut.<br />
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+=======</p></li>
+</ul>
+<p>=======
+<img alt="ini adalah hasil eksplorasi data di power BI menggunakan database mysql" src="../_images/eksplorasi_data_mysql.png" /></p>
+<p><img alt="ini adalah hasil eksplorasi data di power BI menggunakan database postgre" src="../_images/eksplorasi_data_postgre.png" /></p>
+<blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><p>f40dd28 (Jupyter-book)
+bc748fc (Save progress before switching Codespaces)</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -458,6 +631,37 @@ species varchar(50)
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Eksplorasi Data</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#statistik-deskriptif">Statistik Deskriptif</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier">Deteksi Outlier</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#head">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#untuk-mendeteksi-outlier-dibuat-scatter-chart-dengan-kombinasi-variabel-numerikal">Untuk mendeteksi outlier, dibuat scatter chart dengan kombinasi variabel numerikal:</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi">Visualisasi</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-visualisasi">Hasil Visualisasi</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#insight-awal">Insight Awal</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan">Ringkasan</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
               
             
           </div>
