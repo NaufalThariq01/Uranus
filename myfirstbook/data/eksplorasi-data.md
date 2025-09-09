@@ -1,38 +1,44 @@
 # Eksplorasi Data
 
-Saya menggunakan data iris yang saya ambil dari kaggle untuk saya upload ke database lokal di postgree dan mysql
+Setelah memahami struktur dataset, langkah berikutnya adalah melakukan eksplorasi data untuk mendapatkan wawasan lebih dalam mengenai pola dan karakteristik data.
 
-struktur dari table nya adalah sebagai berikut:
+---
 
-MYSQL:
+## Statistik Deskriptif
 
-CREATE TABLE iris (
-    sepal_length FLOAT,
-    sepal_width FLOAT,
-    petal_length FLOAT,
-    petal_width FLOAT,
-    species VARCHAR(50)
-);
+(Tampilkan nilai min, max, mean, median, standar deviasi, dsb.)
 
-POSTGRE:
+---
 
-CREATE TABLE iris (
-    sepal_length double precision,
-    sepal_width double precision,
-    petal_length double precision,
-    petal_width double precision,
-    species varchar(50)
-);
+## Deteksi Outlier
 
-![ini adalah tabel data iris yang saya simpan di myqsl lokal](../_build/html/_static/images/data_iris_mysql.png)
+(Gunakan boxplot atau metode lain untuk menampilkan potensi outlier)
 
-![ini adalah tabel data iris yang saya simpan di postgre lokal](../_build/html/_static/images/data_iris_postgre.png)
+---
 
-Lalu saya melakukan eksplorasi data menggunakan POWER BI dimana saya mencari 
-- min max dari setiap kolom
-- rata rata dari setiap kolom
-- jumlah setiap kelas ditampilkan dalam grafik batang
+## Visualisasi
 
-![ini adalah hasil eksplorasi data di power BI menggunakan database mysql](../_build/html/_static/images/eksplorasi_data_mysql.png)
+Eksplorasi dilakukan menggunakan **Power BI** dengan fokus pada:
 
-![ini adalah hasil eksplorasi data di power BI menggunakan database postgre](../_build/html/_static/images/eksplorasi_data_postgre.png)
+- Nilai minimum dan maksimum setiap kolom  
+- Nilai rata-rata setiap kolom  
+- Distribusi jumlah tiap kelas (ditampilkan dalam grafik batang)  
+
+### Hasil Visualisasi
+- MySQL  
+  ![Eksplorasi dengan MySQL](../_build/html/_static/images/eksplorasi_data_mysql.png)
+
+- PostgreSQL  
+  ![Eksplorasi dengan PostgreSQL](_../_build/html/_static/images/eksplorasi_data_postgre.png)
+
+---
+
+## Insight Awal
+
+(Tuliskan poin-poin hasil pengamatan dari eksplorasi data, misalnya perbedaan karakteristik antar spesies)
+
+---
+
+## Ringkasan
+
+(Tuliskan kesimpulan dari eksplorasi data)
