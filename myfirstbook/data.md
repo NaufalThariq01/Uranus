@@ -49,9 +49,8 @@ Daftar kolom dan tipe data:
 
 - **Catatan Outlier:**
    ![Tabel Iris di PostgreSQL yang menampilkan deteksi outlier](_build/html/_static/images/deteksi_outlier_postgre.png)  
-  **Deteksi Outlier**
 
-Untuk mendeteksi outlier, dibuat scatter chart dengan kombinasi variabel numerikal:
+- **Deteksi Outlier**:Untuk mendeteksi outlier, dibuat scatter chart dengan kombinasi variabel numerikal:
 
 1. Sepal length vs sepal width  
    - Titik data dari ketiga spesies menyebar rapat.  
@@ -67,15 +66,19 @@ Dengan demikian, tidak ada data yang perlu dihapus karena outlier pada dataset i
 
 ## Distribusi Awal
 
-- Distribusi kategori:  
-  (contoh: jumlah tiap spesies)
+![Tabel Iris di PostgreSQL yang menampilkan count of species](_build/html/_static/images/eksplorasi_data_postgre.png)  
+
+- Distribusi kategori:
+  Hasil: masing-masing 50 data untuk Setosa, Versicolor, Virginica.
+  Setosa (50), Versicolor (50), Virginica (50).
+
 
 - Rentang nilai numerikal:  
-  (contoh: min–max per kolom)
+  - sepal_length: min 4.3, max 7.9  
+  - sepal_width: min 2.0, max 4.4  
+  - petal_length: min 1.0, max 6.9  
+  - petal_width: min 0.1, max 2.5  
+
 
 ---
-
-## Ringkasan
-
-(Tuliskan kesimpulan singkat dari hasil Data Understanding)
 
