@@ -48,6 +48,7 @@ Daftar kolom dan tipe data:
  - **Duplicate Rows:** Tidak ditemukan baris duplikat pada dataset.
 
 - **Catatan Outlier:**
+  
    ![Tabel Iris di PostgreSQL yang menampilkan deteksi outlier](_build/html/_static/images/deteksi_outlier_postgre.png)  
 
 - **Deteksi Outlier**:Untuk mendeteksi outlier, dibuat scatter chart dengan kombinasi variabel numerikal:
