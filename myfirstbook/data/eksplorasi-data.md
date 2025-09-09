@@ -1,4 +1,4 @@
-># Eksplorasi Data
+# Eksplorasi Data
 
 Setelah memahami struktur dataset, langkah berikutnya adalah melakukan eksplorasi data untuk mendapatkan wawasan lebih dalam mengenai pola dan karakteristik data.
 
