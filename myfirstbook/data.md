@@ -39,8 +39,9 @@ Daftar kolom dan tipe data:
 
 ## Kualitas Data
 
-- **Missing Values:**  
-  (isi jika sudah dicek)
+- **Missing Values:**
+![Tabel Iris di PostgreSQL yang menampilkan missing value](_build/html/_static/images/missing_value_postgre.png)  
+  - **Missing Values:** Tidak ditemukan missing values pada dataset Iris (semua kolom terisi penuh).
 
 - **Duplicate Rows:**  
   (isi jika sudah dicek)
