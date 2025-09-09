@@ -6,24 +6,25 @@ Setelah memahami struktur dataset, langkah berikutnya adalah melakukan eksploras
 
 ## Statistik Deskriptif
 
- ![Tabel Iris di PostgreSQL yang menampilkan deteksi outlier](../_build/html/_static/images/statistik_deskriptif_postgre.png)
-
+![Tabel Iris di PostgreSQL yang menampilkan deteksi outlier](../_build/html/_static/images/statistik_deskriptif_postgre.png)
 
 ## Deteksi Outlier
 
- ![Tabel Iris di PostgreSQL yang menampilkan deteksi outlier](../_build/html/_static/images/deteksi_outlier_postgre.png)
+![Tabel Iris di PostgreSQL yang menampilkan deteksi outlier](../_build/html/_static/images/deteksi_outlier_postgre.png)
 
 Untuk mendeteksi outlier, dibuat scatter chart dengan kombinasi variabel numerikal:
 
-1. Sepal length vs sepal width  
+1. **Sepal length vs sepal width**  
    - Titik data dari ketiga spesies menyebar rapat.  
    - Tidak ditemukan nilai yang menyendiri jauh dari kelompok → tidak ada outlier ekstrim.  
 
-2. Petal length vs petal width  
-   - Terlihat bahwa Iris-setosa membentuk kluster terpisah dengan ukuran kelopak lebih kecil.  
+2. **Petal length vs petal width**  
+   - Terlihat bahwa *Iris-setosa* membentuk kluster terpisah dengan ukuran kelopak lebih kecil.  
    - Hal ini bukan outlier kesalahan data, melainkan perbedaan alami antar spesies.  
 
 Dengan demikian, tidak ada data yang perlu dihapus karena outlier pada dataset ini merupakan bagian dari variasi kelas.
+
+---
 
 ## Visualisasi
 
@@ -34,10 +35,10 @@ Eksplorasi dilakukan menggunakan **Power BI** dengan fokus pada:
 - Distribusi jumlah tiap kelas (ditampilkan dalam grafik batang)  
 
 ### Hasil Visualisasi
-- MySQL  
+- **MySQL**  
   ![Eksplorasi dengan MySQL](../_build/html/_static/images/eksplorasi_data_mysql.png)
 
-- PostgreSQL  
+- **PostgreSQL**  
   ![Eksplorasi dengan PostgreSQL](../_build/html/_static/images/eksplorasi_data_postgre.png)
 
 ---
@@ -62,6 +63,7 @@ Eksplorasi dilakukan menggunakan **Power BI** dengan fokus pada:
    - Tidak ada outlier ekstrim yang menyendiri.  
    - Nilai ekstrem lebih disebabkan oleh variasi alami antar spesies, bukan kesalahan data.  
 
+---
 
 ## Ringkasan
 
@@ -69,4 +71,3 @@ Eksplorasi dilakukan menggunakan **Power BI** dengan fokus pada:
 - Variabel **petal_length** dan **petal_width** adalah fitur paling signifikan dalam membedakan spesies.  
 - Distribusi kelas seimbang (50:50:50) sehingga tidak ada masalah *class imbalance*.  
 - Tidak ditemukan *missing value* maupun outlier ekstrim → dataset bersih dan siap digunakan untuk analisis lebih lanjut.  
-
