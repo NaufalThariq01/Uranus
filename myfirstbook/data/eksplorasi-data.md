@@ -1,4 +1,4 @@
-<img width="585" height="312" alt="{1D2E9530-4196-4750-BC09-5AB60F7B4C93}" src="https://github.com/user-attachments/assets/608cfe9d-f304-4e83-b478-11a373fac6fa" /># Eksplorasi Data
+># Eksplorasi Data
 
 Setelah memahami struktur dataset, langkah berikutnya adalah melakukan eksplorasi data untuk mendapatkan wawasan lebih dalam mengenai pola dan karakteristik data.
 
@@ -44,10 +44,29 @@ Eksplorasi dilakukan menggunakan **Power BI** dengan fokus pada:
 
 ## Insight Awal
 
-(Tuliskan poin-poin hasil pengamatan dari eksplorasi data, misalnya perbedaan karakteristik antar spesies)
+1. **Jumlah Data**  
+   - Dataset terdiri dari 150 baris dan 5 kolom (4 numerikal, 1 kategorikal).  
+   - Setiap kelas spesies (`Setosa`, `Versicolor`, `Virginica`) berjumlah 50 data → seimbang.  
 
----
+2. **Sebaran Variabel Numerikal**  
+   - `sepal_length`: rata-rata 5.84, dengan variasi moderat (std ~0.83).  
+   - `sepal_width`: rata-rata 3.05, relatif sempit (std ~0.43).  
+   - `petal_length`: variasi paling besar (min 1.0, max 6.9, std ~1.76).  
+   - `petal_width`: juga bervariasi (min 0.1, max 2.5, std ~0.76).  
+
+3. **Perbedaan Antar Spesies**  
+   - *Iris Setosa* memiliki **petal lebih kecil** dibanding dua spesies lain → terlihat jelas pada scatter plot.  
+   - *Versicolor* dan *Virginica* memiliki area yang tumpang tindih, namun Virginica cenderung lebih besar ukuran petalnya.  
+
+4. **Outlier**  
+   - Tidak ada outlier ekstrim yang menyendiri.  
+   - Nilai ekstrem lebih disebabkan oleh variasi alami antar spesies, bukan kesalahan data.  
+
 
 ## Ringkasan
 
-(Tuliskan kesimpulan dari eksplorasi data)
+- Dataset **Iris** cocok untuk eksplorasi dasar machine learning karena sederhana namun tetap informatif.  
+- Variabel **petal_length** dan **petal_width** adalah fitur paling signifikan dalam membedakan spesies.  
+- Distribusi kelas seimbang (50:50:50) sehingga tidak ada masalah *class imbalance*.  
+- Tidak ditemukan *missing value* maupun outlier ekstrim → dataset bersih dan siap digunakan untuk analisis lebih lanjut.  
+
