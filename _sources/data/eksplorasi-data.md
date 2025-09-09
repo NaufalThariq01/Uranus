@@ -1,38 +1,98 @@
 # Eksplorasi Data
 
-Saya menggunakan data iris yang saya ambil dari kaggle untuk saya upload ke database lokal di postgree dan mysql
+Setelah memahami struktur dataset, langkah berikutnya adalah melakukan eksplorasi data untuk mendapatkan wawasan lebih dalam mengenai pola dan karakteristik data.
 
-struktur dari table nya adalah sebagai berikut:
+---
 
-MYSQL:
+## Statistik Deskriptif
 
-CREATE TABLE iris (
-    sepal_length FLOAT,
-    sepal_width FLOAT,
-    petal_length FLOAT,
-    petal_width FLOAT,
-    species VARCHAR(50)
-);
+![Tabel Iris di PostgreSQL yang menampilkan deteksi outlier](../_build/html/_static/images/statistik_deskriptif_postgre.png)
 
-POSTGRE:
+## Deteksi Outlier
 
-CREATE TABLE iris (
-    sepal_length double precision,
-    sepal_width double precision,
-    petal_length double precision,
-    petal_width double precision,
-    species varchar(50)
-);
+<<<<<<< HEAD
+![Tabel Iris di PostgreSQL yang menampilkan deteksi outlier](../_build/html/_static/images/deteksi_outlier_postgre.png)
+=======
+<<<<<<< HEAD
+ ![Tabel Iris di PostgreSQL yang menampilkan deteksi outlier](../_build/html/_static/images/deteksi_outlier_postgre.png)
+>>>>>>> bc748fc (Save progress before switching Codespaces)
 
+Untuk mendeteksi outlier, dibuat scatter chart dengan kombinasi variabel numerikal:
+=======
 ![ini adalah tabel data iris yang saya simpan di myqsl lokal](../_build/html/_static/images/data_iris_mysql.png)
 
 ![ini adalah tabel data iris yang saya simpan di postgre lokal](../_build/html/_static/images/data_iris_postgre.png)
+>>>>>>> f40dd28 (Jupyter-book)
 
-Lalu saya melakukan eksplorasi data menggunakan POWER BI dimana saya mencari 
-- min max dari setiap kolom
-- rata rata dari setiap kolom
-- jumlah setiap kelas ditampilkan dalam grafik batang
+1. **Sepal length vs sepal width**  
+   - Titik data dari ketiga spesies menyebar rapat.  
+   - Tidak ditemukan nilai yang menyendiri jauh dari kelompok → tidak ada outlier ekstrim.  
 
+<<<<<<< HEAD
+2. **Petal length vs petal width**  
+   - Terlihat bahwa *Iris-setosa* membentuk kluster terpisah dengan ukuran kelopak lebih kecil.  
+=======
+<<<<<<< HEAD
+2. Petal length vs petal width  
+   - Terlihat bahwa Iris-setosa membentuk kluster terpisah dengan ukuran kelopak lebih kecil.  
+>>>>>>> bc748fc (Save progress before switching Codespaces)
+   - Hal ini bukan outlier kesalahan data, melainkan perbedaan alami antar spesies.  
+
+Dengan demikian, tidak ada data yang perlu dihapus karena outlier pada dataset ini merupakan bagian dari variasi kelas.
+
+---
+
+## Visualisasi
+
+Eksplorasi dilakukan menggunakan **Power BI** dengan fokus pada:
+
+- Nilai minimum dan maksimum setiap kolom  
+- Nilai rata-rata setiap kolom  
+- Distribusi jumlah tiap kelas (ditampilkan dalam grafik batang)  
+
+### Hasil Visualisasi
+- **MySQL**  
+  ![Eksplorasi dengan MySQL](../_build/html/_static/images/eksplorasi_data_mysql.png)
+
+- **PostgreSQL**  
+  ![Eksplorasi dengan PostgreSQL](../_build/html/_static/images/eksplorasi_data_postgre.png)
+
+---
+
+## Insight Awal
+
+1. **Jumlah Data**  
+   - Dataset terdiri dari 150 baris dan 5 kolom (4 numerikal, 1 kategorikal).  
+   - Setiap kelas spesies (`Setosa`, `Versicolor`, `Virginica`) berjumlah 50 data → seimbang.  
+
+2. **Sebaran Variabel Numerikal**  
+   - `sepal_length`: rata-rata 5.84, dengan variasi moderat (std ~0.83).  
+   - `sepal_width`: rata-rata 3.05, relatif sempit (std ~0.43).  
+   - `petal_length`: variasi paling besar (min 1.0, max 6.9, std ~1.76).  
+   - `petal_width`: juga bervariasi (min 0.1, max 2.5, std ~0.76).  
+
+3. **Perbedaan Antar Spesies**  
+   - *Iris Setosa* memiliki **petal lebih kecil** dibanding dua spesies lain → terlihat jelas pada scatter plot.  
+   - *Versicolor* dan *Virginica* memiliki area yang tumpang tindih, namun Virginica cenderung lebih besar ukuran petalnya.  
+
+4. **Outlier**  
+   - Tidak ada outlier ekstrim yang menyendiri.  
+   - Nilai ekstrem lebih disebabkan oleh variasi alami antar spesies, bukan kesalahan data.  
+
+---
+
+## Ringkasan
+
+- Dataset **Iris** cocok untuk eksplorasi dasar machine learning karena sederhana namun tetap informatif.  
+- Variabel **petal_length** dan **petal_width** adalah fitur paling signifikan dalam membedakan spesies.  
+- Distribusi kelas seimbang (50:50:50) sehingga tidak ada masalah *class imbalance*.  
+- Tidak ditemukan *missing value* maupun outlier ekstrim → dataset bersih dan siap digunakan untuk analisis lebih lanjut.  
+<<<<<<< HEAD
+=======
+
+=======
 ![ini adalah hasil eksplorasi data di power BI menggunakan database mysql](../_build/html/_static/images/eksplorasi_data_mysql.png)
 
 ![ini adalah hasil eksplorasi data di power BI menggunakan database postgre](../_build/html/_static/images/eksplorasi_data_postgre.png)
+>>>>>>> f40dd28 (Jupyter-book)
+>>>>>>> bc748fc (Save progress before switching Codespaces)

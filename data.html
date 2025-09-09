@@ -183,6 +183,8 @@
 <li class="toctree-l1"><a class="reference internal" href="bisnis.html">Memahami Bisnis</a></li>
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Data Understanding</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="data/eksplorasi-data.html">Eksplorasi Data</a></li>
+
+
 </ul>
 </details></li>
 </ul>
@@ -357,7 +359,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -373,6 +377,20 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#struktur-data">Struktur Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mysql">MySQL</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#postgresql">PostgreSQL</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kualitas-data">Kualitas Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribusi-awal">Distribusi Awal</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -384,7 +402,141 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="data-understanding">
 <h1>Data Understanding<a class="headerlink" href="#data-understanding" title="Link to this heading">#</a></h1>
-<p>Ini adalah halaman utama Bab 2.</p>
+<p>Pada bagian ini, saya melakukan pemahaman awal terhadap dataset <strong>Iris</strong> yang digunakan dalam proyek ini. Dataset diambil dari Kaggle, lalu disimpan pada database <strong>MySQL</strong> dan <strong>PostgreSQL</strong>.</p>
+<hr class="docutils" />
+<section id="struktur-data">
+<h2>Struktur Data<a class="headerlink" href="#struktur-data" title="Link to this heading">#</a></h2>
+<p>Dataset Iris yang digunakan memiliki:</p>
+<ul class="simple">
+<li><p>Jumlah baris: 150 (setiap baris mewakili 1 bunga iris)</p></li>
+<li><p>Jumlah kolom: 5 (4 atribut numerikal dan 1 atribut kategorikal)</p></li>
+</ul>
+<p>Daftar kolom dan tipe data:</p>
+<section id="mysql">
+<h3>MySQL<a class="headerlink" href="#mysql" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Kolom</p></th>
+<th class="head"><p>Tipe Data SQL</p></th>
+<th class="head"><p>Tipe Analisis</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>sepal_length</p></td>
+<td><p>FLOAT</p></td>
+<td><p>Numerikal</p></td>
+</tr>
+<tr class="row-odd"><td><p>sepal_width</p></td>
+<td><p>FLOAT</p></td>
+<td><p>Numerikal</p></td>
+</tr>
+<tr class="row-even"><td><p>petal_length</p></td>
+<td><p>FLOAT</p></td>
+<td><p>Numerikal</p></td>
+</tr>
+<tr class="row-odd"><td><p>petal_width</p></td>
+<td><p>FLOAT</p></td>
+<td><p>Numerikal</p></td>
+</tr>
+<tr class="row-even"><td><p>species</p></td>
+<td><p>VARCHAR(50)</p></td>
+<td><p>Kategorikal</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><img alt="Tabel Iris di MySQL" src="_images/data_iris_mysql.png" /></p>
+</section>
+<hr class="docutils" />
+<section id="postgresql">
+<h3>PostgreSQL<a class="headerlink" href="#postgresql" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Kolom</p></th>
+<th class="head"><p>Tipe Data SQL</p></th>
+<th class="head"><p>Tipe Analisis</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>sepal_length</p></td>
+<td><p>DOUBLE PRECISION</p></td>
+<td><p>Numerikal</p></td>
+</tr>
+<tr class="row-odd"><td><p>sepal_width</p></td>
+<td><p>DOUBLE PRECISION</p></td>
+<td><p>Numerikal</p></td>
+</tr>
+<tr class="row-even"><td><p>petal_length</p></td>
+<td><p>DOUBLE PRECISION</p></td>
+<td><p>Numerikal</p></td>
+</tr>
+<tr class="row-odd"><td><p>petal_width</p></td>
+<td><p>DOUBLE PRECISION</p></td>
+<td><p>Numerikal</p></td>
+</tr>
+<tr class="row-even"><td><p>species</p></td>
+<td><p>TEXT</p></td>
+<td><p>Kategorikal</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><img alt="Tabel Iris di PostgreSQL" src="_images/data_iris_postgre.png" /></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="kualitas-data">
+<h2>Kualitas Data<a class="headerlink" href="#kualitas-data" title="Link to this heading">#</a></h2>
+<ul>
+<li><p><strong>Missing Values:</strong>
+<img alt="Tabel Iris di PostgreSQL yang menampilkan missing value" src="_images/missing_value_postgre.png" /></p>
+<ul class="simple">
+<li><p><strong>Missing Values:</strong> Tidak ditemukan missing values pada dataset Iris (semua kolom terisi penuh).</p></li>
+</ul>
+</li>
+<li><p><strong>Duplicate Rows:</strong>
+<img alt="Tabel Iris di PostgreSQL yang menampilkan duplicates" src="_images/duplicates_postgre.png" /></p></li>
+<li><p><strong>Duplicate Rows:</strong> Tidak ditemukan baris duplikat pada dataset.</p></li>
+<li><p><strong>Catatan Outlier:</strong></p>
+<p><img alt="Tabel Iris di PostgreSQL yang menampilkan deteksi outlier" src="_images/deteksi_outlier_postgre.png" /></p>
+</li>
+<li><p><strong>Deteksi Outlier</strong>:Untuk mendeteksi outlier, dibuat scatter chart dengan kombinasi variabel numerikal:</p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>Sepal length vs sepal width</p>
+<ul class="simple">
+<li><p>Titik data dari ketiga spesies menyebar rapat.</p></li>
+<li><p>Tidak ditemukan nilai yang menyendiri jauh dari kelompok → tidak ada outlier ekstrim.</p></li>
+</ul>
+</li>
+<li><p>Petal length vs petal width</p>
+<ul class="simple">
+<li><p>Terlihat bahwa Iris-setosa membentuk kluster terpisah dengan ukuran kelopak lebih kecil.</p></li>
+<li><p>Hal ini bukan outlier kesalahan data, melainkan perbedaan alami antar spesies.</p></li>
+</ul>
+</li>
+</ol>
+<p>Dengan demikian, tidak ada data yang perlu dihapus karena outlier pada dataset ini merupakan bagian dari variasi kelas.</p>
+</section>
+<hr class="docutils" />
+<section id="distribusi-awal">
+<h2>Distribusi Awal<a class="headerlink" href="#distribusi-awal" title="Link to this heading">#</a></h2>
+<p><img alt="Tabel Iris di PostgreSQL yang menampilkan count of species" src="_images/eksplorasi_data_postgre.png" /></p>
+<ul class="simple">
+<li><p>Distribusi kategori:
+Hasil: masing-masing 50 data untuk Setosa, Versicolor, Virginica.
+Setosa (50), Versicolor (50), Virginica (50).</p></li>
+<li><p>Rentang nilai numerikal:</p>
+<ul>
+<li><p>sepal_length: min 4.3, max 7.9</p></li>
+<li><p>sepal_width: min 2.0, max 4.4</p></li>
+<li><p>petal_length: min 1.0, max 6.9</p></li>
+<li><p>petal_width: min 0.1, max 2.5</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -443,6 +595,27 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#struktur-data">Struktur Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mysql">MySQL</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#postgresql">PostgreSQL</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kualitas-data">Kualitas Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribusi-awal">Distribusi Awal</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
