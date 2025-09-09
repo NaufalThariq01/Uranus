@@ -10,16 +10,32 @@ Setelah memahami struktur dataset, langkah berikutnya adalah melakukan eksploras
 
 ## Deteksi Outlier
 
+<<<<<<< HEAD
 ![Tabel Iris di PostgreSQL yang menampilkan deteksi outlier](../_build/html/_static/images/deteksi_outlier_postgre.png)
+=======
+<<<<<<< HEAD
+ ![Tabel Iris di PostgreSQL yang menampilkan deteksi outlier](../_build/html/_static/images/deteksi_outlier_postgre.png)
+>>>>>>> bc748fc (Save progress before switching Codespaces)
 
 Untuk mendeteksi outlier, dibuat scatter chart dengan kombinasi variabel numerikal:
+=======
+![ini adalah tabel data iris yang saya simpan di myqsl lokal](../_build/html/_static/images/data_iris_mysql.png)
+
+![ini adalah tabel data iris yang saya simpan di postgre lokal](../_build/html/_static/images/data_iris_postgre.png)
+>>>>>>> f40dd28 (Jupyter-book)
 
 1. **Sepal length vs sepal width**  
    - Titik data dari ketiga spesies menyebar rapat.  
    - Tidak ditemukan nilai yang menyendiri jauh dari kelompok → tidak ada outlier ekstrim.  
 
+<<<<<<< HEAD
 2. **Petal length vs petal width**  
    - Terlihat bahwa *Iris-setosa* membentuk kluster terpisah dengan ukuran kelopak lebih kecil.  
+=======
+<<<<<<< HEAD
+2. Petal length vs petal width  
+   - Terlihat bahwa Iris-setosa membentuk kluster terpisah dengan ukuran kelopak lebih kecil.  
+>>>>>>> bc748fc (Save progress before switching Codespaces)
    - Hal ini bukan outlier kesalahan data, melainkan perbedaan alami antar spesies.  
 
 Dengan demikian, tidak ada data yang perlu dihapus karena outlier pada dataset ini merupakan bagian dari variasi kelas.
@@ -71,3 +87,12 @@ Eksplorasi dilakukan menggunakan **Power BI** dengan fokus pada:
 - Variabel **petal_length** dan **petal_width** adalah fitur paling signifikan dalam membedakan spesies.  
 - Distribusi kelas seimbang (50:50:50) sehingga tidak ada masalah *class imbalance*.  
 - Tidak ditemukan *missing value* maupun outlier ekstrim → dataset bersih dan siap digunakan untuk analisis lebih lanjut.  
+<<<<<<< HEAD
+=======
+
+=======
+![ini adalah hasil eksplorasi data di power BI menggunakan database mysql](../_build/html/_static/images/eksplorasi_data_mysql.png)
+
+![ini adalah hasil eksplorasi data di power BI menggunakan database postgre](../_build/html/_static/images/eksplorasi_data_postgre.png)
+>>>>>>> f40dd28 (Jupyter-book)
+>>>>>>> bc748fc (Save progress before switching Codespaces)
