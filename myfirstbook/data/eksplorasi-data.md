@@ -22,14 +22,11 @@ Untuk mendeteksi outlier, dibuat scatter chart dengan kombinasi variabel numerik
    - Titik data dari ketiga spesies menyebar rapat.  
    - Tidak ditemukan nilai yang menyendiri jauh dari kelompok → tidak ada outlier ekstrim.  
 
-<<<<<<< HEAD
 2. **Petal length vs petal width**  
    - Terlihat bahwa *Iris-setosa* membentuk kluster terpisah dengan ukuran kelopak lebih kecil.  
 =======
-<<<<<<< HEAD
 2. Petal length vs petal width  
    - Terlihat bahwa Iris-setosa membentuk kluster terpisah dengan ukuran kelopak lebih kecil.  
->>>>>>> bc748fc (Save progress before switching Codespaces)
    - Hal ini bukan outlier kesalahan data, melainkan perbedaan alami antar spesies.  
 
 Dengan demikian, tidak ada data yang perlu dihapus karena outlier pada dataset ini merupakan bagian dari variasi kelas.
@@ -87,5 +84,3 @@ Eksplorasi dilakukan menggunakan **Power BI** dengan fokus pada:
 ![ini adalah hasil eksplorasi data di power BI menggunakan database mysql](../_build/html/_static/images/eksplorasi_data_mysql.png)
 
 ![ini adalah hasil eksplorasi data di power BI menggunakan database postgre](../_build/html/_static/images/eksplorasi_data_postgre.png)
->>>>>>> f40dd28 (Jupyter-book)
->>>>>>> bc748fc (Save progress before switching Codespaces)
