@@ -1,14 +1,18 @@
-# Table of contents
+## Table of contents
 # Learn more at https://jupyterbook.org/customize/toc.html
 
 format: jb-book
 root: intro
 title: Home
+
 chapters:
   - file: bisnis
     title: Memahami Bisnis
+
   - file: data
     title: Data Understanding
     sections:
       - file: data/eksplorasi-data
         title: Eksplorasi Data
+      - file: data/gabungan-data
+        title: Hasil Penggabungan Data
