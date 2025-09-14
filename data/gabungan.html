@@ -60,6 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'data/gabungan';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Eksplorasi Data" href="eksplorasi-data.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -122,8 +123,6 @@
       
       
       
-        
-      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -179,10 +178,11 @@
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../bisnis.html">Memahami Bisnis</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../data.html">Data Understanding</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../data.html">Data Understanding</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="eksplorasi-data.html">Eksplorasi Data</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Hasil Penggabungan Data dari Dua Database</a></li>
 
 
 </ul>
@@ -382,8 +382,14 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Hasil Penggabungan Data dari Dua Database</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kode-python">📌 Kode Python</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan">📊 Penjelasan</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-setelah-digabung">📷 Tabel Setelah Digabung</a></li>
+</ul>
+
             </nav>
         </div>
     </div>
@@ -436,19 +442,21 @@ Tujuannya adalah membuat satu dataset gabungan untuk dianalisis lebih lanjut ata
 
 <span class="c1"># Output ke Power BI</span>
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">df_merge</span>
-
-<span class="c1">## 📊 Penjelasan</span>
-
-<span class="o">-</span> <span class="n">Dari</span> <span class="o">**</span><span class="n">PostgreSQL</span><span class="o">**</span> <span class="n">diambil</span> <span class="mi">2</span> <span class="n">kolom</span><span class="p">:</span> <span class="err">`</span><span class="n">sepal_length</span><span class="err">`</span> <span class="n">dan</span> <span class="err">`</span><span class="n">sepal_width</span><span class="err">`</span><span class="o">.</span>  
-<span class="o">-</span> <span class="n">Dari</span> <span class="o">**</span><span class="n">MySQL</span><span class="o">**</span> <span class="n">diambil</span> <span class="mi">3</span> <span class="n">kolom</span><span class="p">:</span> <span class="err">`</span><span class="n">petal_length</span><span class="err">`</span><span class="p">,</span> <span class="err">`</span><span class="n">petal_width</span><span class="err">`</span><span class="p">,</span> <span class="n">dan</span> <span class="err">`</span><span class="n">species</span><span class="err">`</span><span class="o">.</span>  
-<span class="o">-</span> <span class="n">Data</span> <span class="n">digabungkan</span> <span class="n">secara</span> <span class="o">**</span><span class="n">horizontal</span><span class="o">**</span> <span class="n">dengan</span> <span class="err">`</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="err">`</span> <span class="n">sehingga</span> <span class="n">baris</span> <span class="n">tetap</span> <span class="n">berurutan</span> <span class="n">dan</span> <span class="n">kolom</span> <span class="n">saling</span> <span class="n">melengkapi</span><span class="o">.</span>  
-<span class="o">-</span> <span class="n">Hasil</span> <span class="n">akhirnya</span> <span class="n">berupa</span> <span class="n">dataset</span> <span class="n">lengkap</span> <span class="n">yang</span> <span class="n">terdiri</span> <span class="n">dari</span> <span class="o">**</span><span class="mi">5</span> <span class="n">kolom</span><span class="o">**.</span>
-
-<span class="c1">#Tabel setalah digabung</span>
-<span class="err">!</span><span class="p">[</span><span class="n">ini</span> <span class="n">adalah</span> <span class="n">tabel</span> <span class="n">data</span> <span class="n">iris</span> <span class="n">yang</span> <span class="n">saya</span> <span class="n">gabung</span> <span class="n">dari</span> <span class="n">dua</span> <span class="n">database</span> <span class="n">berbeda</span><span class="p">](</span><span class="o">../</span><span class="n">_static</span><span class="o">/</span><span class="n">images</span><span class="o">/</span><span class="n">gabungan</span><span class="o">.</span><span class="n">png</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="penjelasan">
+<h1>📊 Penjelasan<a class="headerlink" href="#penjelasan" title="Link to this heading">#</a></h1>
+<p>-Dari PostgreSQL diambil 2 kolom: sepal_length dan sepal_width.</p>
+<p>-Dari MySQL diambil 3 kolom: petal_length, petal_width, dan species.</p>
+<p>-Data digabungkan secara horizontal dengan pd.concat(…, axis=1) sehingga baris tetap berurutan dan kolom saling melengkapi.</p>
+<p>-Hasil akhirnya berupa dataset lengkap yang terdiri dari 5 kolom.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="tabel-setelah-digabung">
+<h1>📷 Tabel Setelah Digabung<a class="headerlink" href="#tabel-setelah-digabung" title="Link to this heading">#</a></h1>
+<p>ini adalah tabel data iris yang saya gabung dari dua database berbeda</p>
+<p><img alt="ini adalah tabel data iris yang saya gabung dari dua database berbeda" src="../_images/gabungan.png" /></p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -481,6 +489,15 @@ Tujuannya adalah membuat satu dataset gabungan untuk dianalisis lebih lanjut ata
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="eksplorasi-data.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Eksplorasi Data</p>
+      </div>
+    </a>
 </div>
                 </footer>
               
@@ -497,8 +514,14 @@ Tujuannya adalah membuat satu dataset gabungan untuk dianalisis lebih lanjut ata
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Hasil Penggabungan Data dari Dua Database</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kode-python">📌 Kode Python</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan">📊 Penjelasan</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-setelah-digabung">📷 Tabel Setelah Digabung</a></li>
+</ul>
+
   </nav></div>
 
 </div></div>
