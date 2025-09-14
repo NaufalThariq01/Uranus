@@ -6,27 +6,26 @@ Setelah memahami struktur dataset, langkah berikutnya adalah melakukan eksploras
 
 ## Statistik Deskriptif
 
-![Tabel Iris di PostgreSQL yang menampilkan deteksi outlier](../_build/html/_static/images/statistik_deskriptif_postgre.png)
+![Statistik deskriptif dataset Iris (PostgreSQL)](../_build/html/_static/images/statistik_deskriptif_postgre.png)
+
+---
 
 ## Deteksi Outlier
 
- ![Tabel Iris di PostgreSQL yang menampilkan deteksi outlier](../_build/html/_static/images/deteksi_outlier_postgre.png)
+![Deteksi outlier dataset Iris (PostgreSQL)](../_build/html/_static/images/deteksi_outlier_postgre.png)
 
 Untuk mendeteksi outlier, dibuat scatter chart dengan kombinasi variabel numerikal:
-=======
-![ini adalah tabel data iris yang saya simpan di myqsl lokal](../_build/html/_static/images/data_iris_mysql.png)
 
-![ini adalah tabel data iris yang saya simpan di postgre lokal](../_build/html/_static/images/data_iris_postgre.png)
+![Tabel Iris dari MySQL lokal](../_build/html/_static/images/data_iris_mysql.png)
+
+![Tabel Iris dari PostgreSQL lokal](../_build/html/_static/images/data_iris_postgre.png)
 
 1. **Sepal length vs sepal width**  
    - Titik data dari ketiga spesies menyebar rapat.  
    - Tidak ditemukan nilai yang menyendiri jauh dari kelompok → tidak ada outlier ekstrim.  
 
 2. **Petal length vs petal width**  
-   - Terlihat bahwa *Iris-setosa* membentuk kluster terpisah dengan ukuran kelopak lebih kecil.  
-=======
-2. Petal length vs petal width  
-   - Terlihat bahwa Iris-setosa membentuk kluster terpisah dengan ukuran kelopak lebih kecil.  
+   - *Iris-setosa* membentuk kluster terpisah dengan ukuran kelopak lebih kecil.  
    - Hal ini bukan outlier kesalahan data, melainkan perbedaan alami antar spesies.  
 
 Dengan demikian, tidak ada data yang perlu dihapus karena outlier pada dataset ini merupakan bagian dari variasi kelas.
@@ -39,14 +38,15 @@ Eksplorasi dilakukan menggunakan **Power BI** dengan fokus pada:
 
 - Nilai minimum dan maksimum setiap kolom  
 - Nilai rata-rata setiap kolom  
-- Distribusi jumlah tiap kelas (ditampilkan dalam grafik batang)  
+- Distribusi jumlah tiap kelas (grafik batang)  
 
 ### Hasil Visualisasi
+
 - **MySQL**  
-  ![Eksplorasi dengan MySQL](../_build/html/_static/images/eksplorasi_data_mysql.png)
+  ![Eksplorasi data dengan Power BI (MySQL)](../_build/html/_static/images/eksplorasi_data_mysql.png)
 
 - **PostgreSQL**  
-  ![Eksplorasi dengan PostgreSQL](../_build/html/_static/images/eksplorasi_data_postgre.png)
+  ![Eksplorasi data dengan Power BI (PostgreSQL)](../_build/html/_static/images/eksplorasi_data_postgre.png)
 
 ---
 
@@ -78,9 +78,3 @@ Eksplorasi dilakukan menggunakan **Power BI** dengan fokus pada:
 - Variabel **petal_length** dan **petal_width** adalah fitur paling signifikan dalam membedakan spesies.  
 - Distribusi kelas seimbang (50:50:50) sehingga tidak ada masalah *class imbalance*.  
 - Tidak ditemukan *missing value* maupun outlier ekstrim → dataset bersih dan siap digunakan untuk analisis lebih lanjut.  
-=======
-
-=======
-![ini adalah hasil eksplorasi data di power BI menggunakan database mysql](../_build/html/_static/images/eksplorasi_data_mysql.png)
-
-![ini adalah hasil eksplorasi data di power BI menggunakan database postgre](../_build/html/_static/images/eksplorasi_data_postgre.png)
