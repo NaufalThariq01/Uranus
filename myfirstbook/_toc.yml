@@ -14,5 +14,5 @@ chapters:
     sections:
       - file: data/eksplorasi-data
         title: Eksplorasi Data
-      - file: data/gabungan-data
+      - file: data/gabungan
         title: Hasil Penggabungan Data
