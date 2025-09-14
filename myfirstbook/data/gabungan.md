@@ -44,13 +44,19 @@ df_merge = pd.concat([df_pg, df_my], axis=1)
 
 # Output ke Power BI
 dataset = df_merge
+```
+#📊 Penjelasan
 
-## 📊 Penjelasan
+  -Dari PostgreSQL diambil 2 kolom: sepal_length dan sepal_width.
 
-- Dari **PostgreSQL** diambil 2 kolom: `sepal_length` dan `sepal_width`.  
-- Dari **MySQL** diambil 3 kolom: `petal_length`, `petal_width`, dan `species`.  
-- Data digabungkan secara **horizontal** dengan `pd.concat(..., axis=1)` sehingga baris tetap berurutan dan kolom saling melengkapi.  
-- Hasil akhirnya berupa dataset lengkap yang terdiri dari **5 kolom**.
+  -Dari MySQL diambil 3 kolom: petal_length, petal_width, dan species.
 
-#Tabel setalah digabung
+  -Data digabungkan secara horizontal dengan pd.concat(..., axis=1) sehingga baris tetap berurutan dan kolom saling melengkapi.
+
+  -Hasil akhirnya berupa dataset lengkap yang terdiri dari 5 kolom.
+
+#📷 Tabel Setelah Digabung
+
+ini adalah tabel data iris yang saya gabung dari dua database berbeda
+
 ![ini adalah tabel data iris yang saya gabung dari dua database berbeda](../_static/images/gabungan.png)
