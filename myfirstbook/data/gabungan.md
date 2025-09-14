@@ -59,4 +59,4 @@ dataset = df_merge
 
 ini adalah tabel data iris yang saya gabung dari dua database berbeda
 
-![ini adalah tabel data iris yang saya gabung dari dua database berbeda](../_static/images/gabungan.png)
+![ini adalah tabel data iris yang saya gabung dari dua database berbeda](../_build/html/_static/images/gabungan.png)
