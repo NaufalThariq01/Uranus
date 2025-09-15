@@ -178,7 +178,7 @@ plt.show()
 | Normal   | 135    | 90.0       |
 | Outlier  | 15     | 10.0       |
 ### Visualisasi Deteksi Outlier ABOD
-![Menampilkan visual deteksi Outlier](_build/html/_static/images/visualisasi_deteksi_outlier_abod.png)  
+![Menampilkan visual deteksi Outlier](_build/html/_static/images/visual_deteksi_outlier_abod.png)  
 
 ## 5. Model SOD
 
@@ -257,7 +257,7 @@ plt.show()
 | Normal   | 135    | 90.0       |
 | Outlier  | 15     | 10.0       |
 ### Visualisasi Deteksi Outlier SOD
-![Menampilkan visual deteksi Outlier](_build/html/_static/images/visualisasi_deteksi_outlier_sod.png)  
+![Menampilkan visual deteksi Outlier](_build/html/_static/images/visual_deteksi_outlier_sod.png)  
 
 ## 6. Model IFOREST
 
@@ -336,4 +336,4 @@ plt.show()
 | Normal   | 135    | 90.0       |
 | Outlier  | 15     | 10.0       |
 ### Visualisasi Deteksi Outlier IFOREST
-![Menampilkan visual deteksi Outlier](_build/html/_static/images/visualisasi_deteksi_outlier_iforest.png)  
+![Menampilkan visual deteksi Outlier](_build/html/_static/images/visual_deteksi_outlier_iforest.png)  
