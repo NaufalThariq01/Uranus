@@ -8,7 +8,8 @@ title: Home
 chapters:
   - file: bisnis
     title: Memahami Bisnis
-
+  - file: preprocessing
+    title: Data Preprocessing
   - file: data
     title: Data Understanding
     sections:
@@ -16,5 +17,3 @@ chapters:
         title: Eksplorasi Data
       - file: data/gabungan
         title: Hasil Penggabungan Data
-    - file: preprocessing
-      title: Data Preprocessing
