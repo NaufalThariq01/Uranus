@@ -8,7 +8,7 @@ Pada bagian ini, saya melakukan pemahaman awal terhadap dataset **Iris** yang di
 
 Dataset Iris yang digunakan memiliki:
 - Jumlah baris: 150 (setiap baris mewakili 1 bunga iris)
-- Jumlah kolom: 5 (4 atribut numerikal dan 1 atribut kategorikal)
+- Jumlah kolom: 5 (4 atribut numerikal dan 1 atribut kategorikal).
 
 Daftar kolom dan tipe data:
 
