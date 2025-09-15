@@ -16,3 +16,5 @@ chapters:
         title: Eksplorasi Data
       - file: data/gabungan
         title: Hasil Penggabungan Data
+    - file: preprocessing
+      title: Data Preprocessing
