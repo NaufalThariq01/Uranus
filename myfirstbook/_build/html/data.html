@@ -61,7 +61,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Eksplorasi Data" href="data/eksplorasi-data.html" />
-    <link rel="prev" title="Memahami Bisnis" href="bisnis.html" />
+    <link rel="prev" title="Data Preprocessing" href="preprocessing.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -181,13 +181,9 @@
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="bisnis.html">Memahami Bisnis</a></li>
-<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Data Understanding</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="data/eksplorasi-data.html">Eksplorasi Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="data/gabungan.html">Hasil Penggabungan Data dari Dua Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Data Preprocessing</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Data Understanding</a></li>
 
-
-</ul>
-</details></li>
 </ul>
 
     </div>
@@ -383,6 +379,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Data Understanding</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#struktur-data">Struktur Data</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mysql">MySQL</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#postgresql">PostgreSQL</a></li>
@@ -391,6 +388,39 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kualitas-data">Kualitas Data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribusi-awal">Distribusi Awal</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier-pada-dataset-iris-dengan-pycaret">Deteksi Outlier pada Dataset Iris dengan PyCaret</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">1. Import Library</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-dataset">2. Load Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-up-pycaret">3. Set up Pycaret</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-abod">4. Model ABOD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#informasi-setup">Informasi Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-hasil-outlier-detection-10-baris-pertama">Ringkasan Hasil Outlier Detection (10 baris pertama)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#statistik-outlier">Statistik Outlier</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-jumlah-data">Ringkasan Jumlah Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-deteksi-outlier-abod">Visualisasi Deteksi Outlier ABOD</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-sod">5. Model SOD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Informasi Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Ringkasan Hasil Outlier Detection (10 baris pertama)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Statistik Outlier</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Ringkasan Jumlah Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-deteksi-outlier-sod">Visualisasi Deteksi Outlier SOD</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-iforest">6. Model IFOREST</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Informasi Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Ringkasan Hasil Outlier Detection (10 baris pertama)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Statistik Outlier</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Ringkasan Jumlah Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-deteksi-outlier-iforest">Visualisasi Deteksi Outlier IFOREST</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
             </nav>
         </div>
     </div>
@@ -488,36 +518,17 @@ document.write(`
 <hr class="docutils" />
 <section id="kualitas-data">
 <h2>Kualitas Data<a class="headerlink" href="#kualitas-data" title="Link to this heading">#</a></h2>
-<ul>
+<ul class="simple">
 <li><p><strong>Missing Values:</strong>
 <img alt="Tabel Iris di PostgreSQL yang menampilkan missing value" src="_images/missing_value_postgre.png" /></p>
-<ul class="simple">
+<ul>
 <li><p><strong>Missing Values:</strong> Tidak ditemukan missing values pada dataset Iris (semua kolom terisi penuh).</p></li>
 </ul>
 </li>
 <li><p><strong>Duplicate Rows:</strong>
 <img alt="Tabel Iris di PostgreSQL yang menampilkan duplicates" src="_images/duplicates_postgre.png" /></p></li>
 <li><p><strong>Duplicate Rows:</strong> Tidak ditemukan baris duplikat pada dataset.</p></li>
-<li><p><strong>Catatan Outlier:</strong></p>
-<p><img alt="Tabel Iris di PostgreSQL yang menampilkan deteksi outlier" src="_images/deteksi_outlier_postgre.png" /></p>
-</li>
-<li><p><strong>Deteksi Outlier</strong>:Untuk mendeteksi outlier, dibuat scatter chart dengan kombinasi variabel numerikal:</p></li>
 </ul>
-<ol class="arabic simple">
-<li><p>Sepal length vs sepal width</p>
-<ul class="simple">
-<li><p>Titik data dari ketiga spesies menyebar rapat.</p></li>
-<li><p>Tidak ditemukan nilai yang menyendiri jauh dari kelompok → tidak ada outlier ekstrim.</p></li>
-</ul>
-</li>
-<li><p>Petal length vs petal width</p>
-<ul class="simple">
-<li><p>Terlihat bahwa Iris-setosa membentuk kluster terpisah dengan ukuran kelopak lebih kecil.</p></li>
-<li><p>Hal ini bukan outlier kesalahan data, melainkan perbedaan alami antar spesies.</p></li>
-</ul>
-</li>
-</ol>
-<p>Dengan demikian, tidak ada data yang perlu dihapus karena outlier pada dataset ini merupakan bagian dari variasi kelas.</p>
 </section>
 <hr class="docutils" />
 <section id="distribusi-awal">
@@ -537,7 +548,649 @@ Setosa (50), Versicolor (50), Virginica (50).</p></li>
 </li>
 </ul>
 </section>
+</section>
 <hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="deteksi-outlier-pada-dataset-iris-dengan-pycaret">
+<h1>Deteksi Outlier pada Dataset Iris dengan PyCaret<a class="headerlink" href="#deteksi-outlier-pada-dataset-iris-dengan-pycaret" title="Link to this heading">#</a></h1>
+<p>Dokumen ini menjelaskan langkah-langkah deteksi outlier pada dataset <strong>Iris</strong> menggunakan <strong>PyCaret</strong>.<br />
+Tiga model yang digunakan:</p>
+<ul class="simple">
+<li><p>ABOD (Angle-Based Outlier Detection)</p></li>
+<li><p>SOD (Subspace Outlier Detection)</p></li>
+<li><p>IForest (Isolation Forest)</p></li>
+</ul>
+<hr class="docutils" />
+<section id="import-library">
+<h2>1. Import Library<a class="headerlink" href="#import-library" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pycaret.anomaly</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</pre></div>
+</div>
+</section>
+<section id="load-dataset">
+<h2>2. Load Dataset<a class="headerlink" href="#load-dataset" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Baca dataset iris</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data_iris.csv&quot;</span><span class="p">)</span>
+
+<span class="c1"># Hapus kolom target (species) karena bukan fitur numerik</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;species&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="set-up-pycaret">
+<h2>3. Set up Pycaret<a class="headerlink" href="#set-up-pycaret" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Setup anomaly detection</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">setup</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">session_id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="model-abod">
+<h2>4. Model ABOD<a class="headerlink" href="#model-abod" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Buat model ABOD dengan fraction 0.1 (10% data diasumsikan outlier)</span>
+<span class="n">abod</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="s1">&#39;abod&#39;</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># Assign hasil prediksi ke dataset</span>
+<span class="n">results_abod</span> <span class="o">=</span> <span class="n">assign_model</span><span class="p">(</span><span class="n">abod</span><span class="p">)</span>
+
+<span class="c1"># Tampilkan ringkasan hasil (10 baris pertama)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ringkasan Hasil Outlier Detection (ABOD):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results_abod</span><span class="p">[[</span><span class="s1">&#39;sepal_length&#39;</span><span class="p">,</span><span class="s1">&#39;sepal_width&#39;</span><span class="p">,</span><span class="s1">&#39;petal_length&#39;</span><span class="p">,</span><span class="s1">&#39;petal_width&#39;</span><span class="p">,</span><span class="s1">&#39;Anomaly&#39;</span><span class="p">,</span><span class="s1">&#39;Anomaly_Score&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+
+<span class="c1"># Visualisasi scatter plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">results_abod</span><span class="p">[</span><span class="s1">&#39;sepal_length&#39;</span><span class="p">],</span> <span class="n">results_abod</span><span class="p">[</span><span class="s1">&#39;sepal_width&#39;</span><span class="p">],</span>
+    <span class="n">c</span><span class="o">=</span><span class="n">results_abod</span><span class="p">[</span><span class="s1">&#39;Anomaly&#39;</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;coolwarm&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Visualisasi Outlier dengan ABOD&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Sepal Length&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Sepal Width&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="informasi-setup">
+<h2>Informasi Setup<a class="headerlink" href="#informasi-setup" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Description</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Session id</p></td>
+<td><p>123</p></td>
+</tr>
+<tr class="row-odd"><td><p>Original data shape</p></td>
+<td><p>(150, 4)</p></td>
+</tr>
+<tr class="row-even"><td><p>Transformed data shape</p></td>
+<td><p>(150, 4)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Numeric features</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>Preprocess</p></td>
+<td><p>True</p></td>
+</tr>
+<tr class="row-odd"><td><p>Imputation type</p></td>
+<td><p>simple</p></td>
+</tr>
+<tr class="row-even"><td><p>Numeric imputation</p></td>
+<td><p>mean</p></td>
+</tr>
+<tr class="row-odd"><td><p>Categorical imputation</p></td>
+<td><p>mode</p></td>
+</tr>
+<tr class="row-even"><td><p>CPU Jobs</p></td>
+<td><p>-1</p></td>
+</tr>
+<tr class="row-odd"><td><p>Use GPU</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-even"><td><p>Log Experiment</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-odd"><td><p>Experiment Name</p></td>
+<td><p>anomaly-default-name</p></td>
+</tr>
+<tr class="row-even"><td><p>USI</p></td>
+<td><p>e496</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="ringkasan-hasil-outlier-detection-10-baris-pertama">
+<h2>Ringkasan Hasil Outlier Detection (10 baris pertama)<a class="headerlink" href="#ringkasan-hasil-outlier-detection-10-baris-pertama" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>sepal_length</p></th>
+<th class="head"><p>sepal_width</p></th>
+<th class="head"><p>petal_length</p></th>
+<th class="head"><p>petal_width</p></th>
+<th class="head"><p>Anomaly</p></th>
+<th class="head"><p>Anomaly_Score</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>5.8</p></td>
+<td><p>2.8</p></td>
+<td><p>5.1</p></td>
+<td><p>2.4</p></td>
+<td><p>1</p></td>
+<td><p>-0.385082</p></td>
+</tr>
+<tr class="row-odd"><td><p>5.7</p></td>
+<td><p>4.4</p></td>
+<td><p>1.5</p></td>
+<td><p>0.4</p></td>
+<td><p>1</p></td>
+<td><p>-0.592311</p></td>
+</tr>
+<tr class="row-even"><td><p>7.2</p></td>
+<td><p>3.6</p></td>
+<td><p>6.1</p></td>
+<td><p>2.5</p></td>
+<td><p>1</p></td>
+<td><p>-0.612383</p></td>
+</tr>
+<tr class="row-odd"><td><p>6.7</p></td>
+<td><p>2.5</p></td>
+<td><p>5.8</p></td>
+<td><p>1.8</p></td>
+<td><p>1</p></td>
+<td><p>-0.084224</p></td>
+</tr>
+<tr class="row-even"><td><p>4.9</p></td>
+<td><p>2.5</p></td>
+<td><p>4.5</p></td>
+<td><p>1.7</p></td>
+<td><p>1</p></td>
+<td><p>-0.050388</p></td>
+</tr>
+<tr class="row-odd"><td><p>7.7</p></td>
+<td><p>3.8</p></td>
+<td><p>6.7</p></td>
+<td><p>2.2</p></td>
+<td><p>1</p></td>
+<td><p>-0.129286</p></td>
+</tr>
+<tr class="row-even"><td><p>7.7</p></td>
+<td><p>2.6</p></td>
+<td><p>6.9</p></td>
+<td><p>2.3</p></td>
+<td><p>1</p></td>
+<td><p>-0.692992</p></td>
+</tr>
+<tr class="row-odd"><td><p>6.3</p></td>
+<td><p>3.3</p></td>
+<td><p>6.0</p></td>
+<td><p>2.5</p></td>
+<td><p>1</p></td>
+<td><p>-0.364475</p></td>
+</tr>
+<tr class="row-even"><td><p>5.2</p></td>
+<td><p>2.7</p></td>
+<td><p>3.9</p></td>
+<td><p>1.4</p></td>
+<td><p>1</p></td>
+<td><p>-0.885601</p></td>
+</tr>
+<tr class="row-odd"><td><p>4.6</p></td>
+<td><p>3.6</p></td>
+<td><p>1.0</p></td>
+<td><p>0.2</p></td>
+<td><p>1</p></td>
+<td><p>-0.771745</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="statistik-outlier">
+<h2>Statistik Outlier<a class="headerlink" href="#statistik-outlier" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Total Data</strong>     : 150</p></li>
+<li><p><strong>Normal Data</strong>    : 135</p></li>
+<li><p><strong>Outlier Data</strong>   : 15</p></li>
+<li><p><strong>Persentase Outlier</strong> : 10.00%</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="ringkasan-jumlah-data">
+<h2>Ringkasan Jumlah Data<a class="headerlink" href="#ringkasan-jumlah-data" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Kategori</p></th>
+<th class="head"><p>Jumlah</p></th>
+<th class="head"><p>Persentase</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Normal</p></td>
+<td><p>135</p></td>
+<td><p>90.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Outlier</p></td>
+<td><p>15</p></td>
+<td><p>10.0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="visualisasi-deteksi-outlier-abod">
+<h3>Visualisasi Deteksi Outlier ABOD<a class="headerlink" href="#visualisasi-deteksi-outlier-abod" title="Link to this heading">#</a></h3>
+<p><img alt="Menampilkan visual deteksi Outlier" src="_images/visual_deteksi_outlier_abod.png" /></p>
+</section>
+</section>
+<section id="model-sod">
+<h2>5. Model SOD<a class="headerlink" href="#model-sod" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Buat model SOD dengan fraction 0.1</span>
+<span class="n">sod</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="s1">&#39;sod&#39;</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># Assign hasil prediksi ke dataset</span>
+<span class="n">results_sod</span> <span class="o">=</span> <span class="n">assign_model</span><span class="p">(</span><span class="n">sod</span><span class="p">)</span>
+
+<span class="c1"># Tampilkan ringkasan hasil (10 baris pertama)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ringkasan Hasil Outlier Detection (SOD):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results_sod</span><span class="p">[[</span><span class="s1">&#39;sepal_length&#39;</span><span class="p">,</span><span class="s1">&#39;sepal_width&#39;</span><span class="p">,</span><span class="s1">&#39;petal_length&#39;</span><span class="p">,</span><span class="s1">&#39;petal_width&#39;</span><span class="p">,</span><span class="s1">&#39;Anomaly&#39;</span><span class="p">,</span><span class="s1">&#39;Anomaly_Score&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+
+<span class="c1"># Visualisasi scatter plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">results_sod</span><span class="p">[</span><span class="s1">&#39;sepal_length&#39;</span><span class="p">],</span> <span class="n">results_sod</span><span class="p">[</span><span class="s1">&#39;sepal_width&#39;</span><span class="p">],</span>
+    <span class="n">c</span><span class="o">=</span><span class="n">results_sod</span><span class="p">[</span><span class="s1">&#39;Anomaly&#39;</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;coolwarm&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Visualisasi Outlier dengan SOD&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Sepal Length&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Sepal Width&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h2>Informasi Setup<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Description</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Session id</p></td>
+<td><p>123</p></td>
+</tr>
+<tr class="row-odd"><td><p>Original data shape</p></td>
+<td><p>(150, 4)</p></td>
+</tr>
+<tr class="row-even"><td><p>Transformed data shape</p></td>
+<td><p>(150, 4)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Numeric features</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>Preprocess</p></td>
+<td><p>True</p></td>
+</tr>
+<tr class="row-odd"><td><p>Imputation type</p></td>
+<td><p>simple</p></td>
+</tr>
+<tr class="row-even"><td><p>Numeric imputation</p></td>
+<td><p>mean</p></td>
+</tr>
+<tr class="row-odd"><td><p>Categorical imputation</p></td>
+<td><p>mode</p></td>
+</tr>
+<tr class="row-even"><td><p>CPU Jobs</p></td>
+<td><p>-1</p></td>
+</tr>
+<tr class="row-odd"><td><p>Use GPU</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-even"><td><p>Log Experiment</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-odd"><td><p>Experiment Name</p></td>
+<td><p>anomaly-default-name</p></td>
+</tr>
+<tr class="row-even"><td><p>USI</p></td>
+<td><p>bfe8</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="id2">
+<h2>Ringkasan Hasil Outlier Detection (10 baris pertama)<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>sepal_length</p></th>
+<th class="head"><p>sepal_width</p></th>
+<th class="head"><p>petal_length</p></th>
+<th class="head"><p>petal_width</p></th>
+<th class="head"><p>Anomaly</p></th>
+<th class="head"><p>Anomaly_Score</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>7.2</p></td>
+<td><p>3.0</p></td>
+<td><p>5.8</p></td>
+<td><p>1.6</p></td>
+<td><p>1</p></td>
+<td><p>0.307002</p></td>
+</tr>
+<tr class="row-odd"><td><p>6.1</p></td>
+<td><p>2.6</p></td>
+<td><p>5.6</p></td>
+<td><p>1.4</p></td>
+<td><p>1</p></td>
+<td><p>0.450000</p></td>
+</tr>
+<tr class="row-even"><td><p>4.5</p></td>
+<td><p>2.3</p></td>
+<td><p>1.3</p></td>
+<td><p>0.3</p></td>
+<td><p>1</p></td>
+<td><p>0.444297</p></td>
+</tr>
+<tr class="row-odd"><td><p>6.7</p></td>
+<td><p>2.5</p></td>
+<td><p>5.8</p></td>
+<td><p>1.8</p></td>
+<td><p>1</p></td>
+<td><p>0.610000</p></td>
+</tr>
+<tr class="row-even"><td><p>4.9</p></td>
+<td><p>2.5</p></td>
+<td><p>4.5</p></td>
+<td><p>1.7</p></td>
+<td><p>1</p></td>
+<td><p>0.450000</p></td>
+</tr>
+<tr class="row-odd"><td><p>5.8</p></td>
+<td><p>2.8</p></td>
+<td><p>5.1</p></td>
+<td><p>2.4</p></td>
+<td><p>1</p></td>
+<td><p>0.429011</p></td>
+</tr>
+<tr class="row-even"><td><p>7.1</p></td>
+<td><p>3.0</p></td>
+<td><p>5.9</p></td>
+<td><p>2.1</p></td>
+<td><p>1</p></td>
+<td><p>0.285045</p></td>
+</tr>
+<tr class="row-odd"><td><p>6.0</p></td>
+<td><p>2.2</p></td>
+<td><p>5.0</p></td>
+<td><p>1.5</p></td>
+<td><p>1</p></td>
+<td><p>0.450000</p></td>
+</tr>
+<tr class="row-even"><td><p>7.2</p></td>
+<td><p>3.2</p></td>
+<td><p>6.0</p></td>
+<td><p>1.8</p></td>
+<td><p>1</p></td>
+<td><p>0.284429</p></td>
+</tr>
+<tr class="row-odd"><td><p>4.6</p></td>
+<td><p>3.6</p></td>
+<td><p>1.0</p></td>
+<td><p>0.2</p></td>
+<td><p>1</p></td>
+<td><p>0.332340</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="id3">
+<h2>Statistik Outlier<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Total Data</strong>     : 150</p></li>
+<li><p><strong>Normal Data</strong>    : 135</p></li>
+<li><p><strong>Outlier Data</strong>   : 15</p></li>
+<li><p><strong>Persentase Outlier</strong> : 10.00%</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="id4">
+<h2>Ringkasan Jumlah Data<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Kategori</p></th>
+<th class="head"><p>Jumlah</p></th>
+<th class="head"><p>Persentase</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Normal</p></td>
+<td><p>135</p></td>
+<td><p>90.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Outlier</p></td>
+<td><p>15</p></td>
+<td><p>10.0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="visualisasi-deteksi-outlier-sod">
+<h3>Visualisasi Deteksi Outlier SOD<a class="headerlink" href="#visualisasi-deteksi-outlier-sod" title="Link to this heading">#</a></h3>
+<p><img alt="Menampilkan visual deteksi Outlier" src="_images/visual_deteksi_outlier_sod.png" /></p>
+</section>
+</section>
+<section id="model-iforest">
+<h2>6. Model IFOREST<a class="headerlink" href="#model-iforest" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">## Buat model Isolation Forest dengan fraction 0.1</span>
+<span class="n">iforest</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="s1">&#39;iforest&#39;</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># Assign hasil prediksi ke dataset</span>
+<span class="n">results_iforest</span> <span class="o">=</span> <span class="n">assign_model</span><span class="p">(</span><span class="n">iforest</span><span class="p">)</span>
+
+<span class="c1"># Tampilkan ringkasan hasil (10 baris pertama)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ringkasan Hasil Outlier Detection (IFOREST):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results_iforest</span><span class="p">[[</span><span class="s1">&#39;sepal_length&#39;</span><span class="p">,</span><span class="s1">&#39;sepal_width&#39;</span><span class="p">,</span><span class="s1">&#39;petal_length&#39;</span><span class="p">,</span><span class="s1">&#39;petal_width&#39;</span><span class="p">,</span><span class="s1">&#39;Anomaly&#39;</span><span class="p">,</span><span class="s1">&#39;Anomaly_Score&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+
+<span class="c1"># Visualisasi scatter plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">results_iforest</span><span class="p">[</span><span class="s1">&#39;sepal_length&#39;</span><span class="p">],</span> <span class="n">results_iforest</span><span class="p">[</span><span class="s1">&#39;sepal_width&#39;</span><span class="p">],</span>
+    <span class="n">c</span><span class="o">=</span><span class="n">results_iforest</span><span class="p">[</span><span class="s1">&#39;Anomaly&#39;</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;coolwarm&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Visualisasi Outlier dengan IFOREST&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Sepal Length&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Sepal Width&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h2>Informasi Setup<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Description</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Session id</p></td>
+<td><p>123</p></td>
+</tr>
+<tr class="row-odd"><td><p>Original data shape</p></td>
+<td><p>(150, 4)</p></td>
+</tr>
+<tr class="row-even"><td><p>Transformed data shape</p></td>
+<td><p>(150, 4)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Numeric features</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>Preprocess</p></td>
+<td><p>True</p></td>
+</tr>
+<tr class="row-odd"><td><p>Imputation type</p></td>
+<td><p>simple</p></td>
+</tr>
+<tr class="row-even"><td><p>Numeric imputation</p></td>
+<td><p>mean</p></td>
+</tr>
+<tr class="row-odd"><td><p>Categorical imputation</p></td>
+<td><p>mode</p></td>
+</tr>
+<tr class="row-even"><td><p>CPU Jobs</p></td>
+<td><p>-1</p></td>
+</tr>
+<tr class="row-odd"><td><p>Use GPU</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-even"><td><p>Log Experiment</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-odd"><td><p>Experiment Name</p></td>
+<td><p>anomaly-default-name</p></td>
+</tr>
+<tr class="row-even"><td><p>USI</p></td>
+<td><p>e496</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="id6">
+<h2>Ringkasan Hasil Outlier Detection (10 baris pertama)<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>sepal_length</p></th>
+<th class="head"><p>sepal_width</p></th>
+<th class="head"><p>petal_length</p></th>
+<th class="head"><p>petal_width</p></th>
+<th class="head"><p>Anomaly</p></th>
+<th class="head"><p>Anomaly_Score</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>5.8</p></td>
+<td><p>2.8</p></td>
+<td><p>5.1</p></td>
+<td><p>2.4</p></td>
+<td><p>1</p></td>
+<td><p>-0.385082</p></td>
+</tr>
+<tr class="row-odd"><td><p>5.7</p></td>
+<td><p>4.4</p></td>
+<td><p>1.5</p></td>
+<td><p>0.4</p></td>
+<td><p>1</p></td>
+<td><p>-0.592311</p></td>
+</tr>
+<tr class="row-even"><td><p>7.2</p></td>
+<td><p>3.6</p></td>
+<td><p>6.1</p></td>
+<td><p>2.5</p></td>
+<td><p>1</p></td>
+<td><p>-0.612383</p></td>
+</tr>
+<tr class="row-odd"><td><p>6.7</p></td>
+<td><p>2.5</p></td>
+<td><p>5.8</p></td>
+<td><p>1.8</p></td>
+<td><p>1</p></td>
+<td><p>-0.084224</p></td>
+</tr>
+<tr class="row-even"><td><p>4.9</p></td>
+<td><p>2.5</p></td>
+<td><p>4.5</p></td>
+<td><p>1.7</p></td>
+<td><p>1</p></td>
+<td><p>-0.050388</p></td>
+</tr>
+<tr class="row-odd"><td><p>7.7</p></td>
+<td><p>3.8</p></td>
+<td><p>6.7</p></td>
+<td><p>2.2</p></td>
+<td><p>1</p></td>
+<td><p>-0.129286</p></td>
+</tr>
+<tr class="row-even"><td><p>7.7</p></td>
+<td><p>2.6</p></td>
+<td><p>6.9</p></td>
+<td><p>2.3</p></td>
+<td><p>1</p></td>
+<td><p>-0.692992</p></td>
+</tr>
+<tr class="row-odd"><td><p>6.3</p></td>
+<td><p>3.3</p></td>
+<td><p>6.0</p></td>
+<td><p>2.5</p></td>
+<td><p>1</p></td>
+<td><p>-0.364475</p></td>
+</tr>
+<tr class="row-even"><td><p>5.2</p></td>
+<td><p>2.7</p></td>
+<td><p>3.9</p></td>
+<td><p>1.4</p></td>
+<td><p>1</p></td>
+<td><p>-0.885601</p></td>
+</tr>
+<tr class="row-odd"><td><p>4.6</p></td>
+<td><p>3.6</p></td>
+<td><p>1.0</p></td>
+<td><p>0.2</p></td>
+<td><p>1</p></td>
+<td><p>-0.771745</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="id7">
+<h2>Statistik Outlier<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Total Data</strong>     : 150</p></li>
+<li><p><strong>Normal Data</strong>    : 135</p></li>
+<li><p><strong>Outlier Data</strong>   : 15</p></li>
+<li><p><strong>Persentase Outlier</strong> : 10.00%</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="id8">
+<h2>Ringkasan Jumlah Data<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Kategori</p></th>
+<th class="head"><p>Jumlah</p></th>
+<th class="head"><p>Persentase</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Normal</p></td>
+<td><p>135</p></td>
+<td><p>90.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Outlier</p></td>
+<td><p>15</p></td>
+<td><p>10.0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="visualisasi-deteksi-outlier-iforest">
+<h3>Visualisasi Deteksi Outlier IFOREST<a class="headerlink" href="#visualisasi-deteksi-outlier-iforest" title="Link to this heading">#</a></h3>
+<p><img alt="Menampilkan visual deteksi Outlier" src="_images/visual_deteksi_outlier_iforest.png" /></p>
+</section>
+</section>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -573,12 +1226,12 @@ Setosa (50), Versicolor (50), Virginica (50).</p></li>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="bisnis.html"
+       href="preprocessing.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Memahami Bisnis</p>
+        <p class="prev-next-title">Data Preprocessing</p>
       </div>
     </a>
     <a class="right-next"
@@ -606,6 +1259,7 @@ Setosa (50), Versicolor (50), Virginica (50).</p></li>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Data Understanding</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#struktur-data">Struktur Data</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mysql">MySQL</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#postgresql">PostgreSQL</a></li>
@@ -614,6 +1268,39 @@ Setosa (50), Versicolor (50), Virginica (50).</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kualitas-data">Kualitas Data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribusi-awal">Distribusi Awal</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier-pada-dataset-iris-dengan-pycaret">Deteksi Outlier pada Dataset Iris dengan PyCaret</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">1. Import Library</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-dataset">2. Load Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-up-pycaret">3. Set up Pycaret</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-abod">4. Model ABOD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#informasi-setup">Informasi Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-hasil-outlier-detection-10-baris-pertama">Ringkasan Hasil Outlier Detection (10 baris pertama)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#statistik-outlier">Statistik Outlier</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-jumlah-data">Ringkasan Jumlah Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-deteksi-outlier-abod">Visualisasi Deteksi Outlier ABOD</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-sod">5. Model SOD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Informasi Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Ringkasan Hasil Outlier Detection (10 baris pertama)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Statistik Outlier</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Ringkasan Jumlah Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-deteksi-outlier-sod">Visualisasi Deteksi Outlier SOD</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-iforest">6. Model IFOREST</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Informasi Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Ringkasan Hasil Outlier Detection (10 baris pertama)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Statistik Outlier</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Ringkasan Jumlah Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-deteksi-outlier-iforest">Visualisasi Deteksi Outlier IFOREST</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
   </nav></div>
 
 </div></div>
