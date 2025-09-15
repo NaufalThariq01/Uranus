@@ -67,6 +67,7 @@ plt.tight_layout()
 plt.show()
 ```
 ## Visualisasi 
+![Menampilkan visual deteksi Outlier](_build/html/_static/images/before_after_outlier_abod.png) 
 
 ## 2. MODEL IFOREST
 
@@ -108,6 +109,9 @@ axes[1].set_ylabel("Sepal Width")
 plt.tight_layout()
 plt.show()
 ```
+## Visualisasi 
+![Menampilkan visual deteksi Outlier](_build/html/_static/images/before_after_outlier_iforest.png)
+
 ## 3. MODEL SOD
 
 ```python
@@ -148,3 +152,5 @@ axes[1].set_ylabel("Sepal Width")
 plt.tight_layout()
 plt.show()
 ```
+## Visualisasi 
+![Menampilkan visual deteksi Outlier](_build/html/_static/images/before_after_outlier_sod.png) 
