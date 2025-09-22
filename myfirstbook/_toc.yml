@@ -11,8 +11,8 @@ chapters:
   - file: preprocessing
     title: Data Preprocessing
     sections: 
-    -file: oversampling
-    title: Oversampling
+      -file: oversampling
+      title: Oversampling
   - file: data
     title: Data Understanding
     sections:
