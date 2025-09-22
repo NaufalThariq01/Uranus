@@ -10,6 +10,9 @@ chapters:
     title: Memahami Bisnis
   - file: preprocessing
     title: Data Preprocessing
+    sections: 
+    -file: oversampling
+    title: Oversampling
   - file: data
     title: Data Understanding
     sections:
