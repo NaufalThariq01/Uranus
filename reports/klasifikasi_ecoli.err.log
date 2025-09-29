@@ -25,28 +25,30 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-import matplotlib.pyplot as plt
 import pandas as pd
+import matplotlib.pyplot as plt
 import numpy as np
 from sqlalchemy import create_engine
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import LabelEncoder
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis 
-from sklearn.preprocessing import StandardScaler
 from imblearn.over_sampling import ADASYN, SMOTE
 from collections import Counter
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import BaggingClassifier
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 import seaborn as sns
 ------------------
 
 
 [31m---------------------------------------------------------------------------[39m
 [31mModuleNotFoundError[39m                       Traceback (most recent call last)
-[36mCell[39m[36m [39m[32mIn[1][39m[32m, line 9[39m
-[32m      7[39m [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01msklearn[39;00m[34;01m.[39;00m[34;01mdiscriminant_analysis[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m LinearDiscriminantAnalysis 
-[32m      8[39m [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01msklearn[39;00m[34;01m.[39;00m[34;01mpreprocessing[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m StandardScaler
-[32m----> [39m[32m9[39m [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01mimblearn[39;00m[34;01m.[39;00m[34;01mover_sampling[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m ADASYN, SMOTE
-[32m     10[39m [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01mcollections[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m Counter
-[32m     11[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mseaborn[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01msns[39;00m
+[36mCell[39m[36m [39m[32mIn[1][39m[32m, line 5[39m
+[32m      3[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mnumpy[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mnp[39;00m
+[32m      4[39m [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01msqlalchemy[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m create_engine
+[32m----> [39m[32m5[39m [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01mimblearn[39;00m[34;01m.[39;00m[34;01mover_sampling[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m ADASYN, SMOTE
+[32m      6[39m [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01mcollections[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m Counter
+[32m      7[39m [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01msklearn[39;00m[34;01m.[39;00m[34;01mmodel_selection[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m train_test_split
 
 [31mModuleNotFoundError[39m: No module named 'imblearn'
 
