@@ -60,7 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'preprocessing';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Data Understanding" href="data.html" />
+    <link rel="next" title="Penyeimbangan Data" href="oversampling.html" />
     <link rel="prev" title="Memahami Bisnis" href="bisnis.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -181,16 +181,10 @@
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="bisnis.html">Memahami Bisnis</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Data Preprocessing</a></li>
-
-
-
-
-
-
-
-
-
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Data Preprocessing</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="oversampling.html">Oversampling</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="data.html">Data Understanding</a></li>
 
 </ul>
@@ -388,18 +382,16 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Data Preprocessing</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">1. Import Library</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#load-dataset">2. Load Dataset</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#set-up-pycaret">3. Set up Pycaret</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#model-abod">1. MODEL ABOD</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi">Visualisasi</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#model-iforest">2. MODEL IFOREST</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Visualisasi</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#model-sod">3. MODEL SOD</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Visualisasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">1. Import Library</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-dataset">2. Load Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-up-pycaret">3. Set up Pycaret</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-abod">1. MODEL ABOD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi">Visualisasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-iforest">2. MODEL IFOREST</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Visualisasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-sod">3. MODEL SOD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Visualisasi</a></li>
 </ul>
-
             </nav>
         </div>
     </div>
@@ -410,11 +402,10 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="data-preprocessing">
+  <section class="tex2jax_ignore mathjax_ignore" id="data-preprocessing">
 <h1>Data Preprocessing<a class="headerlink" href="#data-preprocessing" title="Link to this heading">#</a></h1>
-</section>
 <section id="import-library">
-<h1>1. Import Library<a class="headerlink" href="#import-library" title="Link to this heading">#</a></h1>
+<h2>1. Import Library<a class="headerlink" href="#import-library" title="Link to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pycaret.anomaly</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
@@ -422,7 +413,7 @@ document.write(`
 </div>
 </section>
 <section id="load-dataset">
-<h1>2. Load Dataset<a class="headerlink" href="#load-dataset" title="Link to this heading">#</a></h1>
+<h2>2. Load Dataset<a class="headerlink" href="#load-dataset" title="Link to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Baca dataset iris</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data_iris.csv&quot;</span><span class="p">)</span>
 
@@ -432,7 +423,7 @@ document.write(`
 </div>
 </section>
 <section id="set-up-pycaret">
-<h1>3. Set up Pycaret<a class="headerlink" href="#set-up-pycaret" title="Link to this heading">#</a></h1>
+<h2>3. Set up Pycaret<a class="headerlink" href="#set-up-pycaret" title="Link to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Setup anomaly detection</span>
 <span class="n">s</span> <span class="o">=</span> <span class="n">setup</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">session_id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
 </pre></div>
@@ -441,7 +432,7 @@ document.write(`
 <p>menggunakan 3 model:</p>
 </section>
 <section id="model-abod">
-<h1>1. MODEL ABOD<a class="headerlink" href="#model-abod" title="Link to this heading">#</a></h1>
+<h2>1. MODEL ABOD<a class="headerlink" href="#model-abod" title="Link to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 3. Buat model Isolation Forest</span>
 <span class="n">abod</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="s1">&#39;abod&#39;</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span> 
 <span class="n">results</span> <span class="o">=</span> <span class="n">assign_model</span><span class="p">(</span><span class="n">abod</span><span class="p">)</span>
@@ -482,11 +473,11 @@ document.write(`
 </div>
 </section>
 <section id="visualisasi">
-<h1>Visualisasi<a class="headerlink" href="#visualisasi" title="Link to this heading">#</a></h1>
+<h2>Visualisasi<a class="headerlink" href="#visualisasi" title="Link to this heading">#</a></h2>
 <p><img alt="Menampilkan visual deteksi Outlier" src="_images/before_after_outlier_abod.png" /></p>
 </section>
 <section id="model-iforest">
-<h1>2. MODEL IFOREST<a class="headerlink" href="#model-iforest" title="Link to this heading">#</a></h1>
+<h2>2. MODEL IFOREST<a class="headerlink" href="#model-iforest" title="Link to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 3. Buat model Isolation Forest</span>
 <span class="n">iforest</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="s1">&#39;iforest&#39;</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span> 
 <span class="n">results</span> <span class="o">=</span> <span class="n">assign_model</span><span class="p">(</span><span class="n">iforest</span><span class="p">)</span>
@@ -527,11 +518,11 @@ document.write(`
 </div>
 </section>
 <section id="id1">
-<h1>Visualisasi<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<h2>Visualisasi<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <p><img alt="Menampilkan visual deteksi Outlier" src="_images/before_after_outlier_iforest.png" /></p>
 </section>
 <section id="model-sod">
-<h1>3. MODEL SOD<a class="headerlink" href="#model-sod" title="Link to this heading">#</a></h1>
+<h2>3. MODEL SOD<a class="headerlink" href="#model-sod" title="Link to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 3. Buat model Isolation Forest</span>
 <span class="n">sod</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="s1">&#39;sod&#39;</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span> 
 <span class="n">results</span> <span class="o">=</span> <span class="n">assign_model</span><span class="p">(</span><span class="n">sod</span><span class="p">)</span>
@@ -572,8 +563,11 @@ document.write(`
 </div>
 </section>
 <section id="id2">
-<h1>Visualisasi<a class="headerlink" href="#id2" title="Link to this heading">#</a></h1>
+<h2>Visualisasi<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
 <p><img alt="Menampilkan visual deteksi Outlier" src="_images/before_after_outlier_sod.png" /></p>
+</section>
+<div class="toctree-wrapper compound">
+</div>
 </section>
 
     <script type="text/x-thebe-config">
@@ -616,11 +610,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="data.html"
+       href="oversampling.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Data Understanding</p>
+        <p class="prev-next-title">Penyeimbangan Data</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -640,18 +634,16 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Data Preprocessing</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">1. Import Library</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#load-dataset">2. Load Dataset</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#set-up-pycaret">3. Set up Pycaret</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#model-abod">1. MODEL ABOD</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi">Visualisasi</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#model-iforest">2. MODEL IFOREST</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Visualisasi</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#model-sod">3. MODEL SOD</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Visualisasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">1. Import Library</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-dataset">2. Load Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-up-pycaret">3. Set up Pycaret</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-abod">1. MODEL ABOD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi">Visualisasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-iforest">2. MODEL IFOREST</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Visualisasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-sod">3. MODEL SOD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Visualisasi</a></li>
 </ul>
-
   </nav></div>
 
 </div></div>

@@ -5,6 +5,7 @@ format: jb-book
 root: intro
 title: Home
 
+
 parts:
   - caption: Memahami Bisnis
     chapters:
@@ -33,3 +34,22 @@ parts:
     chapters:
       - file: klasifikasi_ecoli
         title: Permodelan
+=======
+chapters:
+  - file: bisnis
+    title: Memahami Bisnis
+
+  - file: preprocessing
+    title: Data Preprocessing
+    sections:
+      - file: oversampling
+        title: Oversampling
+
+  - file: data
+    title: Data Understanding
+    sections:
+      - file: data/eksplorasi-data
+        title: Eksplorasi Data
+      - file: data/gabungan
+        title: Hasil Penggabungan Data
+
