@@ -33,7 +33,21 @@ parts:
       - file: klasifikasi_ecoli
         title: Permodelan
 
-   - caption: Knime
-    chapters:
-      - file: Knime/Workflow_Pra UTS
-        title: Workflow
+chapters:
+  - file: bisnis
+    title: Memahami Bisnis
+
+  - file: preprocessing
+    title: Data Preprocessing
+    sections:
+      - file: oversampling
+        title: Oversampling
+
+  - file: data
+    title: Data Understanding
+    sections:
+      - file: data/eksplorasi-data
+        title: Eksplorasi Data
+      - file: data/gabungan
+        title: Hasil Penggabungan Data
+
