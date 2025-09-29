@@ -1,22 +1,35 @@
-## Table of contents
+# Table of contents
 # Learn more at https://jupyterbook.org/customize/toc.html
 
 format: jb-book
 root: intro
 title: Home
 
-chapters:
-  - file: bisnis
-    title: Memahami Bisnis
-  - file: preprocessing
-    title: Data Preprocessing
-    sections: 
-      -file: oversampling
-      title: Oversampling
-  - file: data
-    title: Data Understanding
-    sections:
-      - file: data/eksplorasi-data
-        title: Eksplorasi Data
-      - file: data/gabungan
-        title: Hasil Penggabungan Data
+parts:
+  - caption: Memahami Bisnis
+    chapters:
+      - file: bisnis
+        title: Memahami Bisnis
+
+  - caption: Data Understanding
+    chapters:
+      - file: data
+        title: Data Understanding
+        sections:
+          - file: data/eksplorasi-data
+            title: Eksplorasi Data
+          - file: data/gabungan
+            title: Hasil Penggabungan Data
+
+  - caption: Data Preprocessing
+    chapters:
+      - file: preprocessing
+        title: Data Preprocessing
+        sections:
+          - file: oversampling
+            title: Oversampling
+
+  - caption: Permodelan
+    chapters:
+      - file: klasifikasi_ecoli
+        title: Permodelan
