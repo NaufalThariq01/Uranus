@@ -32,3 +32,8 @@ parts:
     chapters:
       - file: klasifikasi_ecoli
         title: Permodelan
+
+   - caption: Knime
+    chapters:
+      - file: Knime/Workflow_Pra UTS
+        title: Workflow
