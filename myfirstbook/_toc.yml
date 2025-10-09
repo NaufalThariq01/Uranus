@@ -37,8 +37,3 @@ parts:
     chapters:
       - file: Knime/Workflow_Pra UTS
         title: Workflow
-
-  - caption: Knime
-    chapters:
-      - file: Knime/Workflow_Pra UTS
-        title: Workflow
