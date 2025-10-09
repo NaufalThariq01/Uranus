@@ -2,7 +2,7 @@
 
 Workflow ini digunakan untuk melakukan menangani missing value,Deteksi outlier dan balancing data mengggunakan SMOTE dan dengan tahapan mulai dari koneksi database, pembersihan data, penanganan outlier, penyeimbangan data (SMOTE), hingga evaluasi model.
 
-(gambar workflow)
+![ini adalah Workflow](../_build/html/_static/images/workflow.png)
 
 ---
 
@@ -46,7 +46,7 @@ Menampilkan isi tabel yang telah dibaca dari database.
 
 ### Visualisasi Tabel sebelum penanganan missing value
 
-(gambar)
+![ini adalah tabel ini adalah sebelum missing value](../_build/html/_static/images/tabel_before.png)
 
 ---
 
@@ -62,7 +62,7 @@ Menangani nilai-nilai yang hilang (missing values) dalam dataset.
 
 ### Visualisasi Tabel setelah penanganan missing value
 
-(gambar)
+![ini adalah tabel after missing value](../_build/html/_static/images/tabel_after.png)
 
 
 ---
@@ -78,8 +78,7 @@ Mendeteksi nilai-nilai ekstrim (outlier) pada kolom numerik.
 
 ### Visualisasi box plot setelah deteksi outlier
 
-(gambar)
-
+![ini adalah box plot untuk visualisasi deteksi outlier](../_build/html/_static/images/box_plot_deteksi_outlier.png)
 
 ---
 
@@ -105,7 +104,7 @@ Menangani ketidakseimbangan kelas (imbalanced dataset).
 
 ### Visualisasi bar chart setelah balancing data menggunakan SMOTE
 
-(gambar)
+![ini adalah bar chart untuk visualisasi balancing data menggunakan smote](../_build/html/_static/images/visual_smote.png)
 
 
 ---
