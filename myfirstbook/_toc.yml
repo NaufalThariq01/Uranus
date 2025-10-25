@@ -37,3 +37,9 @@ parts:
     chapters:
       - file: Knime/Workflow_Pra UTS
         title: Workflow
+
+   - caption: Code Space
+    chapters:
+      - file: NO2_Kamal/codespace
+        title: NO2_Kamal
+        
