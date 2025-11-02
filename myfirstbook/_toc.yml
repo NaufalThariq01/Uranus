@@ -31,14 +31,22 @@ parts:
   - caption: Permodelan
     chapters:
       - file: klasifikasi_ecoli
-        title: Permodelan
+        title: Permodelan Ecoli
 
-  - caption: Knime
+  - caption: KNIME Workflow
     chapters:
       - file: Knime/Workflow_Pra UTS
-        title: Workflow
+        title: Workflow Pra-UTS
 
-  - caption: Code Space
+  - caption: Analisis Kualitas Udara (NO₂) - Kabupaten Demak
     chapters:
-      - file: NO2_Kamal/dataspace
-        title: NO2_Kamal
+      - file: NO2_Demak/bussines_understanding
+        title: Business Understanding
+      - file: NO2_Demak/data_understanding
+        title: Data Understanding
+      - file: NO2_Demak/preprocessing
+        title: Data Preprocessing
+      - file: NO2_Demak/modelling
+        title: Modelling
+      - file: NO2_Demak/app
+        title: Aplikasi Streamlit
