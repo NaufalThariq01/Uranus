@@ -50,3 +50,18 @@ parts:
         title: Modelling
       - file: NO2_Demak/app
         title: Aplikasi Streamlit
+    
+  - caption: Audio Recognition - Perintah Buka Tutup
+    chapters:
+      - file: Audio_recognition/bisnis_understanding
+        title: Bisnis Understanding
+      - file: Audio_recognition/data_understanding
+        title: Data Understanding
+      - file: Audio_recognition/data_preparation
+        title: Data Preparation
+      - file: Audio_recognition/preprocessing
+        title: Data Preprocessing
+      - file: Audio_recognition/modelling
+        title: Modelling
+      - file: Audio_recognition/app
+        title: Aplikasi Streamlit
