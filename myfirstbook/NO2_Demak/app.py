@@ -10,12 +10,15 @@ def load_model(day, forecast_type="1day"):
     """
     Memuat model dan scaler sesuai tipe forecast (1 hari atau 3 hari)
     """
+    # Sesuaikan path folder model
+    base_path = os.path.join("myfirstbook", "NO2_Demak")
+
     if forecast_type == "1day":
-        folder = "no2_models"
+        folder = os.path.join(base_path, "no2_models")
         model_file = f"knn_day{day}.pkl"
         scaler_file = f"scaler_day{day}.pkl"
     elif forecast_type == "3day":
-        folder = "no2_models_multiday"
+        folder = os.path.join(base_path, "no2_models_multiday")
         model_file = f"knn_day{day}_forecast3.pkl"
         scaler_file = f"scaler_day{day}_forecast3.pkl"
     else:
@@ -26,6 +29,8 @@ def load_model(day, forecast_type="1day"):
 
     if not os.path.exists(model_path) or not os.path.exists(scaler_path):
         st.error(f"❌ Model atau scaler tidak ditemukan untuk day {day} ({forecast_type}).")
+        st.write("Current working directory:", os.getcwd())
+        st.write("Path dicari:", model_path)
         st.stop()
 
     with open(model_path, "rb") as f:
