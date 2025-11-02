@@ -60,6 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'klasifikasi_ecoli';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="📊 Alur Eksperimen Klasifikasi Naive Bayes dengan KNIME" href="Knime/Workflow_Pra%20UTS.html" />
     <link rel="prev" title="Penyeimbangan Data" href="oversampling.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -217,6 +218,17 @@
 
 
 
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">KNIME Workflow</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Knime/Workflow_Pra%20UTS.html">Workflow Pra-UTS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Analisis Kualitas Udara (NO₂) - Kabupaten Demak</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="NO2_Demak/bussines_understanding.html">Business Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NO2_Demak/data_understanding.html">Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NO2_Demak/preprocessing.html">Data Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NO2_Demak/modelling.html">Modelling</a></li>
 </ul>
 
     </div>
@@ -465,20 +477,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">5</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_engine</span>
-<span class="ne">----&gt; </span><span class="mi">5</span> <span class="kn">from</span><span class="w"> </span><span class="nn">imblearn.over_sampling</span><span class="w"> </span><span class="kn">import</span> <span class="n">ADASYN</span><span class="p">,</span> <span class="n">SMOTE</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;imblearn&#39;
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="load-data">
@@ -651,7 +649,9 @@ Name: count, dtype: int64
 Sorted counts untuk iterasi: [2, 2, 5, 20, 35, 52, 77, 143]
 
 Iterasi 1: menggunakan k_neighbors=1
-Hasil iterasi 1: [(&#39;cp&#39;, 143), (&#39;im&#39;, 77), (&#39;imL&#39;, 142), (&#39;imS&#39;, 2), (&#39;imU&#39;, 35), (&#39;om&#39;, 20), (&#39;omL&#39;, 5), (&#39;pp&#39;, 52)]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Hasil iterasi 1: [(&#39;cp&#39;, 143), (&#39;im&#39;, 77), (&#39;imL&#39;, 142), (&#39;imS&#39;, 2), (&#39;imU&#39;, 35), (&#39;om&#39;, 20), (&#39;omL&#39;, 5), (&#39;pp&#39;, 52)]
 
 Iterasi 2: menggunakan k_neighbors=1
 Hasil iterasi 2: [(&#39;cp&#39;, 143), (&#39;im&#39;, 77), (&#39;imL&#39;, 142), (&#39;imS&#39;, 142), (&#39;imU&#39;, 35), (&#39;om&#39;, 20), (&#39;omL&#39;, 5), (&#39;pp&#39;, 52)]
@@ -663,20 +663,20 @@ Iterasi 4: menggunakan k_neighbors=19
 Hasil iterasi 4: [(&#39;cp&#39;, 143), (&#39;im&#39;, 77), (&#39;imL&#39;, 142), (&#39;imS&#39;, 142), (&#39;imU&#39;, 35), (&#39;om&#39;, 143), (&#39;omL&#39;, 143), (&#39;pp&#39;, 52)]
 
 Iterasi 5: menggunakan k_neighbors=34
-Hasil iterasi 5: [(&#39;cp&#39;, 143), (&#39;im&#39;, 77), (&#39;imL&#39;, 142), (&#39;imS&#39;, 142), (&#39;imU&#39;, 146), (&#39;om&#39;, 143), (&#39;omL&#39;, 143), (&#39;pp&#39;, 52)]
+Hasil iterasi 5: [(&#39;cp&#39;, 143), (&#39;im&#39;, 77), (&#39;imL&#39;, 142), (&#39;imS&#39;, 142), (&#39;imU&#39;, 143), (&#39;om&#39;, 143), (&#39;omL&#39;, 143), (&#39;pp&#39;, 52)]
 
 Iterasi 6: menggunakan k_neighbors=51
-Hasil iterasi 6: [(&#39;cp&#39;, 143), (&#39;im&#39;, 77), (&#39;imL&#39;, 142), (&#39;imS&#39;, 142), (&#39;imU&#39;, 146), (&#39;om&#39;, 143), (&#39;omL&#39;, 143), (&#39;pp&#39;, 143)]
+Hasil iterasi 6: [(&#39;cp&#39;, 143), (&#39;im&#39;, 77), (&#39;imL&#39;, 142), (&#39;imS&#39;, 142), (&#39;imU&#39;, 143), (&#39;om&#39;, 143), (&#39;omL&#39;, 143), (&#39;pp&#39;, 144)]
 
 Iterasi 7: menggunakan k_neighbors=76
-Hasil iterasi 7: [(&#39;cp&#39;, 143), (&#39;im&#39;, 153), (&#39;imL&#39;, 142), (&#39;imS&#39;, 142), (&#39;imU&#39;, 146), (&#39;om&#39;, 143), (&#39;omL&#39;, 143), (&#39;pp&#39;, 143)]
+Hasil iterasi 7: [(&#39;cp&#39;, 143), (&#39;im&#39;, 152), (&#39;imL&#39;, 142), (&#39;imS&#39;, 142), (&#39;imU&#39;, 143), (&#39;om&#39;, 143), (&#39;omL&#39;, 143), (&#39;pp&#39;, 144)]
 
 Distribusi kelas setelah ADASYN:
-[(&#39;cp&#39;, 143), (&#39;im&#39;, 153), (&#39;imL&#39;, 142), (&#39;imS&#39;, 142), (&#39;imU&#39;, 146), (&#39;om&#39;, 143), (&#39;omL&#39;, 143), (&#39;pp&#39;, 143)]
+[(&#39;cp&#39;, 143), (&#39;im&#39;, 152), (&#39;imL&#39;, 142), (&#39;imS&#39;, 142), (&#39;imU&#39;, 143), (&#39;om&#39;, 143), (&#39;omL&#39;, 143), (&#39;pp&#39;, 144)]
 
 Total samples sebelum: 336
-Total samples setelah: 1155
-Data yang ditambahkan: 819
+Total samples setelah: 1152
+Data yang ditambahkan: 816
 </pre></div>
 </div>
 </div>
@@ -719,7 +719,7 @@ Data yang ditambahkan: 819
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/99012f7b21ac9f85a671b41efc41c065e709742015248078554b163d89438667.png" src="_images/99012f7b21ac9f85a671b41efc41c065e709742015248078554b163d89438667.png" />
+<img alt="_images/aa0030669b3be11040021d19866e4012d867e50431eda1604ec0dc997bc18e8d.png" src="_images/aa0030669b3be11040021d19866e4012d867e50431eda1604ec0dc997bc18e8d.png" />
 </div>
 </div>
 </section>
@@ -848,11 +848,11 @@ Classification Report:
 weighted avg       0.73      0.79      0.75       101
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>c:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
   _warn_prf(average, modifier, f&quot;{metric.capitalize()} is&quot;, len(result))
-c:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
   _warn_prf(average, modifier, f&quot;{metric.capitalize()} is&quot;, len(result))
-c:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
   _warn_prf(average, modifier, f&quot;{metric.capitalize()} is&quot;, len(result))
 </pre></div>
 </div>
@@ -916,11 +916,11 @@ Classification Report:
 weighted avg       0.83      0.85      0.84       101
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>c:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
   _warn_prf(average, modifier, f&quot;{metric.capitalize()} is&quot;, len(result))
-c:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
   _warn_prf(average, modifier, f&quot;{metric.capitalize()} is&quot;, len(result))
-c:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
   _warn_prf(average, modifier, f&quot;{metric.capitalize()} is&quot;, len(result))
 </pre></div>
 </div>
@@ -996,26 +996,26 @@ c:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Accuracy: 0.8097982708933718
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Accuracy: 0.8121387283236994
 
 Classification Report:
                precision    recall  f1-score   support
 
-          cp       0.88      1.00      0.93        43
-          im       0.88      0.50      0.64        46
+          cp       0.86      1.00      0.92        43
+          im       0.76      0.54      0.63        46
          imL       1.00      1.00      1.00        43
-         imS       0.95      1.00      0.98        42
-         imU       0.73      0.73      0.73        44
-          om       0.93      0.30      0.46        43
+         imS       0.98      1.00      0.99        42
+         imU       0.71      0.63      0.67        43
+          om       1.00      0.42      0.59        43
          omL       1.00      1.00      1.00        43
-          pp       0.50      0.98      0.66        43
+          pp       0.51      0.93      0.66        43
 
-    accuracy                           0.81       347
-   macro avg       0.86      0.81      0.80       347
-weighted avg       0.86      0.81      0.80       347
+    accuracy                           0.81       346
+   macro avg       0.85      0.82      0.81       346
+weighted avg       0.85      0.81      0.81       346
 </pre></div>
 </div>
-<img alt="_images/084cc8f2be0c0a384fbe12119adf13a77cadc8604b45652ba49ea93f059fd948.png" src="_images/084cc8f2be0c0a384fbe12119adf13a77cadc8604b45652ba49ea93f059fd948.png" />
+<img alt="_images/80403f23f5ff73729c3a7f0d866e05563977d8a6fcd5549b25315aed22b8a16a.png" src="_images/80403f23f5ff73729c3a7f0d866e05563977d8a6fcd5549b25315aed22b8a16a.png" />
 </div>
 </div>
 </section>
@@ -1044,33 +1044,33 @@ weighted avg       0.86      0.81      0.80       347
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ Evaluasi Bagging + ADASYN + Naive Bayes:
-Accuracy: 0.8097982708933718
+Accuracy: 0.8208092485549133
 
 Confusion Matrix:
  [[43  0  0  0  0  0  0  0]
- [ 5 22  0  1 13  0  0  5]
+ [ 3 26  0  0 11  0  0  6]
  [ 0  0 43  0  0  0  0  0]
  [ 0  0  0 42  0  0  0  0]
- [ 0  4  0  1 33  0  0  6]
- [ 0  0  0  0  0 13  0 30]
+ [ 2  8  0  1 27  0  0  5]
+ [ 0  0  0  0  0 20  0 23]
  [ 0  0  0  0  0  0 43  0]
- [ 1  0  0  0  0  0  0 42]]
+ [ 2  1  0  0  0  0  0 40]]
 
 Classification Report:
                precision    recall  f1-score   support
 
-          cp       0.88      1.00      0.93        43
-          im       0.85      0.48      0.61        46
+          cp       0.86      1.00      0.92        43
+          im       0.74      0.57      0.64        46
          imL       1.00      1.00      1.00        43
-         imS       0.95      1.00      0.98        42
-         imU       0.72      0.75      0.73        44
-          om       1.00      0.30      0.46        43
+         imS       0.98      1.00      0.99        42
+         imU       0.71      0.63      0.67        43
+          om       1.00      0.47      0.63        43
          omL       1.00      1.00      1.00        43
-          pp       0.51      0.98      0.67        43
+          pp       0.54      0.93      0.68        43
 
-    accuracy                           0.81       347
-   macro avg       0.86      0.81      0.80       347
-weighted avg       0.86      0.81      0.80       347
+    accuracy                           0.82       346
+   macro avg       0.85      0.82      0.82       346
+weighted avg       0.85      0.82      0.82       346
 </pre></div>
 </div>
 </div>
@@ -1104,7 +1104,7 @@ weighted avg       0.86      0.81      0.80       347
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/a43aac339b4eb7c70abfcd090a0329ed29daec6b4d62a134c40ff59ea2cdb138.png" src="_images/a43aac339b4eb7c70abfcd090a0329ed29daec6b4d62a134c40ff59ea2cdb138.png" />
+<img alt="_images/bcbf7568b9942caae55964603bf0862e1e51bb2959ab647d8f87f696a2c95300.png" src="_images/bcbf7568b9942caae55964603bf0862e1e51bb2959ab647d8f87f696a2c95300.png" />
 </div>
 </div>
 </section>
@@ -1164,7 +1164,7 @@ Classification Report:
 weighted avg       0.86      0.82      0.81       344
 </pre></div>
 </div>
-<img alt="_images/7dec3d1818b1f5f5a0e1d1c01c6dab02a525309f2d740fc53438dbd6d5972f2d.png" src="_images/7dec3d1818b1f5f5a0e1d1c01c6dab02a525309f2d740fc53438dbd6d5972f2d.png" />
+<img alt="_images/6bcd85601d797faa32b65be2ceaf7b6f500a061e4df36b4d0fb08a6d378fb294.png" src="_images/6bcd85601d797faa32b65be2ceaf7b6f500a061e4df36b4d0fb08a6d378fb294.png" />
 </div>
 </div>
 </section>
@@ -1287,7 +1287,7 @@ weighted avg       0.88      0.85      0.84       344
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/662704fcc628b60fce7f444f4acd2b867d05a5a6b29378e78356d1ffea53bea3.png" src="_images/662704fcc628b60fce7f444f4acd2b867d05a5a6b29378e78356d1ffea53bea3.png" />
+<img alt="_images/079fed52931f5c7b3500832acb5396b951eb99778d8065ddca3c5a4b68c9dee5.png" src="_images/079fed52931f5c7b3500832acb5396b951eb99778d8065ddca3c5a4b68c9dee5.png" />
 </div>
 </div>
 </section>
@@ -1350,11 +1350,11 @@ Classification Report:
 weighted avg       0.82      0.82      0.82       101
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>c:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
   _warn_prf(average, modifier, f&quot;{metric.capitalize()} is&quot;, len(result))
-c:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
   _warn_prf(average, modifier, f&quot;{metric.capitalize()} is&quot;, len(result))
-c:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\metrics\_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
   _warn_prf(average, modifier, f&quot;{metric.capitalize()} is&quot;, len(result))
 </pre></div>
 </div>
@@ -1402,26 +1402,26 @@ c:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Accuracy: 0.9510086455331412
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Accuracy: 0.9364161849710982
 
 Classification Report:
                precision    recall  f1-score   support
 
-          cp       0.96      1.00      0.98        43
-          im       0.84      0.80      0.82        46
+          cp       0.93      0.98      0.95        43
+          im       0.82      0.78      0.80        46
          imL       1.00      1.00      1.00        43
          imS       1.00      1.00      1.00        42
-         imU       0.82      0.84      0.83        44
-          om       1.00      1.00      1.00        43
+         imU       0.78      0.84      0.81        43
+          om       1.00      0.98      0.99        43
          omL       1.00      1.00      1.00        43
-          pp       1.00      0.98      0.99        43
+          pp       0.98      0.93      0.95        43
 
-    accuracy                           0.95       347
-   macro avg       0.95      0.95      0.95       347
-weighted avg       0.95      0.95      0.95       347
+    accuracy                           0.94       346
+   macro avg       0.94      0.94      0.94       346
+weighted avg       0.94      0.94      0.94       346
 </pre></div>
 </div>
-<img alt="_images/e45d64bf3120379832576412366530213c88af72c1fddf89aa8f585a06a6a98a.png" src="_images/e45d64bf3120379832576412366530213c88af72c1fddf89aa8f585a06a6a98a.png" />
+<img alt="_images/fc74c2c7bb376d9ee9c2af611effccb456f1a8d42c21ed62599b2bc1450f9a95.png" src="_images/fc74c2c7bb376d9ee9c2af611effccb456f1a8d42c21ed62599b2bc1450f9a95.png" />
 </div>
 </div>
 </section>
@@ -1516,7 +1516,7 @@ weighted avg       0.95      0.94      0.94       344
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/4e6d9bc5089da72d3588ae77b50bfce2f3c0b88720553ea1fa34bf8b1086ef0a.png" src="_images/4e6d9bc5089da72d3588ae77b50bfce2f3c0b88720553ea1fa34bf8b1086ef0a.png" />
+<img alt="_images/fa8fba17b7318aba88b4fc37ffdae81a05848dea7471da9a47321db772f6f96b.png" src="_images/fa8fba17b7318aba88b4fc37ffdae81a05848dea7471da9a47321db772f6f96b.png" />
 </div>
 </div>
 </section>
@@ -1559,6 +1559,15 @@ weighted avg       0.95      0.94      0.94       344
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">Penyeimbangan Data</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="Knime/Workflow_Pra%20UTS.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">📊 Alur Eksperimen Klasifikasi Naive Bayes dengan KNIME</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
