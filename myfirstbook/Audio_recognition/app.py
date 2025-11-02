@@ -1,7 +1,7 @@
 # =====================================
 # app.py - Identifikasi suara "buka" / "tutup"
 # =====================================
-
+import os
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -12,13 +12,25 @@ from scipy.stats import skew, kurtosis
 # ======================
 # Load Model dan Scaler
 # ======================
+
 @st.cache_resource
 def load_model_scaler():
-    model = pickle.load(open('model_RandomForest.pkl', 'rb'))  # ganti sesuai model terbaikmu
-    scaler = pickle.load(open('scaler.pkl', 'rb'))
-    return model, scaler
+    # Pastikan file diambil dari folder yang sama dengan app.py
+    base_dir = os.path.dirname(__file__)
+    model_path = os.path.join(base_dir, "model_RandomForest.pkl")
+    scaler_path = os.path.join(base_dir, "scaler.pkl")
 
-model, scaler = load_model_scaler()
+    # Cek keberadaan file
+    if not os.path.exists(model_path):
+        st.error(f"File model tidak ditemukan: {model_path}")
+        st.stop()
+    if not os.path.exists(scaler_path):
+        st.error(f"File scaler tidak ditemukan: {scaler_path}")
+        st.stop()
+
+    model = pickle.load(open(model_path, "rb"))
+    scaler = pickle.load(open(scaler_path, "rb"))
+    return model, scaler
 
 # ======================
 # Fungsi Ekstraksi Fitur Statistik
