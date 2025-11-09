@@ -7,5 +7,4 @@ seaborn
 scipy
 soundfile
 streamlit
-pickle
 streamlit-webrtc

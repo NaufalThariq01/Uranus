@@ -1,97 +1,136 @@
 # 🧩 4. Data Preparation
+
 ## 4.1 Tujuan
 
-Tahapan Data Preparation bertujuan untuk menyiapkan data audio mentah dari dataset Kaggle agar siap digunakan dalam proses modeling. Proses ini mencakup pengorganisasian ulang dataset, pembersihan awal, penyeragaman format, serta ekstraksi fitur statistik yang akan digunakan sebagai input model klasifikasi.
+Tahapan **Data Preparation** bertujuan untuk menyiapkan data audio mentah dari dua sumber rekaman berbeda agar siap digunakan pada tahap **ekstraksi fitur dan pemodelan klasifikasi suara**.  
+Proses ini mencakup pengorganisasian dataset, penyeragaman format file, pembersihan sinyal, serta penyusunan dataset fitur yang siap dipakai untuk pelatihan model.
+
+---
 
 ## 4.2 Proses Penyiapan Data
-### a. Struktur dan Integrasi Data
 
-Dataset Kaggle terdiri dari dua folder utama:
+### 🎛️ a. Struktur dan Integrasi Data
 
-* train → berisi 150 file audio kelas buka dan 150 file audio kelas tutup
+Dataset berasal dari dua sumber rekaman dengan struktur awal sebagai berikut:
 
-* val (validation/test) → berisi 50 file audio kelas buka dan 50 file audio kelas tutup
+Uranus/
+└── myfirstbook/
+└── Audio_recognition/
+├── Dataset_Voice_pertama/
+│ ├── Buka_wav/
+│ └── Tutup_wav/
+└── Dataset_Voice_kedua/
+├── Buka/
+└── Tutup/
 
-Semua file audio dikumpulkan ke dalam satu struktur baru agar mudah diproses oleh program:
 
-dataset/
+Kedua dataset ini kemudian digabung dan disusun ulang ke dalam format baru agar mudah diproses secara terstruktur:
+
+dataset_merged/
 ├── train/
-│   ├── buka/
-│   └── tutup/
+│ ├── buka/
+│ └── tutup/
 └── test/
-    ├── buka/
-    └── tutup/
+├── buka/
+└── tutup/
 
-Struktur ini digunakan untuk memudahkan pipeline pembacaan data saat proses ekstraksi fitur menggunakan Python.
 
-### b. Penyeragaman Format Audio
+Struktur ini digunakan untuk memudahkan proses pembacaan dan pembagian data (train-test split) pada tahap selanjutnya.
 
-Semua file audio diseragamkan agar memiliki spesifikasi yang sama:
+---
 
-* Format: .wav
+### 🎧 b. Penyeragaman Format Audio
 
-* Sample rate: 48.000 Hz
+Dataset pertama memiliki sebagian file dengan format **.aac**, sementara **Dataset_Voice_kedua** sudah sepenuhnya dalam format **.wav**.  
+Agar konsisten, file dari dataset pertama dikonversi ke `.wav` menggunakan *audio converter* (FFmpeg atau Audacity).
 
-* Kanal: Mono
+Spesifikasi akhir audio:
 
-* Durasi: ±1–2 detik
+| Parameter | Nilai Standar |
+|------------|----------------|
+| Format | `.wav` |
+| Sample rate | 16.000 Hz |
+| Kanal | Mono |
+| Durasi rata-rata | ±1–2 detik |
 
-Proses ini dilakukan menggunakan library librosa dengan fungsi librosa.load(path, sr=48000, mono=True) agar semua sinyal memiliki bentuk time series yang konsisten.
+Setelah konversi, seluruh data audio dari kedua dataset memiliki spesifikasi yang sama dan siap diproses.
 
-### c. Preprocessing Awal
+---
 
-Sebelum melakukan ekstraksi fitur, dilakukan beberapa tahap preprocessing:
+### 🧹 c. Preprocessing Awal
 
-* Normalisasi amplitudo
-Menyamakan skala amplitudo agar sinyal berada di rentang -1 hingga 1.
+Sebelum dilakukan ekstraksi fitur, sinyal audio melalui beberapa tahap *preprocessing* agar data lebih bersih dan seragam:
 
-* Penghapusan noise
-Menggunakan pendekatan spectral gating untuk mengurangi gangguan latar seperti suara angin atau klik.
+| Tahap | Deskripsi |
+|--------|------------|
+| **Normalisasi amplitudo** | Menyelaraskan skala amplitudo ke rentang -1 hingga 1 |
+| **Noise reduction** | Mengurangi gangguan latar (napas, kipas, gema) menggunakan teknik *spectral gating* |
+| **Trimming silence** | Menghapus bagian diam di awal dan akhir rekaman |
+| **Padding durasi** | Menyeragamkan panjang sinyal menggunakan *zero padding* bila durasi kurang dari target |
 
-* Trimming (pemotongan diam)
-Menghapus bagian diam pada awal dan akhir rekaman agar fokus hanya pada bagian utama suara.
+Tahapan ini memastikan setiap file memiliki bentuk sinyal dan energi yang setara sebelum diekstraksi.
 
-* Padding (penyeragaman durasi)
-Jika durasi kurang dari panjang target, bagian kosong diisi dengan nol (zero padding) agar panjang sinyal seragam.
+---
 
-### d. Ekstraksi Fitur Statistik
+### 🧮 d. Ekstraksi Fitur Audio
 
-Setiap file audio kemudian dikonversi menjadi vektor fitur numerik yang mewakili karakteristik statistik sinyal waktu.
-Beberapa fitur yang digunakan adalah:
+Setiap file audio `.wav` dikonversi menjadi vektor numerik berisi **36 fitur audio** yang merepresentasikan karakteristik utama sinyal dari tiga kategori:
 
-| Jenis Fitur                  | Keterangan                                   |
-| ---------------------------- | -------------------------------------------- |
-| **Mean**                     | Nilai rata-rata amplitudo sinyal             |
-| **Standard Deviation**       | Variasi amplitudo sinyal terhadap mean       |
-| **Skewness**                 | Kemiringan distribusi amplitudo sinyal       |
-| **Kurtosis**                 | Kepuncakan distribusi sinyal                 |
-| **Root Mean Square (RMS)**   | Ukuran energi rata-rata sinyal               |
-| **Zero Crossing Rate (ZCR)** | Jumlah perpotongan sinyal terhadap sumbu nol |
+| Jenis Fitur | Contoh | Jumlah |
+|--------------|---------|---------|
+| **Statistik** | mean, std, RMS, skewness | 10 |
+| **Spektral** | spectral centroid, MFCC, chroma | 20 |
+| **Temporal** | duration, tempo, onset rate | 6 |
 
-Nilai-nilai ini diambil langsung dari sinyal time domain tanpa transformasi spektral (tanpa FFT atau MFCC), sesuai dengan batasan masalah penelitian.
+Ekstraksi dilakukan menggunakan kombinasi fungsi dari **librosa** dan **NumPy**, mencakup karakteristik domain waktu dan frekuensi.
 
-### e. Penyusunan Dataset Fitur
+Contoh potongan kode ekstraksi fitur:
 
-Setiap file .wav menghasilkan satu baris data berisi nilai-nilai fitur dan labelnya (“buka” atau “tutup”).
+```python
+import librosa
+import numpy as np
+
+def extract_features(file_path):
+    y, sr = librosa.load(file_path, sr=16000, mono=True)
+    features = []
+
+    # Statistik
+    features += [np.mean(y), np.std(y), np.var(y)]
+    features += [np.mean((y - np.mean(y))**3)/(np.std(y)**3)]
+    features += [np.mean((y - np.mean(y))**4)/(np.std(y)**4)]
+    features += [np.sqrt(np.mean(y**2))]
+    features += [np.mean(librosa.feature.zero_crossing_rate(y))]
+
+    # Spektral
+    features += [
+        np.mean(librosa.feature.spectral_centroid(y=y, sr=sr)),
+        np.mean(librosa.feature.spectral_bandwidth(y=y, sr=sr))
+    ]
+
+    # Tambahan MFCC (5 koefisien utama)
+    mfcc = np.mean(librosa.feature.mfcc(y=y, sr=sr, n_mfcc=5), axis=1)
+    features += list(mfcc)
+    return features
+```
+
+### 📋 e. Penyusunan Dataset Fitur
+
+Setiap file menghasilkan satu baris data berisi nilai-nilai fitur dan label kelasnya (“buka” atau “tutup”).
 Contoh tabel hasil akhir:
 
-| file          | mean  | std  | skew  | kurtosis | rms  | zcr   | label |
-| ------------- | ----- | ---- | ----- | -------- | ---- | ----- | ----- |
-| buka_001.wav  | 0.014 | 0.29 | -0.45 | 2.13     | 0.22 | 0.041 | buka  |
-| tutup_087.wav | 0.008 | 0.25 | 0.33  | 1.97     | 0.19 | 0.038 | tutup |
+| file          | mean  | std  | skew  | kurtosis | rms  | zcr   | mfcc1 | mfcc2 | ... | label |
+| ------------- | ----- | ---- | ----- | -------- | ---- | ----- | ----- | ----- | --- | ----- |
+| buka_001.wav  | 0.014 | 0.29 | -0.45 | 2.13     | 0.22 | 0.041 | -12.3 | 4.7   | ... | buka  |
+| tutup_087.wav | 0.008 | 0.25 | 0.33  | 1.97     | 0.19 | 0.038 | -15.2 | 3.9   | ... | tutup |
 
-Dataset ini kemudian disimpan ke file fitur_statistik.csv yang akan digunakan pada tahap modeling.
+Hasil ekstraksi seluruh file disimpan dalam satu dataset dengan format .csv:
+fitur_audio_36.csv
 
 ## 4.3 Hasil Akhir
 
-Tahap Data Preparation menghasilkan dataset terstruktur yang telah melalui:
+Tahap Data Preparation menghasilkan dataset audio yang telah melalui proses:
 
-Penyeragaman format audio
-
-Pembersihan dan normalisasi sinyal
-
-Ekstraksi fitur statistik
-
-Pelabelan dan penyimpanan hasil ke format CSV
-
-Dataset inilah yang siap digunakan pada proses pelatihan model klasifikasi untuk membedakan suara “buka” dan “tutup”.
+✅ Penyeragaman format audio antar dataset (konversi AAC → WAV bila perlu)
+✅ Normalisasi dan pembersihan sinyal (noise, trimming, padding)
+✅ Ekstraksi 36 fitur audio (statistik, spektral, temporal)
+✅ Pelabelan dan penyimpanan hasil ke file .csv

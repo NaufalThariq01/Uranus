@@ -229,6 +229,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../NO2_Demak/data_understanding.html">Data Understanding</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../NO2_Demak/preprocessing.html">Data Preprocessing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../NO2_Demak/modelling.html">Modelling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NO2_Demak/app.html">Aplikasi Streamlit</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Audio Recognition - Perintah Buka Tutup</span></p>
 <ul class="current nav bd-sidenav">
@@ -237,6 +238,7 @@
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Data Preparation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Data Preprocessing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelling.html">Modelling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">Aplikasi Streamlit</a></li>
 </ul>
 
     </div>
@@ -434,11 +436,11 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan">4.1 Tujuan</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proses-penyiapan-data">4.2 Proses Penyiapan Data</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-struktur-dan-integrasi-data">a. Struktur dan Integrasi Data</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-penyeragaman-format-audio">b. Penyeragaman Format Audio</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-preprocessing-awal">c. Preprocessing Awal</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-ekstraksi-fitur-statistik">d. Ekstraksi Fitur Statistik</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#e-penyusunan-dataset-fitur">e. Penyusunan Dataset Fitur</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-struktur-dan-integrasi-data">🎛️ a. Struktur dan Integrasi Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-penyeragaman-format-audio">🎧 b. Penyeragaman Format Audio</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-preprocessing-awal">🧹 c. Preprocessing Awal</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-ekstraksi-fitur-audio">🧮 d. Ekstraksi Fitur Audio</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#e-penyusunan-dataset-fitur">📋 e. Penyusunan Dataset Fitur</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-akhir">4.3 Hasil Akhir</a></li>
@@ -457,89 +459,151 @@ document.write(`
 <h1>🧩 4. Data Preparation<a class="headerlink" href="#data-preparation" title="Link to this heading">#</a></h1>
 <section id="tujuan">
 <h2>4.1 Tujuan<a class="headerlink" href="#tujuan" title="Link to this heading">#</a></h2>
-<p>Tahapan Data Preparation bertujuan untuk menyiapkan data audio mentah dari dataset Kaggle agar siap digunakan dalam proses modeling. Proses ini mencakup pengorganisasian ulang dataset, pembersihan awal, penyeragaman format, serta ekstraksi fitur statistik yang akan digunakan sebagai input model klasifikasi.</p>
+<p>Tahapan <strong>Data Preparation</strong> bertujuan untuk menyiapkan data audio mentah dari dua sumber rekaman berbeda agar siap digunakan pada tahap <strong>ekstraksi fitur dan pemodelan klasifikasi suara</strong>.<br />
+Proses ini mencakup pengorganisasian dataset, penyeragaman format file, pembersihan sinyal, serta penyusunan dataset fitur yang siap dipakai untuk pelatihan model.</p>
 </section>
+<hr class="docutils" />
 <section id="proses-penyiapan-data">
 <h2>4.2 Proses Penyiapan Data<a class="headerlink" href="#proses-penyiapan-data" title="Link to this heading">#</a></h2>
 <section id="a-struktur-dan-integrasi-data">
-<h3>a. Struktur dan Integrasi Data<a class="headerlink" href="#a-struktur-dan-integrasi-data" title="Link to this heading">#</a></h3>
-<p>Dataset Kaggle terdiri dari dua folder utama:</p>
-<ul class="simple">
-<li><p>train → berisi 150 file audio kelas buka dan 150 file audio kelas tutup</p></li>
-<li><p>val (validation/test) → berisi 50 file audio kelas buka dan 50 file audio kelas tutup</p></li>
-</ul>
-<p>Semua file audio dikumpulkan ke dalam satu struktur baru agar mudah diproses oleh program:</p>
-<p>dataset/
+<h3>🎛️ a. Struktur dan Integrasi Data<a class="headerlink" href="#a-struktur-dan-integrasi-data" title="Link to this heading">#</a></h3>
+<p>Dataset berasal dari dua sumber rekaman dengan struktur awal sebagai berikut:</p>
+<p>Uranus/
+└── myfirstbook/
+└── Audio_recognition/
+├── Dataset_Voice_pertama/
+│ ├── Buka_wav/
+│ └── Tutup_wav/
+└── Dataset_Voice_kedua/
+├── Buka/
+└── Tutup/</p>
+<p>Kedua dataset ini kemudian digabung dan disusun ulang ke dalam format baru agar mudah diproses secara terstruktur:</p>
+<p>dataset_merged/
 ├── train/
-│   ├── buka/
-│   └── tutup/
+│ ├── buka/
+│ └── tutup/
 └── test/
 ├── buka/
 └── tutup/</p>
-<p>Struktur ini digunakan untuk memudahkan pipeline pembacaan data saat proses ekstraksi fitur menggunakan Python.</p>
+<p>Struktur ini digunakan untuk memudahkan proses pembacaan dan pembagian data (train-test split) pada tahap selanjutnya.</p>
 </section>
+<hr class="docutils" />
 <section id="b-penyeragaman-format-audio">
-<h3>b. Penyeragaman Format Audio<a class="headerlink" href="#b-penyeragaman-format-audio" title="Link to this heading">#</a></h3>
-<p>Semua file audio diseragamkan agar memiliki spesifikasi yang sama:</p>
-<ul class="simple">
-<li><p>Format: .wav</p></li>
-<li><p>Sample rate: 48.000 Hz</p></li>
-<li><p>Kanal: Mono</p></li>
-<li><p>Durasi: ±1–2 detik</p></li>
-</ul>
-<p>Proses ini dilakukan menggunakan library librosa dengan fungsi librosa.load(path, sr=48000, mono=True) agar semua sinyal memiliki bentuk time series yang konsisten.</p>
-</section>
-<section id="c-preprocessing-awal">
-<h3>c. Preprocessing Awal<a class="headerlink" href="#c-preprocessing-awal" title="Link to this heading">#</a></h3>
-<p>Sebelum melakukan ekstraksi fitur, dilakukan beberapa tahap preprocessing:</p>
-<ul class="simple">
-<li><p>Normalisasi amplitudo
-Menyamakan skala amplitudo agar sinyal berada di rentang -1 hingga 1.</p></li>
-<li><p>Penghapusan noise
-Menggunakan pendekatan spectral gating untuk mengurangi gangguan latar seperti suara angin atau klik.</p></li>
-<li><p>Trimming (pemotongan diam)
-Menghapus bagian diam pada awal dan akhir rekaman agar fokus hanya pada bagian utama suara.</p></li>
-<li><p>Padding (penyeragaman durasi)
-Jika durasi kurang dari panjang target, bagian kosong diisi dengan nol (zero padding) agar panjang sinyal seragam.</p></li>
-</ul>
-</section>
-<section id="d-ekstraksi-fitur-statistik">
-<h3>d. Ekstraksi Fitur Statistik<a class="headerlink" href="#d-ekstraksi-fitur-statistik" title="Link to this heading">#</a></h3>
-<p>Setiap file audio kemudian dikonversi menjadi vektor fitur numerik yang mewakili karakteristik statistik sinyal waktu.
-Beberapa fitur yang digunakan adalah:</p>
+<h3>🎧 b. Penyeragaman Format Audio<a class="headerlink" href="#b-penyeragaman-format-audio" title="Link to this heading">#</a></h3>
+<p>Dataset pertama memiliki sebagian file dengan format <strong>.aac</strong>, sementara <strong>Dataset_Voice_kedua</strong> sudah sepenuhnya dalam format <strong>.wav</strong>.<br />
+Agar konsisten, file dari dataset pertama dikonversi ke <code class="docutils literal notranslate"><span class="pre">.wav</span></code> menggunakan <em>audio converter</em> (FFmpeg atau Audacity).</p>
+<p>Spesifikasi akhir audio:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head"><p>Jenis Fitur</p></th>
-<th class="head"><p>Keterangan</p></th>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Nilai Standar</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><strong>Mean</strong></p></td>
-<td><p>Nilai rata-rata amplitudo sinyal</p></td>
+<tr class="row-even"><td><p>Format</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">.wav</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>Standard Deviation</strong></p></td>
-<td><p>Variasi amplitudo sinyal terhadap mean</p></td>
+<tr class="row-odd"><td><p>Sample rate</p></td>
+<td><p>16.000 Hz</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>Skewness</strong></p></td>
-<td><p>Kemiringan distribusi amplitudo sinyal</p></td>
+<tr class="row-even"><td><p>Kanal</p></td>
+<td><p>Mono</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>Kurtosis</strong></p></td>
-<td><p>Kepuncakan distribusi sinyal</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>Root Mean Square (RMS)</strong></p></td>
-<td><p>Ukuran energi rata-rata sinyal</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Zero Crossing Rate (ZCR)</strong></p></td>
-<td><p>Jumlah perpotongan sinyal terhadap sumbu nol</p></td>
+<tr class="row-odd"><td><p>Durasi rata-rata</p></td>
+<td><p>±1–2 detik</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Nilai-nilai ini diambil langsung dari sinyal time domain tanpa transformasi spektral (tanpa FFT atau MFCC), sesuai dengan batasan masalah penelitian.</p>
+<p>Setelah konversi, seluruh data audio dari kedua dataset memiliki spesifikasi yang sama dan siap diproses.</p>
+</section>
+<hr class="docutils" />
+<section id="c-preprocessing-awal">
+<h3>🧹 c. Preprocessing Awal<a class="headerlink" href="#c-preprocessing-awal" title="Link to this heading">#</a></h3>
+<p>Sebelum dilakukan ekstraksi fitur, sinyal audio melalui beberapa tahap <em>preprocessing</em> agar data lebih bersih dan seragam:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Tahap</p></th>
+<th class="head"><p>Deskripsi</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Normalisasi amplitudo</strong></p></td>
+<td><p>Menyelaraskan skala amplitudo ke rentang -1 hingga 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Noise reduction</strong></p></td>
+<td><p>Mengurangi gangguan latar (napas, kipas, gema) menggunakan teknik <em>spectral gating</em></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Trimming silence</strong></p></td>
+<td><p>Menghapus bagian diam di awal dan akhir rekaman</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Padding durasi</strong></p></td>
+<td><p>Menyeragamkan panjang sinyal menggunakan <em>zero padding</em> bila durasi kurang dari target</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Tahapan ini memastikan setiap file memiliki bentuk sinyal dan energi yang setara sebelum diekstraksi.</p>
+</section>
+<hr class="docutils" />
+<section id="d-ekstraksi-fitur-audio">
+<h3>🧮 d. Ekstraksi Fitur Audio<a class="headerlink" href="#d-ekstraksi-fitur-audio" title="Link to this heading">#</a></h3>
+<p>Setiap file audio <code class="docutils literal notranslate"><span class="pre">.wav</span></code> dikonversi menjadi vektor numerik berisi <strong>36 fitur audio</strong> yang merepresentasikan karakteristik utama sinyal dari tiga kategori:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Jenis Fitur</p></th>
+<th class="head"><p>Contoh</p></th>
+<th class="head"><p>Jumlah</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Statistik</strong></p></td>
+<td><p>mean, std, RMS, skewness</p></td>
+<td><p>10</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Spektral</strong></p></td>
+<td><p>spectral centroid, MFCC, chroma</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Temporal</strong></p></td>
+<td><p>duration, tempo, onset rate</p></td>
+<td><p>6</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Ekstraksi dilakukan menggunakan kombinasi fungsi dari <strong>librosa</strong> dan <strong>NumPy</strong>, mencakup karakteristik domain waktu dan frekuensi.</p>
+<p>Contoh potongan kode ekstraksi fitur:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">librosa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_features</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="mi">16000</span><span class="p">,</span> <span class="n">mono</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Statistik</span>
+    <span class="n">features</span> <span class="o">+=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span>
+    <span class="n">features</span> <span class="o">+=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">))</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span><span class="p">)]</span>
+    <span class="n">features</span> <span class="o">+=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">))</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">4</span><span class="p">)]</span>
+    <span class="n">features</span> <span class="o">+=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">))]</span>
+    <span class="n">features</span> <span class="o">+=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">zero_crossing_rate</span><span class="p">(</span><span class="n">y</span><span class="p">))]</span>
+
+    <span class="c1"># Spektral</span>
+    <span class="n">features</span> <span class="o">+=</span> <span class="p">[</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">spectral_centroid</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">spectral_bandwidth</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">))</span>
+    <span class="p">]</span>
+
+    <span class="c1"># Tambahan MFCC (5 koefisien utama)</span>
+    <span class="n">mfcc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">mfcc</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">n_mfcc</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">features</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mfcc</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">features</span>
+</pre></div>
+</div>
 </section>
 <section id="e-penyusunan-dataset-fitur">
-<h3>e. Penyusunan Dataset Fitur<a class="headerlink" href="#e-penyusunan-dataset-fitur" title="Link to this heading">#</a></h3>
-<p>Setiap file .wav menghasilkan satu baris data berisi nilai-nilai fitur dan labelnya (“buka” atau “tutup”).
+<h3>📋 e. Penyusunan Dataset Fitur<a class="headerlink" href="#e-penyusunan-dataset-fitur" title="Link to this heading">#</a></h3>
+<p>Setiap file menghasilkan satu baris data berisi nilai-nilai fitur dan label kelasnya (“buka” atau “tutup”).
 Contoh tabel hasil akhir:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -550,6 +614,9 @@ Contoh tabel hasil akhir:</p>
 <th class="head"><p>kurtosis</p></th>
 <th class="head"><p>rms</p></th>
 <th class="head"><p>zcr</p></th>
+<th class="head"><p>mfcc1</p></th>
+<th class="head"><p>mfcc2</p></th>
+<th class="head"><p>…</p></th>
 <th class="head"><p>label</p></th>
 </tr>
 </thead>
@@ -561,6 +628,9 @@ Contoh tabel hasil akhir:</p>
 <td><p>2.13</p></td>
 <td><p>0.22</p></td>
 <td><p>0.041</p></td>
+<td><p>-12.3</p></td>
+<td><p>4.7</p></td>
+<td><p>…</p></td>
 <td><p>buka</p></td>
 </tr>
 <tr class="row-odd"><td><p>tutup_087.wav</p></td>
@@ -570,22 +640,25 @@ Contoh tabel hasil akhir:</p>
 <td><p>1.97</p></td>
 <td><p>0.19</p></td>
 <td><p>0.038</p></td>
+<td><p>-15.2</p></td>
+<td><p>3.9</p></td>
+<td><p>…</p></td>
 <td><p>tutup</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Dataset ini kemudian disimpan ke file fitur_statistik.csv yang akan digunakan pada tahap modeling.</p>
+<p>Hasil ekstraksi seluruh file disimpan dalam satu dataset dengan format .csv:
+fitur_audio_36.csv</p>
 </section>
 </section>
 <section id="hasil-akhir">
 <h2>4.3 Hasil Akhir<a class="headerlink" href="#hasil-akhir" title="Link to this heading">#</a></h2>
-<p>Tahap Data Preparation menghasilkan dataset terstruktur yang telah melalui:</p>
-<p>Penyeragaman format audio</p>
-<p>Pembersihan dan normalisasi sinyal</p>
-<p>Ekstraksi fitur statistik</p>
-<p>Pelabelan dan penyimpanan hasil ke format CSV</p>
-<p>Dataset inilah yang siap digunakan pada proses pelatihan model klasifikasi untuk membedakan suara “buka” dan “tutup”.</p>
+<p>Tahap Data Preparation menghasilkan dataset audio yang telah melalui proses:</p>
+<p>✅ Penyeragaman format audio antar dataset (konversi AAC → WAV bila perlu)
+✅ Normalisasi dan pembersihan sinyal (noise, trimming, padding)
+✅ Ekstraksi 36 fitur audio (statistik, spektral, temporal)
+✅ Pelabelan dan penyimpanan hasil ke file .csv</p>
 </section>
 </section>
 
@@ -655,11 +728,11 @@ Contoh tabel hasil akhir:</p>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan">4.1 Tujuan</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proses-penyiapan-data">4.2 Proses Penyiapan Data</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-struktur-dan-integrasi-data">a. Struktur dan Integrasi Data</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-penyeragaman-format-audio">b. Penyeragaman Format Audio</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-preprocessing-awal">c. Preprocessing Awal</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-ekstraksi-fitur-statistik">d. Ekstraksi Fitur Statistik</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#e-penyusunan-dataset-fitur">e. Penyusunan Dataset Fitur</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-struktur-dan-integrasi-data">🎛️ a. Struktur dan Integrasi Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-penyeragaman-format-audio">🎧 b. Penyeragaman Format Audio</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-preprocessing-awal">🧹 c. Preprocessing Awal</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-ekstraksi-fitur-audio">🧮 d. Ekstraksi Fitur Audio</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#e-penyusunan-dataset-fitur">📋 e. Penyusunan Dataset Fitur</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-akhir">4.3 Hasil Akhir</a></li>
