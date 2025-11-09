@@ -56,13 +56,31 @@ def extract_features(path):
 # ======================
 # Fungsi Prediksi
 # ======================
+# ======================
+# Fungsi Prediksi
+# ======================
 def predict_audio(path):
     X_new = np.array(extract_features(path)).reshape(1, -1)
     X_scaled = scaler.transform(X_new)
+
     probs = model.predict_proba(X_scaled)[0]
-    label = model.classes_[np.argmax(probs)]
+    pred_idx = np.argmax(probs)
+    label_num = model.classes_[pred_idx]
+
+    # Konversi ke label teks kalau model.classes_ masih berupa angka
+    try:
+        # Kalau kamu punya file encoder.pkl (LabelEncoder), bisa pakai ini
+        with open("encoder.pkl", "rb") as f:
+            le = pickle.load(f)
+        label = le.inverse_transform([label_num])[0]
+    except:
+        # Kalau tidak ada, fallback ke label langsung
+        label = str(label_num)
+
+    # Deteksi penyusup (confidence rendah)
     if max(probs) < THRESHOLD:
         label = "Penyusup"
+
     return label, probs
 
 # ======================
