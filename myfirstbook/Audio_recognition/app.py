@@ -117,7 +117,7 @@ def extract_features(file_path):
         f += [0]*6
 
     return f
-
+ 
 # ======================
 # Fungsi Prediksi
 # ======================
