@@ -5,10 +5,12 @@ import soundfile as sf
 import pickle
 import streamlit as st
 from streamlit_webrtc import webrtc_streamer, AudioProcessorBase, RTCConfiguration
+import warnings
 
 # ======================
 # Konfigurasi Global
 # ======================
+warnings.filterwarnings('ignore')
 SAMPLE_RATE = 48000
 THRESHOLD = 0.6
 
@@ -37,89 +39,79 @@ model, scaler = load_model_scaler()
 # ======================
 # Fungsi Ekstraksi Fitur
 # ======================
-def extract_features(file_path):
-    y, sr = librosa.load(file_path, sr=SAMPLE_RATE, mono=True)
-    features = []
+def extract_features(path):
+    y, sr = librosa.load(path, sr=SAMPLE_RATE)
+    y = librosa.util.normalize(y)
+    y_harm, y_perc = librosa.effects.hpss(y)
 
-    # ----- 1. Statistik (10 fitur) -----
-    features.append(np.mean(y))                         # mean
-    features.append(np.std(y))                          # std
-    features.append(np.var(y))                          # var
-    features.append(np.mean((y - np.mean(y))**3)/(np.std(y)**3 + 1e-6))  # skew
-    features.append(np.mean((y - np.mean(y))**4)/(np.std(y)**4 + 1e-6))  # kurtosis
-    features.append(np.sqrt(np.mean(y**2)))            # RMS
-    features.append(np.mean(librosa.feature.zero_crossing_rate(y)))  # ZCR
-
-    # Energy mean & std
-    energy = y**2
-    features.append(np.mean(energy))                   # energy_mean
-    features.append(np.std(energy))                    # energy_std
-
-    # Amplitude range (max-min)
-    features.append(np.max(y) - np.min(y))            # amplitude_range
-
-    # ----- 2. Spektral (20 fitur) -----
-    # Spectral centroid & bandwidth
+    # --- 1. Statistik dasar sinyal ---
+    mean = np.mean(y)
+    std = np.std(y)
+    var = np.var(y)
+    skew = np.mean((y - mean)**3) / (std**3 + 1e-6)
+    kurtosis = np.mean((y - mean)**4) / (std**4 + 1e-6)
+    rms = np.mean(librosa.feature.rms(y=y))
+    zcr = np.mean(librosa.feature.zero_crossing_rate(y))
+    
+    # --- 2. Energi ---
+    energy = y ** 2
+    energy_mean = np.mean(energy)
+    energy_std = np.std(energy)
+    
+    # --- 3. Rentang amplitudo ---
+    amplitude_range = np.max(y) - np.min(y)
+    
+    # --- 4. Spektrum ---
     spec_centroid = librosa.feature.spectral_centroid(y=y, sr=sr)
-    features.append(np.mean(spec_centroid))
-    features.append(np.std(spec_centroid))
-
     spec_bandwidth = librosa.feature.spectral_bandwidth(y=y, sr=sr)
-    features.append(np.mean(spec_bandwidth))
-    features.append(np.std(spec_bandwidth))
-
-    # Spectral contrast (7 bands → mean & std digabung)
     spec_contrast = librosa.feature.spectral_contrast(y=y, sr=sr)
-    features.append(np.mean(spec_contrast))
-    features.append(np.std(spec_contrast))
-
-    # Spectral rolloff
     spec_rolloff = librosa.feature.spectral_rolloff(y=y, sr=sr)
-    features.append(np.mean(spec_rolloff))
-    features.append(np.std(spec_rolloff))
-
-    # Spectral flatness
     spec_flatness = librosa.feature.spectral_flatness(y=y)
-    features.append(np.mean(spec_flatness))
-    features.append(np.std(spec_flatness))
-
-    # Chroma (12 bins → mean & std digabung)
+    
+    # --- 5. Chroma & MFCC ---
     chroma = librosa.feature.chroma_stft(y=y, sr=sr)
-    features.append(np.mean(chroma))
-    features.append(np.std(chroma))
-
-    # MFCC 5 koefisien → mean & std
     mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=5)
-    for i in range(5):
-        features.append(np.mean(mfcc[i]))
-    for i in range(5):
-        features.append(np.std(mfcc[i]))
-
-    # ----- 3. Temporal (6 fitur) -----
-    # Duration
-    features.append(librosa.get_duration(y=y, sr=sr))
-
-    # Tempo
+    
+    # --- 6. Tempo & Onset ---
     onset_env = librosa.onset.onset_strength(y=y, sr=sr)
-    tempo = librosa.beat.tempo(onset_envelope=onset_env, sr=sr)
-    features.append(float(tempo))
-
-    # Onset rate
-    features.append(np.mean(onset_env))
-
-    # Autocorrelation lag (puncak pertama di autocorr)
+    try:
+        tempo = librosa.beat.tempo(onset_envelope=onset_env, sr=sr)[0]
+    except Exception:
+        tempo = 0.0
+    onset_rate = librosa.onset.onset_detect(y=y, sr=sr).shape[0]
+    
+    # --- 7. Autocorrelation lag ---
     autocorr = np.correlate(y, y, mode='full')
-    mid = len(autocorr)//2
-    autocorr_lag = np.argmax(autocorr[mid+1:]) + 1
-    features.append(autocorr_lag)
-
-    # Envelope mean & std
+    autocorr_lag = np.argmax(autocorr[len(autocorr)//2:])
+    
+    # --- 8. Envelope ---
     envelope = np.abs(librosa.onset.onset_strength(y=y, sr=sr))
-    features.append(np.mean(envelope))
-    features.append(np.std(envelope))
-
+    envelope_mean = np.mean(envelope)
+    envelope_std = np.std(envelope)
+    
+    # --- 9. Durasi ---
+    duration = librosa.get_duration(y=y, sr=sr)
+    
+    # --- Gabungkan semua ke array fitur ---
+    features = [
+        mean, std, var, skew, kurtosis, rms, zcr,
+        energy_mean, energy_std, amplitude_range,
+        np.mean(spec_centroid), np.std(spec_centroid),
+        np.mean(spec_bandwidth), np.std(spec_bandwidth),
+        np.mean(spec_contrast), np.std(spec_contrast),
+        np.mean(spec_rolloff), np.std(spec_rolloff),
+        np.mean(spec_flatness), np.std(spec_flatness),
+        np.mean(chroma), np.std(chroma),
+        np.mean(mfcc[0]), np.mean(mfcc[1]), np.mean(mfcc[2]),
+        np.mean(mfcc[3]), np.mean(mfcc[4]),
+        np.std(mfcc[0]), np.std(mfcc[1]), np.std(mfcc[2]),
+        np.std(mfcc[3]), np.std(mfcc[4]),
+        duration, tempo, onset_rate, autocorr_lag,
+        envelope_mean, envelope_std
+    ]
+    
     return features
- 
+
 # ======================
 # Fungsi Prediksi
 # ======================
@@ -141,7 +133,7 @@ st.write("Unggah file .wav atau rekam langsung dari microphone.")
 # Upload File
 uploaded = st.file_uploader("📂 Pilih file audio (.wav)", type=["wav"])
 if uploaded:
-    path = "temp_upload.wav"
+    path = os.path.join(os.getcwd(), "temp_upload.wav")
     with open(path, "wb") as f:
         f.write(uploaded.getbuffer())
     st.audio(uploaded, format="audio/wav")
@@ -161,7 +153,8 @@ st.header("🎤 Rekam dari Microphone")
 class AudioProcessor(AudioProcessorBase):
     def recv_audio(self, frame):
         data = frame.to_ndarray().flatten()
-        sf.write("temp_mic.wav", data, 48000)
+        temp_path = os.path.join(os.getcwd(), "temp_mic.wav")
+        sf.write(temp_path, data, SAMPLE_RATE)
         return frame
 
 webrtc_streamer(
@@ -173,7 +166,8 @@ webrtc_streamer(
 
 if st.button("🔍 Deteksi dari Microphone"):
     try:
-        label, probs = predict_audio("temp_mic.wav")
+        temp_path = os.path.join(os.getcwd(), "temp_mic.wav")
+        label, probs = predict_audio(temp_path)
         st.subheader("🎯 Hasil Prediksi")
         st.write(f"**Kategori:** {label}")
         st.write("📊 Probabilitas:")
