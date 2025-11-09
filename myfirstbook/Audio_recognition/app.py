@@ -40,48 +40,34 @@ model, scaler = load_model_scaler()
 # Fungsi Ekstraksi Fitur
 # ======================
 def extract_features(path):
-    y, sr = librosa.load(path, sr=48000)
+    y, sr = librosa.load(path, sr=SAMPLE_RATE)
     y = librosa.util.normalize(y)
 
-    # --- Fitur yang diperlukan ---
     zcr = np.mean(librosa.feature.zero_crossing_rate(y))
     mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=5)
     mfcc1_std = np.std(mfcc[0])
     mfcc3_mean = np.mean(mfcc[2])
 
-    # Hanya 3 fitur sesuai hasil seleksi
-    features = [mfcc1_std, zcr, mfcc3_mean]
-    return features
+    return [mfcc1_std, zcr, mfcc3_mean]
 
-# ======================
-# Fungsi Prediksi
-# ======================
 # ======================
 # Fungsi Prediksi
 # ======================
 def predict_audio(path):
     X_new = np.array(extract_features(path)).reshape(1, -1)
     X_scaled = scaler.transform(X_new)
-
     probs = model.predict_proba(X_scaled)[0]
     pred_idx = np.argmax(probs)
     label_num = model.classes_[pred_idx]
 
-    # Konversi ke label teks kalau model.classes_ masih berupa angka
-    try:
-        # Kalau kamu punya file encoder.pkl (LabelEncoder), bisa pakai ini
-        with open("encoder.pkl", "rb") as f:
-            le = pickle.load(f)
-        label = le.inverse_transform([label_num])[0]
-    except:
-        # Kalau tidak ada, fallback ke label langsung
-        label = str(label_num)
+    # Mapping label angka ke teks
+    label_map = {0: "buka", 1: "tutup"}
+    label = label_map.get(label_num, "unknown")
 
-    # Deteksi penyusup (confidence rendah)
     if max(probs) < THRESHOLD:
         label = "Penyusup"
 
-    return label, probs
+    return label, probs, label_map
 
 # ======================
 # UI Streamlit
@@ -97,12 +83,15 @@ if uploaded:
         f.write(uploaded.getbuffer())
     st.audio(uploaded, format="audio/wav")
 
-    label, probs = predict_audio(path)
+    label, probs, label_map = predict_audio(path)
+
     st.subheader("🎯 Hasil Prediksi")
     st.write(f"**Kategori:** {label}")
+
     st.write("📊 Probabilitas:")
-    for l, p in zip(model.classes_, probs):
-        st.write(f"- {l}: {p:.2f}")
+    for i, p in zip(model.classes_, probs):
+        st.write(f"- {label_map[i]}: {p:.2f}")
+
     if label == "Penyusup":
         st.warning("⚠️ Suara tidak dikenali!")
 
@@ -126,12 +115,15 @@ webrtc_streamer(
 if st.button("🔍 Deteksi dari Microphone"):
     try:
         temp_path = os.path.join(os.getcwd(), "temp_mic.wav")
-        label, probs = predict_audio(temp_path)
+        label, probs, label_map = predict_audio(temp_path)
+
         st.subheader("🎯 Hasil Prediksi")
         st.write(f"**Kategori:** {label}")
+
         st.write("📊 Probabilitas:")
-        for l, p in zip(model.classes_, probs):
-            st.write(f"- {l}: {p:.2f}")
+        for i, p in zip(model.classes_, probs):
+            st.write(f"- {label_map[i]}: {p:.2f}")
+
         if label == "Penyusup":
             st.warning("⚠️ Suara tidak dikenali!")
     except Exception as e:
