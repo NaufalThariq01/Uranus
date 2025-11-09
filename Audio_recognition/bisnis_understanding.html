@@ -61,7 +61,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="🧠 2. Data Understanding" href="data_understanding.html" />
-    <link rel="prev" title="Modelling" href="../NO2_Demak/modelling.html" />
+    <link rel="prev" title="LINK STREAMLIT" href="../NO2_Demak/app.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -229,6 +229,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../NO2_Demak/data_understanding.html">Data Understanding</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../NO2_Demak/preprocessing.html">Data Preprocessing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../NO2_Demak/modelling.html">Modelling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NO2_Demak/app.html">Aplikasi Streamlit</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Audio Recognition - Perintah Buka Tutup</span></p>
 <ul class="current nav bd-sidenav">
@@ -237,6 +238,7 @@
 <li class="toctree-l1"><a class="reference internal" href="data_preparation.html">Data Preparation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Data Preprocessing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelling.html">Modelling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">Aplikasi Streamlit</a></li>
 </ul>
 
     </div>
@@ -432,7 +434,13 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#latar-belakang">1.1 Latar Belakang</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#latar-belakang">1.1 Latar Belakang</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitur-statistik">🔹 Fitur Statistik</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitur-spektral">🔹 Fitur Spektral</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitur-temporal">🔹 Fitur Temporal</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#total-keseluruhan">🔹 Total Keseluruhan</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan-penelitian">1.2 Tujuan Penelitian</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rumusan-masalah">1.3 Rumusan Masalah</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batasan-masalah">1.4 Batasan Masalah</a></li>
@@ -453,41 +461,133 @@ document.write(`
 <h1>🧩 1. Business Understanding<a class="headerlink" href="#business-understanding" title="Link to this heading">#</a></h1>
 <section id="latar-belakang">
 <h2>1.1 Latar Belakang<a class="headerlink" href="#latar-belakang" title="Link to this heading">#</a></h2>
-<p>Dalam era digital dan otomasi, sistem yang mampu mengenali suara secara otomatis memiliki peran penting dalam berbagai bidang seperti smart home, voice command system, hingga safety monitoring. Salah satu penerapan sederhana namun bermanfaat adalah identifikasi suara “buka” dan “tutup”, yang dapat digunakan untuk mendeteksi aktivitas fisik seperti membuka atau menutup pintu, kotak, atau wadah tertentu.</p>
-<p>Pengenalan suara umumnya dilakukan menggunakan teknik analisis frekuensi seperti spectrogram atau MFCC. Namun, pendekatan tersebut memerlukan komputasi yang relatif tinggi. Oleh karena itu, penelitian ini mencoba menggunakan pendekatan yang lebih ringan, yaitu analisis fitur statistik dari sinyal time series audio, untuk membedakan antara dua jenis suara: “buka” dan “tutup”.</p>
-<p>Dengan pendekatan ini, sistem diharapkan tetap dapat mengenali pola suara secara efisien tanpa memerlukan transformasi domain frekuensi.</p>
+<p>Dalam era digital dan otomasi, sistem pengenalan suara (voice recognition) memiliki peran penting dalam berbagai bidang, mulai dari <em>smart home</em>, perintah suara (<em>voice command</em>), hingga sistem keamanan cerdas. Salah satu penerapan sederhana namun relevan adalah identifikasi suara <strong>“buka”</strong> dan <strong>“tutup”</strong>, yang dapat digunakan untuk mendeteksi aktivitas fisik seperti membuka atau menutup pintu, laci, atau wadah tertentu.</p>
+<p>Pengenalan suara biasanya dilakukan menggunakan pendekatan berbasis analisis frekuensi seperti <strong>Spectrogram</strong> atau <strong>Mel-Frequency Cepstral Coefficients (MFCC)</strong>. Namun, metode tersebut membutuhkan komputasi yang cukup tinggi dan tidak selalu efisien untuk aplikasi sederhana atau perangkat dengan sumber daya terbatas.</p>
+<p>Penelitian ini mencoba pendekatan <strong>ringan namun efektif</strong>, yaitu dengan mengekstraksi <strong>36 fitur utama</strong> dari sinyal audio yang dikelompokkan menjadi tiga jenis utama: <strong>fitur statistik, spektral, dan temporal</strong>.</p>
+<hr class="docutils" />
+<section id="fitur-statistik">
+<h3>🔹 Fitur Statistik<a class="headerlink" href="#fitur-statistik" title="Link to this heading">#</a></h3>
+<p>Merepresentasikan karakteristik bentuk gelombang secara numerik berdasarkan distribusi amplitudo sinyal.</p>
+<p>Beberapa fitur yang digunakan:</p>
+<ul class="simple">
+<li><p>Mean amplitude – rata-rata nilai amplitudo sinyal</p></li>
+<li><p>Standard deviation – ukuran sebaran amplitudo terhadap rata-rata</p></li>
+<li><p>Variance</p></li>
+<li><p>Skewness – tingkat kemiringan distribusi sinyal</p></li>
+<li><p>Kurtosis – tingkat keruncingan distribusi</p></li>
+<li><p>Root Mean Square (RMS) – kekuatan energi rata-rata sinyal</p></li>
+<li><p>Zero Crossing Rate (ZCR) – frekuensi perubahan tanda positif/negatif pada sinyal</p></li>
+<li><p>Energy mean &amp; std</p></li>
+<li><p>Amplitude max &amp; min</p></li>
+</ul>
+<p>➡️ <strong>Total: 10 fitur statistik</strong></p>
+</section>
+<hr class="docutils" />
+<section id="fitur-spektral">
+<h3>🔹 Fitur Spektral<a class="headerlink" href="#fitur-spektral" title="Link to this heading">#</a></h3>
+<p>Menggambarkan karakteristik frekuensi dan energi dalam domain spektrum sinyal audio.</p>
+<p>Beberapa fitur yang digunakan:</p>
+<ul class="simple">
+<li><p>Spectral centroid (mean, std) – posisi pusat energi spektrum</p></li>
+<li><p>Spectral bandwidth (mean, std) – lebar pita frekuensi utama</p></li>
+<li><p>Spectral contrast (mean, std) – perbedaan antara puncak dan lembah energi spektrum</p></li>
+<li><p>Spectral roll-off (mean, std) – frekuensi di mana energi kumulatif mencapai 85–95%</p></li>
+<li><p>Spectral flatness (mean, std) – tingkat keseragaman spektrum</p></li>
+<li><p>Chroma features (mean, std) – distribusi energi per nada musik (12 bin)</p></li>
+<li><p>MFCC (mean, std untuk 5 koefisien utama) – representasi mel-scale dari spektrum</p></li>
+</ul>
+<p>➡️ <strong>Total: 20 fitur spektral</strong></p>
+</section>
+<hr class="docutils" />
+<section id="fitur-temporal">
+<h3>🔹 Fitur Temporal<a class="headerlink" href="#fitur-temporal" title="Link to this heading">#</a></h3>
+<p>Berhubungan dengan aspek waktu dan dinamika perubahan sinyal audio.</p>
+<p>Beberapa fitur yang digunakan:</p>
+<ul class="simple">
+<li><p>Tempo (BPM) – kecepatan ritme sinyal</p></li>
+<li><p>Duration (detik) – panjang sinyal audio</p></li>
+<li><p>Onset rate – laju kemunculan serangan bunyi</p></li>
+<li><p>Autocorrelation lag – pola pengulangan periodik sinyal</p></li>
+<li><p>Envelope mean &amp; std – perubahan amplop energi terhadap waktu</p></li>
+<li><p>Attack time &amp; decay time – waktu naik dan turun energi sinyal</p></li>
+</ul>
+<p>➡️ <strong>Total: 6 fitur temporal</strong></p>
+</section>
+<hr class="docutils" />
+<section id="total-keseluruhan">
+<h3>🔹 Total Keseluruhan<a class="headerlink" href="#total-keseluruhan" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Jenis Fitur</p></th>
+<th class="head"><p>Jumlah Fitur</p></th>
+<th class="head"><p>Contoh</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Statistik</p></td>
+<td><p>10</p></td>
+<td><p>mean, std, skewness</p></td>
+</tr>
+<tr class="row-odd"><td><p>Spektral</p></td>
+<td><p>20</p></td>
+<td><p>spectral centroid, MFCC</p></td>
+</tr>
+<tr class="row-even"><td><p>Temporal</p></td>
+<td><p>6</p></td>
+<td><p>tempo, duration</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Total: 36 fitur audio</strong></p>
+</section>
 </section>
 <section id="tujuan-penelitian">
 <h2>1.2 Tujuan Penelitian<a class="headerlink" href="#tujuan-penelitian" title="Link to this heading">#</a></h2>
 <p>Tujuan utama penelitian ini adalah:</p>
-<p>Mengidentifikasi dan mengklasifikasikan suara “buka” dan “tutup” berdasarkan karakteristik statistik dari sinyal audio.</p>
-<p>Menguji efektivitas fitur statistik seperti mean, standard deviation, skewness, kurtosis, RMS, dan zero crossing rate dalam membedakan dua kategori suara.</p>
-<p>Membangun model klasifikasi berbasis machine learning (seperti K-Nearest Neighbors, Random Forest, atau Naive Bayes) untuk mengenali pola dari fitur tersebut.</p>
+<p>Mengidentifikasi dan mengklasifikasikan suara “buka” dan “tutup” berdasarkan kombinasi fitur statistik, spektral, dan temporal.</p>
+<p>Menentukan jenis fitur yang paling berpengaruh dalam membedakan kedua jenis suara tersebut.</p>
+<p>Membangun model klasifikasi berbasis machine learning (seperti K-Nearest Neighbors, Random Forest, atau Naive Bayes) untuk mengenali pola suara.</p>
+<p>Mengembangkan aplikasi sederhana berbasis Streamlit untuk menguji hasil model dengan input suara langsung dari pengguna.</p>
 </section>
 <section id="rumusan-masalah">
 <h2>1.3 Rumusan Masalah<a class="headerlink" href="#rumusan-masalah" title="Link to this heading">#</a></h2>
-<p>Berdasarkan latar belakang di atas, rumusan masalah yang dapat diambil adalah:</p>
-<p>Bagaimana cara mengekstraksi fitur statistik dari sinyal audio “buka” dan “tutup” secara efektif?</p>
-<p>Fitur statistik apa yang paling berpengaruh dalam membedakan suara “buka” dan “tutup”?</p>
-<p>Algoritma klasifikasi apa yang paling akurat untuk mengenali pola tersebut?</p>
+<ol class="arabic simple">
+<li><p>Bagaimana mengekstraksi fitur statistik, spektral, dan temporal dari sinyal audio “buka” dan “tutup”?</p></li>
+<li><p>Fitur mana yang memberikan performa terbaik dalam membedakan dua jenis suara tersebut?</p></li>
+<li><p>Algoritma klasifikasi apa yang paling akurat untuk mengenali suara “buka” dan “tutup”?</p></li>
+<li><p>Bagaimana menerapkan hasil model ke dalam aplikasi interaktif untuk mendeteksi suara secara real-time?</p></li>
+</ol>
 </section>
 <section id="batasan-masalah">
 <h2>1.4 Batasan Masalah<a class="headerlink" href="#batasan-masalah" title="Link to this heading">#</a></h2>
-<p>Data suara yang digunakan berasal dari dataset online di Kaggle yang berisi berbagai jenis suara “buka” dan “tutup”.</p>
-<p>Ciri yang digunakan hanya fitur statistik dari sinyal time series audio, tanpa transformasi ke domain frekuensi (seperti FFT atau MFCC).</p>
-<p>Model yang diuji terbatas pada algoritma machine learning dasar (KNN, Random Forest, Naive Bayes).</p>
-<p>Fokus penelitian adalah pada proses identifikasi dua kelas: “buka” dan “tutup”, bukan pengenalan suara secara umum.</p>
+<p>Data suara direkam langsung menggunakan perekam ponsel oleh dua orang berbeda.</p>
+<p>Masing-masing orang menghasilkan 50 sampel suara “buka” dan 50 sampel suara “tutup”, dengan total 200 data audio (100 dari setiap orang).</p>
+<p>Dataset dibagi dalam dua folder berdasarkan sumber suara (dua orang berbeda).</p>
+<p>Tujuan tambahan: sistem dapat mengenali suara hanya jika berasal dari dua orang tersebut; jika suara berasal dari orang lain, akan muncul peringatan “Anda bukan pengguna terdaftar / penyusup”.</p>
+<p>Penelitian hanya fokus pada dua kelas (buka dan tutup), tanpa melibatkan jenis suara lain.</p>
+<p>Transformasi fitur dilakukan dengan tiga pendekatan (statistik, spektral, temporal), namun hanya fitur dengan performa terbaik yang digunakan dalam tahap akhir modelling.</p>
 </section>
 <section id="manfaat-penelitian">
 <h2>1.5 Manfaat Penelitian<a class="headerlink" href="#manfaat-penelitian" title="Link to this heading">#</a></h2>
-<p>Memberikan alternatif metode pengenalan suara yang ringan dan efisien, tanpa perlu transformasi spektral yang kompleks.</p>
-<p>Menjadi dasar pengembangan sistem monitoring suara otomatis, misalnya deteksi aktivitas pintu atau wadah.</p>
-<p>Memberikan kontribusi dalam pengembangan aplikasi berbasis audio recognition menggunakan fitur statistik sederhana.</p>
+<p>Memberikan alternatif metode pengenalan suara yang ringan, cepat, dan efisien, tanpa membutuhkan GPU atau transformasi kompleks.</p>
+<p>Menjadi dasar pengembangan sistem keamanan atau otomatisasi berbasis audio pattern recognition.</p>
+<p>Menunjukkan perbandingan efektivitas antara fitur statistik, spektral, dan temporal dalam konteks klasifikasi dua suara sederhana.</p>
+<p>Memberikan contoh implementasi praktis pengenalan suara ke dalam aplikasi interaktif berbasis Streamlit.</p>
 </section>
 <section id="sumber-dataset">
 <h2>1.6 Sumber Dataset<a class="headerlink" href="#sumber-dataset" title="Link to this heading">#</a></h2>
-<p>Dataset audio yang digunakan diperoleh secara online dari Kaggle, yang judulnya “Audio Recognition: “Buka” and “Tutup” “,link: <a class="reference external" href="https://www.kaggle.com/datasets/muhammadridhoisdi/audio-recognition-buka-and-tutup?resource=download">https://www.kaggle.com/datasets/muhammadridhoisdi/audio-recognition-buka-and-tutup?resource=download</a>.<br />
-Dengan dua folder yaitu train dan test(val) ,train berisi 150 sample suara buka dan 150 sample suara tutup sedangkan test(val) berisi 50 sampe suara buka dan 50 sample suara tutup</p>
+<p>Dataset direkam langsung menggunakan perekam ponsel, terdiri dari:</p>
+<ul class="simple">
+<li><p>Folder Dataset_Voice_pertama: 50 suara “buka” dan 50 suara “tutup” dari orang pertama,</p></li>
+<li><p>Folder Dataset_Voice_kedua: 50 suara “buka” dan 50 suara “tutup” dari orang kedua.</p></li>
+</ul>
+<p>Dataset ini digunakan agar sistem mampu:</p>
+<ul class="simple">
+<li><p>Membedakan pola suara “buka” dan “tutup”,</p></li>
+<li><p>Mengenali suara hanya dari dua orang terdaftar, dan</p></li>
+<li><p>Menolak atau memberi peringatan bila suara berasal dari orang lain (penyusup).</p></li>
+</ul>
 </section>
 </section>
 
@@ -522,12 +622,12 @@ Dengan dua folder yaitu train dan test(val) ,train berisi 150 sample suara buka 
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../NO2_Demak/modelling.html"
+       href="../NO2_Demak/app.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Modelling</p>
+        <p class="prev-next-title">LINK STREAMLIT</p>
       </div>
     </a>
     <a class="right-next"
@@ -555,7 +655,13 @@ Dengan dua folder yaitu train dan test(val) ,train berisi 150 sample suara buka 
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#latar-belakang">1.1 Latar Belakang</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#latar-belakang">1.1 Latar Belakang</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitur-statistik">🔹 Fitur Statistik</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitur-spektral">🔹 Fitur Spektral</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitur-temporal">🔹 Fitur Temporal</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#total-keseluruhan">🔹 Total Keseluruhan</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan-penelitian">1.2 Tujuan Penelitian</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rumusan-masalah">1.3 Rumusan Masalah</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batasan-masalah">1.4 Batasan Masalah</a></li>

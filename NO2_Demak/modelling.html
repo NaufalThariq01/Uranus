@@ -60,6 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'NO2_Demak/modelling';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="LINK STREAMLIT" href="app.html" />
     <link rel="prev" title="Preprocessing Data" href="preprocessing.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -228,6 +229,16 @@
 <li class="toctree-l1"><a class="reference internal" href="data_understanding.html">Data Understanding</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Data Preprocessing</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Modelling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">Aplikasi Streamlit</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Audio Recognition - Perintah Buka Tutup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../Audio_recognition/bisnis_understanding.html">Bisnis Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Audio_recognition/data_understanding.html">Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Audio_recognition/data_preparation.html">Data Preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Audio_recognition/preprocessing.html">Data Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Audio_recognition/modelling.html">Modelling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Audio_recognition/app.html">Aplikasi Streamlit</a></li>
 </ul>
 
     </div>
@@ -459,10 +470,10 @@ document.write(`
 <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">&quot;no2_models&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># 3️⃣ Membaca Dataset</span>
-<span class="n">day2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;no2_results/day2.csv&#39;</span><span class="p">)</span>
-<span class="n">day3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;no2_results/day3.csv&#39;</span><span class="p">)</span>
-<span class="n">day4</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;no2_results/day4.csv&#39;</span><span class="p">)</span>
-<span class="n">day5</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;no2_results/day5.csv&#39;</span><span class="p">)</span>
+<span class="n">day2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;no2_results/day2_selected.csv&#39;</span><span class="p">)</span>
+<span class="n">day3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;no2_results/day3_selected.csv&#39;</span><span class="p">)</span>
+<span class="n">day4</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;no2_results/day4_selected.csv&#39;</span><span class="p">)</span>
+<span class="n">day5</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;no2_results/day5_selected.csv&#39;</span><span class="p">)</span>
 
 <span class="c1"># 4️⃣ Fungsi Evaluasi KNN + Simpan Model</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">train_and_save_knn</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">n_day</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
@@ -548,9 +559,9 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=============================================
 📊 Modeling Data t1–t2
 =============================================
-MSE  : 0.0000000001
-R²   : 0.1723
-MAPE : 24.90%
+MSE  : 0.0000000000
+R²   : -0.0797
+MAPE : 24.52%
 ✅ Model disimpan di  : no2_models/knn_day2.pkl
 ✅ Scaler disimpan di : no2_models/scaler_day2.pkl
 
@@ -558,17 +569,17 @@ MAPE : 24.90%
 📊 Modeling Data t1–t3
 =============================================
 MSE  : 0.0000000000
-R²   : 0.1893
-MAPE : 23.05%
+R²   : -0.1163
+MAPE : 21.76%
 ✅ Model disimpan di  : no2_models/knn_day3.pkl
 ✅ Scaler disimpan di : no2_models/scaler_day3.pkl
 
 =============================================
 📊 Modeling Data t1–t4
 =============================================
-MSE  : 0.0000000001
-R²   : 0.1131
-MAPE : 24.00%
+MSE  : 0.0000000000
+R²   : 0.0710
+MAPE : 21.18%
 ✅ Model disimpan di  : no2_models/knn_day4.pkl
 ✅ Scaler disimpan di : no2_models/scaler_day4.pkl
 
@@ -576,13 +587,13 @@ MAPE : 24.00%
 📊 Modeling Data t1–t5
 =============================================
 MSE  : 0.0000000000
-R²   : 0.0892
-MAPE : 25.45%
+R²   : -0.1511
+MAPE : 18.85%
 ✅ Model disimpan di  : no2_models/knn_day5.pkl
 ✅ Scaler disimpan di : no2_models/scaler_day5.pkl
 </pre></div>
 </div>
-<img alt="../_images/5e869515d7571cb1447d7f9a3608e13896b6671b2d42ddd64792709ef638f251.png" src="../_images/5e869515d7571cb1447d7f9a3608e13896b6671b2d42ddd64792709ef638f251.png" />
+<img alt="../_images/36b8f2c4dbdc479e378b5efaf05ef5809de22b930bdad0800d3bfb848dfb3a63.png" src="../_images/36b8f2c4dbdc479e378b5efaf05ef5809de22b930bdad0800d3bfb848dfb3a63.png" />
 </div>
 </div>
 <section id="multiday-forecast">
@@ -604,16 +615,16 @@ MAPE : 25.45%
 <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">&quot;no2_models_multiday&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># 3️⃣ Baca dataset NO2 (hasil preprocessing &amp; supervised)</span>
-<span class="n">day2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;no2_results/day2_forecast3.csv&#39;</span><span class="p">)</span>
-<span class="n">day3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;no2_results/day3_forecast3.csv&#39;</span><span class="p">)</span>
-<span class="n">day4</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;no2_results/day4_forecast3.csv&#39;</span><span class="p">)</span>
-<span class="n">day5</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;no2_results/day5_forecast3.csv&#39;</span><span class="p">)</span>
+<span class="n">day2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;no2_results/day2_forecast3_selected.csv&#39;</span><span class="p">)</span>
+<span class="n">day3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;no2_results/day3_forecast3_selected.csv&#39;</span><span class="p">)</span>
+<span class="n">day4</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;no2_results/day4_forecast3_selected.csv&#39;</span><span class="p">)</span>
+<span class="n">day5</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;no2_results/day5_forecast3_selected.csv&#39;</span><span class="p">)</span>
 
 <span class="c1"># 4️⃣ Fungsi untuk membuat target multi-step (misal t+1, t+2, t+3)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_multiday_target</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">horizon</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">horizon</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">data</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;NO2_t+</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;NO2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;NO2_t+</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;NO2_t-1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="n">i</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">data</span>
 
@@ -703,18 +714,18 @@ MAPE : 25.45%
 
 📅 Hari ke-1:
   MSE  : 0.0000000000
-  R²   : -0.2101
-  MAPE : 18.40%
+  R²   : -0.1831
+  MAPE : 17.64%
 
 📅 Hari ke-2:
   MSE  : 0.0000000000
-  R²   : -0.3505
-  MAPE : 18.28%
+  R²   : -0.1437
+  MAPE : 18.14%
 
 📅 Hari ke-3:
   MSE  : 0.0000000000
-  R²   : -0.4796
-  MAPE : 19.32%
+  R²   : -0.2945
+  MAPE : 17.59%
 
 ✅ Model disimpan di  : no2_models_multiday/knn_day3_forecast3.pkl
 ✅ Scaler disimpan di : no2_models_multiday/scaler_day3_forecast3.pkl
@@ -725,18 +736,18 @@ MAPE : 25.45%
 
 📅 Hari ke-1:
   MSE  : 0.0000000000
-  R²   : -0.2304
-  MAPE : 17.87%
+  R²   : -0.2198
+  MAPE : 17.73%
 
 📅 Hari ke-2:
   MSE  : 0.0000000000
-  R²   : -0.3748
-  MAPE : 18.27%
+  R²   : -0.1700
+  MAPE : 17.76%
 
 📅 Hari ke-3:
   MSE  : 0.0000000000
-  R²   : -0.5988
-  MAPE : 19.97%
+  R²   : -0.2652
+  MAPE : 17.46%
 
 ✅ Model disimpan di  : no2_models_multiday/knn_day4_forecast3.pkl
 ✅ Scaler disimpan di : no2_models_multiday/scaler_day4_forecast3.pkl
@@ -747,24 +758,24 @@ MAPE : 25.45%
 
 📅 Hari ke-1:
   MSE  : 0.0000000000
-  R²   : -0.2404
-  MAPE : 17.63%
+  R²   : -0.2232
+  MAPE : 17.81%
 
 📅 Hari ke-2:
   MSE  : 0.0000000000
-  R²   : -0.2887
-  MAPE : 17.76%
+  R²   : -0.1415
+  MAPE : 17.67%
 
 📅 Hari ke-3:
   MSE  : 0.0000000000
-  R²   : -0.6131
-  MAPE : 19.57%
+  R²   : -0.2631
+  MAPE : 17.38%
 
 ✅ Model disimpan di  : no2_models_multiday/knn_day5_forecast3.pkl
 ✅ Scaler disimpan di : no2_models_multiday/scaler_day5_forecast3.pkl
 </pre></div>
 </div>
-<img alt="../_images/557fc24f1112baec67340e3f18a0be7d3654d406a33cd971a8884e2c4458a35c.png" src="../_images/557fc24f1112baec67340e3f18a0be7d3654d406a33cd971a8884e2c4458a35c.png" />
+<img alt="../_images/98ab4bca55893f5663fe4184cf447ff86d3e8c75e82aa3a82e78adcbb2a90edb.png" src="../_images/98ab4bca55893f5663fe4184cf447ff86d3e8c75e82aa3a82e78adcbb2a90edb.png" />
 </div>
 </div>
 </section>
@@ -809,6 +820,15 @@ MAPE : 25.45%
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">Preprocessing Data</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="app.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">LINK STREAMLIT</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>

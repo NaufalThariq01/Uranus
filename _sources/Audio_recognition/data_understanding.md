@@ -1,95 +1,162 @@
 # 🧠 2. Data Understanding
-
 ## 2.1 Deskripsi Dataset
 
-Dataset yang digunakan dalam penelitian ini terdiri dari dua sumber data audio utama, yaitu:
+Dataset yang digunakan dalam penelitian ini berasal dari dua sumber data hasil rekaman langsung menggunakan perekam ponsel. Masing-masing dataset direkam oleh dua orang berbeda untuk mensimulasikan sistem pengenalan suara berbasis identitas.
 
-Dataset 48k
-path:
-Uranus\myfirstbook\Audio_recognition\dataset48k
+Setiap dataset memiliki dua kelas utama:
 
-Dataset ini merupakan kumpulan file audio dengan sampling rate 48 kHz yang digunakan untuk melatih dan menguji model pengenalan suara. Struktur foldernya dibagi menjadi dua subset utama:
+* Buka → berisi rekaman suara kata “buka”
 
-Train → digunakan untuk proses pelatihan model
+* Tutup → berisi rekaman suara kata “tutup”
 
-Val → digunakan untuk proses validasi
+Tujuan dari pembagian ini adalah agar sistem dapat:
 
-Masing-masing subset memiliki dua kelas, yaitu:
+* Mengenali perbedaan antara suara “buka” dan “tutup”.
 
-* buka → berisi file suara “buka”
+* Membedakan apakah suara tersebut berasal dari pengguna yang dikenal (dua orang perekam dataset).
 
-Contoh path:
+* Memberikan peringatan (“Anda bukan pengguna terdaftar / penyusup”) jika input berasal dari orang lain.
 
-...\dataset48k\train\buka\buka48k-buka_0.wav
+Struktur folder dataset adalah sebagai berikut:
+Uranus/
+ └── myfirstbook/
+     └── Audio_recognition/
+         ├── Dataset_Voice_pertama/
+         │   ├── Buka_wav/
+         │   └── Tutup_wav/
+         └── Dataset_Voice_kedua/
+             ├── Buka/
+             └── Tutup/
 
-Terdiri dari 150 file (buka_0.wav – buka_149.wav)
+📸 Contoh struktur folder (dari dataset kedua):
+Uranus\myfirstbook\Audio_recognition\Dataset_Voice_kedua\Buka
+Uranus\myfirstbook\Audio_recognition\Dataset_Voice_kedua\Tutup
 
-* tutup → berisi file suara “tutup”
+## 2.2 Spesifikasi Dataset
 
-Contoh path:
+| Atribut                | Nilai / Keterangan                            |
+| ---------------------- | --------------------------------------------- |
+| Format File            | `.wav`                                        |
+| Sampling Rate          | 16.000 Hz                                     |
+| Durasi per audio       | ± 1 detik                                     |
+| Jumlah kelas           | 2 (buka, tutup)                               |
+| Jumlah dataset         | 2 sumber suara (2 orang berbeda)              |
+| Jumlah data per orang  | 50 suara “buka” + 50 suara “tutup” = 100 file |
+| Total data keseluruhan | 200 file audio                                |
 
-...\dataset48k\train\tutup\tutup48k-tutup_0.wav
+## 2.3 Eksplorasi Awal
 
-Terdiri dari 150 file (tutup_0.wav – tutup_149.wav)
+Dari eksplorasi awal terhadap data audio:
 
-Sementara folder validation (val) masing-masing berisi 50 file (nomor 150–199) untuk kedua kelas tersebut.
+* Setiap file direkam dengan durasi relatif seragam (~2 detik).
 
-| Subset | Kelas | Jumlah Sampel | Rentang Nama File                               |
-| ------ | ----- | ------------- | ----------------------------------------------- |
-| train  | buka  | 150           | buka48k-buka_0.wav – buka48k-buka_149.wav       |
-| train  | tutup | 150           | tutup48k-tutup_0.wav – tutup48k-tutup_149.wav   |
-| val    | buka  | 50            | buka48k-buka_150.wav – buka48k-buka_199.wav     |
-| val    | tutup | 50            | tutup48k-tutup_150.wav – tutup48k-tutup_199.wav |
+* Sampling rate konsisten di 16 kHz untuk semua file.
 
-## 2.2. Deskripsi Dataset
+* Beberapa file memiliki noise latar belakang ringan (napas, bunyi kipas, atau gema ruangan).
 
-Format file: .wav
+* Pola suara antara dua individu berbeda secara signifikan, terutama dari segi pitch dan intensitas.
 
-Sampling rate: 16.000 Hz
+* Distribusi jumlah data antar kelas seimbang (masing-masing 50 per kelas per orang).
 
-Durasi per audio: ±1 detik
+* Visualisasi awal (waveform dan spektrogram) menunjukkan perbedaan yang konsisten:
 
-Jumlah kelas: 2 kelas (buka, tutup)
+* Suara “buka” memiliki amplitudo meningkat perlahan dan durasi sedikit lebih panjang.
 
-Ukuran data: ±50–100 sampel per kelas (dapat ditambah untuk keseimbangan)
+* Suara “tutup” memiliki ledakan energi cepat di awal dan durasi lebih pendek.
 
-## 2.3. Eksplorasi Awal 
+## 2.4 Rencana Ekstraksi Fitur
 
+Tahapan analisis fitur dibagi menjadi tiga kategori utama yang mencakup total **36 fitur audio**: fitur statistik, fitur spektral, dan fitur temporal.  
+Setiap kategori mewakili karakteristik berbeda dari sinyal audio dan akan dievaluasi secara terpisah untuk menentukan kelompok fitur yang paling efektif dalam membedakan suara **“buka”** dan **“tutup”**.
 
-Setiap file audio direkam dengan sampling rate tetap.
+---
 
-Data bersih, namun beberapa file memiliki noise (suara latar).
+### 🧮 1. Fitur Statistik
 
-Variasi suara antar individu cukup tinggi → perlu normalisasi.
+Berbasis sinyal **time-series mentah (y)** tanpa transformasi frekuensi.  
+Fitur ini merepresentasikan bentuk dan distribusi amplitudo sinyal.
 
-Distribusi jumlah data per kelas relatif seimbang (jika tidak, akan dilakukan balancing).
+Fitur yang diekstraksi meliputi:
 
-## 2.4. Rencana Analisis Fitur
+- Mean amplitude  
+- Standard deviation  
+- Variance  
+- Skewness  
+- Kurtosis  
+- Root Mean Square (RMS)  
+- Zero Crossing Rate (ZCR)  
+- Energy mean  
+- Energy std  
+- Amplitude max dan min  
 
-Ciri-ciri (fitur) yang akan diekstrak dari data audio berbasis time series statistik, meliputi:
+➡️ **Total: 10 fitur statistik**
 
-Mean amplitude (rata-rata energi)
+---
 
-Standard deviation (keragaman sinyal)
+### 🎵 2. Fitur Spektral
 
-Zero Crossing Rate (ZCR)
+Dihitung dari **transformasi frekuensi** menggunakan fungsi `librosa.feature`.  
+Fitur ini menggambarkan persebaran energi dalam domain spektrum suara.
 
-Root Mean Square Energy (RMS)
+Fitur yang diekstraksi meliputi:
 
-Spectral Centroid
+- Spectral centroid (mean, std)  
+- Spectral bandwidth (mean, std)  
+- Spectral contrast (mean, std)  
+- Spectral roll-off (mean, std)  
+- Spectral flatness (mean, std)  
+- Chroma features (mean, std)  
+- MFCC (mean, std untuk 5 koefisien utama)  
 
-Spectral Bandwidth
+➡️ **Total: 20 fitur spektral**
 
-Spectral Roll-off
+---
 
-Fitur-fitur ini nantinya akan digunakan sebagai input ke model klasifikasi (misalnya KNN, SVM, atau Random Forest).
+### ⏱️ 3. Fitur Temporal
 
-## 2.5. Insight Awal
+Berhubungan dengan **durasi, ritme, dan dinamika energi sinyal** dalam domain waktu.
 
-Berdasarkan visualisasi (akan dibuat di tahap berikut):
+Fitur yang diekstraksi meliputi:
 
-Suara “buka” cenderung memiliki pola energi yang lebih panjang dan naik perlahan.
+- Tempo (BPM)  
+- Duration (detik)  
+- Onset rate  
+- Autocorrelation lag  
+- Envelope mean dan std  
+- Attack time dan decay time  
 
-Suara “tutup” cenderung memiliki puncak energi yang tajam di awal lalu turun cepat.
+➡️ **Total: 6 fitur temporal**
 
-Fitur RMS dan Spectral Centroid menunjukkan perbedaan pola yang bisa dimanfaatkan model untuk klasifikasi.
+---
+
+### 📊 Total Keseluruhan
+
+| Jenis Fitur | Jumlah Fitur | Contoh |
+|--------------|---------------|---------|
+| Statistik | 10 | mean, std, RMS |
+| Spektral | 20 | MFCC, spectral centroid |
+| Temporal | 6 | tempo, duration |
+
+**Total keseluruhan: 36 fitur audio**
+
+## 2.5 Rencana Analisis
+
+* Eksplorasi visual – waveform, spektrogram, dan distribusi fitur tiap kelas.
+
+* Statistical summary – analisis perbedaan mean dan variansi antar kelas.
+
+* Korelasi fitur – untuk menghindari fitur yang redundan.
+
+* Evaluasi model – menguji performa tiga kelompok fitur (statistik, spektral, temporal) menggunakan model KNN, Random Forest, dan Naive Bayes.
+
+* Pemilihan fitur terbaik – menentukan fitur yang paling kontributif terhadap akurasi model.
+
+## 2.6 Insight Awal
+
+Suara “buka” cenderung memiliki pola energi meningkat perlahan dan amplitudo puncak di akhir.
+
+Suara “tutup” menampilkan energi awal tinggi lalu cepat menurun.
+
+Fitur RMS dan Spectral Centroid menunjukkan pola pemisahan yang cukup jelas antar kelas.
+
+Variasi antar individu bisa menjadi dasar pengembangan sistem verifikasi suara (voice identity) di tahap lanjutan.

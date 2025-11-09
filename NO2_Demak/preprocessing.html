@@ -229,6 +229,16 @@
 <li class="toctree-l1"><a class="reference internal" href="data_understanding.html">Data Understanding</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Data Preprocessing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelling.html">Modelling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">Aplikasi Streamlit</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Audio Recognition - Perintah Buka Tutup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../Audio_recognition/bisnis_understanding.html">Bisnis Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Audio_recognition/data_understanding.html">Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Audio_recognition/data_preparation.html">Data Preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Audio_recognition/preprocessing.html">Data Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Audio_recognition/modelling.html">Modelling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Audio_recognition/app.html">Aplikasi Streamlit</a></li>
 </ul>
 
     </div>
@@ -425,8 +435,14 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#missing-value">Missing Value</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier-dan-penanganannya">Deteksi Outlier dan penanganannya</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membentuk-data-supervised-menggunakan-2-3-4-5-hari-sebelumnya">Membentuk Data Supervised menggunakan 2,3,4,5 Hari sebelumnya</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memprediksi-3-hari-kedepan">Memprediksi 3 hari kedepan</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pemilihan-fitur-terbaik">Pemilihan Fitur terbaik</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filter-untuk-prediksi-satu-hari">filter untuk prediksi satu hari</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#untuk-yang-forecasting-3-hari">untuk yang forecasting 3 hari</a></li>
 </ul>
 </li>
 </ul>
@@ -509,6 +525,87 @@ Ringkasan hasil interpolasi:
 </div>
 </div>
 </section>
+<section id="deteksi-outlier-dan-penanganannya">
+<h2>Deteksi Outlier dan penanganannya<a class="headerlink" href="#deteksi-outlier-dan-penanganannya" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neighbors</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalOutlierFactor</span>
+
+<span class="c1"># 1️⃣ Baca hasil interpolasi</span>
+<span class="n">input_path</span> <span class="o">=</span> <span class="s2">&quot;no2_results/no2_interpolated_demak.csv&quot;</span>
+<span class="n">output_path</span> <span class="o">=</span> <span class="s2">&quot;no2_results/no2_cleaned_demak_lof.csv&quot;</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">input_path</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ File tidak ditemukan: </span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ File hasil interpolasi ditemukan: </span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Pastikan urut berdasarkan tanggal</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># 2️⃣ Terapkan LOF untuk deteksi outlier</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;NO2&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">lof</span> <span class="o">=</span> <span class="n">LocalOutlierFactor</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">contamination</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>  <span class="c1"># 5% diasumsikan outlier</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">lof</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">outlier_count</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">⚠️ Ditemukan </span><span class="si">{</span><span class="n">outlier_count</span><span class="si">}</span><span class="s2"> outlier berdasarkan LOF.&quot;</span><span class="p">)</span>
+
+<span class="c1"># 3️⃣ Visualisasi sebelum penanganan</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;NO2&quot;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Data NO2&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">],</span> <span class="s2">&quot;date&quot;</span><span class="p">],</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">],</span> <span class="s2">&quot;NO2&quot;</span><span class="p">],</span>
+            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Outlier (LOF)&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Deteksi Outlier dengan Local Outlier Factor (Sebelum Penanganan)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Tanggal&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Konsentrasi NO2&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># 4️⃣ Tangani outlier: ubah nilai outlier menjadi NaN lalu interpolasi</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">],</span> <span class="s2">&quot;NO2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;NO2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;NO2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">)</span>
+
+<span class="c1"># 5️⃣ Visualisasi setelah penanganan</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;NO2&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Data Setelah Penanganan&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Data NO2 Setelah Penanganan Outlier (Interpolasi Linear)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Tanggal&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Konsentrasi NO2&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># 6️⃣ Simpan hasil</span>
+<span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">💾 Data bersih disimpan ke: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ File hasil interpolasi ditemukan: no2_results/no2_interpolated_demak.csv
+
+⚠️ Ditemukan 20 outlier berdasarkan LOF.
+</pre></div>
+</div>
+<img alt="../_images/c3587f7fe39041fcdf12b84be4b8ea1d4068ddfd9cdd4d4aa5bb3281a6b34aa5.png" src="../_images/c3587f7fe39041fcdf12b84be4b8ea1d4068ddfd9cdd4d4aa5bb3281a6b34aa5.png" />
+<img alt="../_images/4db5b0608134d15bcb998c469e80755e3ac5373393245a1adeeb9a663a429404.png" src="../_images/4db5b0608134d15bcb998c469e80755e3ac5373393245a1adeeb9a663a429404.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>💾 Data bersih disimpan ke: no2_results/no2_cleaned_demak_lof.csv
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 <section id="membentuk-data-supervised-menggunakan-2-3-4-5-hari-sebelumnya">
 <h2>Membentuk Data Supervised menggunakan 2,3,4,5 Hari sebelumnya<a class="headerlink" href="#membentuk-data-supervised-menggunakan-2-3-4-5-hari-sebelumnya" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
@@ -521,7 +618,7 @@ Ringkasan hasil interpolasi:
 <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">&quot;no2_results&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># 3️⃣ Baca data interpolasi NO2</span>
-<span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;no2_results/no2_interpolated_demak.csv&quot;</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;no2_results/no2_cleaned_demak_lof.csv&quot;</span>
 <span class="n">new_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
 
 <span class="c1"># 4️⃣ Pastikan urutan waktu benar</span>
@@ -538,14 +635,15 @@ Ringkasan hasil interpolasi:
 <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">lag_list</span><span class="p">:</span>
     <span class="n">df_lag</span> <span class="o">=</span> <span class="n">new_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">df_lag</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;t</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_lag</span><span class="p">[</span><span class="s2">&quot;NO2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="c1"># Ganti nama kolom lag menjadi NO2_t-1, NO2_t-2, dst</span>
+        <span class="n">df_lag</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;NO2_t-</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_lag</span><span class="p">[</span><span class="s2">&quot;NO2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
     <span class="n">df_lag</span> <span class="o">=</span> <span class="n">df_lag</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     
     <span class="c1"># Simpan ke dictionary &amp; file</span>
     <span class="n">lag_dataframes</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_lag</span>
     <span class="n">output_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;no2_results/day</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">.csv&quot;</span>
     <span class="n">df_lag</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Data supervised dengan t1–t</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> disimpan di: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Data supervised dengan NO2_t-1–NO2_t-</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> disimpan di: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="c1"># 8️⃣ Contoh tampilkan salah satu hasil (misal lag 5)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📊 Contoh hasil day5:&quot;</span><span class="p">)</span>
@@ -554,13 +652,13 @@ Ringkasan hasil interpolasi:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ Data supervised dengan t1–t2 disimpan di: no2_results/day2.csv
-✅ Data supervised dengan t1–t3 disimpan di: no2_results/day3.csv
-✅ Data supervised dengan t1–t4 disimpan di: no2_results/day4.csv
-✅ Data supervised dengan t1–t5 disimpan di: no2_results/day5.csv
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ Data supervised dengan NO2_t-1–NO2_t-2 disimpan di: no2_results/day2.csv
+✅ Data supervised dengan NO2_t-1–NO2_t-3 disimpan di: no2_results/day3.csv
+✅ Data supervised dengan NO2_t-1–NO2_t-4 disimpan di: no2_results/day4.csv
+✅ Data supervised dengan NO2_t-1–NO2_t-5 disimpan di: no2_results/day5.csv
 
 📊 Contoh hasil day5:
-   feature_index       NO2        t1        t2        t3        t4        t5
+   feature_index       NO2   NO2_t-1   NO2_t-2   NO2_t-3   NO2_t-4   NO2_t-5
 0              0  0.000025  0.000026  0.000031  0.000027  0.000029  0.000025
 1              0  0.000018  0.000025  0.000026  0.000031  0.000027  0.000029
 2              0  0.000026  0.000018  0.000025  0.000026  0.000031  0.000027
@@ -582,7 +680,7 @@ Ringkasan hasil interpolasi:
 <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">&quot;no2_results&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># 3️⃣ Baca data interpolasi NO2</span>
-<span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;no2_results/no2_interpolated_demak.csv&quot;</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;no2_results/no2_cleaned_demak_lof.csv&quot;</span>
 <span class="n">new_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
 
 <span class="c1"># 4️⃣ Pastikan urutan waktu benar</span>
@@ -599,18 +697,18 @@ Ringkasan hasil interpolasi:
 <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">lag_list</span><span class="p">:</span>
     <span class="n">df_lag</span> <span class="o">=</span> <span class="n">new_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     
-    <span class="c1"># Buat kolom lag (t1, t2, ..., tn)</span>
+    <span class="c1"># 🔹 Buat kolom lag historis (NO2_t-1, NO2_t-2, dst)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">df_lag</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;t</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_lag</span><span class="p">[</span><span class="s2">&quot;NO2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">df_lag</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;NO2_t-</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_lag</span><span class="p">[</span><span class="s2">&quot;NO2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
     
-    <span class="c1"># Tambahkan kolom target untuk 3 hari ke depan</span>
+    <span class="c1"># 🔹 Tambahkan kolom target masa depan (NO2_t+1, NO2_t+2, NO2_t+3)</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
         <span class="n">df_lag</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;NO2_t+</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_lag</span><span class="p">[</span><span class="s2">&quot;NO2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="n">j</span><span class="p">)</span>
     
-    <span class="c1"># Hapus baris kosong akibat shift</span>
+    <span class="c1"># 🔹 Hapus baris kosong akibat shift</span>
     <span class="n">df_lag</span> <span class="o">=</span> <span class="n">df_lag</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     
-    <span class="c1"># Simpan ke dictionary &amp; file</span>
+    <span class="c1"># 🔹 Simpan ke dictionary &amp; file</span>
     <span class="n">lag_dataframes</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_lag</span>
     <span class="n">output_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;no2_results/day</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">_forecast3.csv&quot;</span>
     <span class="n">df_lag</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -629,7 +727,7 @@ Ringkasan hasil interpolasi:
 ✅ Data supervised (lag 5, forecast 3 hari) disimpan di: no2_results/day5_forecast3.csv
 
 📊 Contoh hasil day5 (prediksi 3 hari ke depan):
-   feature_index       NO2        t1        t2        t3        t4        t5  \
+   feature_index       NO2   NO2_t-1   NO2_t-2   NO2_t-3   NO2_t-4   NO2_t-5  \
 0              0  0.000025  0.000026  0.000031  0.000027  0.000029  0.000025   
 1              0  0.000018  0.000025  0.000026  0.000031  0.000027  0.000029   
 2              0  0.000026  0.000018  0.000025  0.000026  0.000031  0.000027   
@@ -644,6 +742,400 @@ Ringkasan hasil interpolasi:
 4  0.000016  0.000031  0.000024  
 </pre></div>
 </div>
+</div>
+</div>
+</section>
+</section>
+<section id="pemilihan-fitur-terbaik">
+<h2>Pemilihan Fitur terbaik<a class="headerlink" href="#pemilihan-fitur-terbaik" title="Link to this heading">#</a></h2>
+<section id="filter-untuk-prediksi-satu-hari">
+<h3>filter untuk prediksi satu hari<a class="headerlink" href="#filter-untuk-prediksi-satu-hari" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># 1️⃣ Folder input/output</span>
+<span class="n">input_folder</span> <span class="o">=</span> <span class="s2">&quot;no2_results&quot;</span>
+<span class="n">output_folder</span> <span class="o">=</span> <span class="s2">&quot;no2_results&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># 2️⃣ Kolom target dan threshold</span>
+<span class="n">target_col</span> <span class="o">=</span> <span class="s2">&quot;NO2&quot;</span>
+<span class="n">correlation_threshold</span> <span class="o">=</span> <span class="mf">0.4</span>
+
+<span class="c1"># 3️⃣ Siapkan dict untuk menyimpan hasil</span>
+<span class="n">correlation_results</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># 4️⃣ Loop untuk file day2–day5 (bisa disesuaikan)</span>
+<span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]:</span>
+    <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_folder</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;day</span><span class="si">{</span><span class="n">day</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ File </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2"> tidak ditemukan, lewati...&quot;</span><span class="p">)</span>
+        <span class="k">continue</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📂 Memproses: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+    <span class="c1"># 5️⃣ Cek kolom lag (format: NO2_t-1, NO2_t-2, dst.)</span>
+    <span class="n">lag_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;NO2_t-&quot;</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">lag_cols</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Tidak ditemukan kolom lag di </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">continue</span>
+
+    <span class="c1"># 6️⃣ Hitung korelasi antar kolom lag dengan target</span>
+    <span class="n">correlations</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">selected_features</span> <span class="o">=</span> <span class="p">[</span><span class="n">target_col</span><span class="p">]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🔍 Korelasi tiap lag dengan </span><span class="si">{</span><span class="n">target_col</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">lag_cols</span><span class="p">:</span>
+        <span class="n">corr</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">target_col</span><span class="p">]</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
+        <span class="n">abs_corr</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">corr</span><span class="p">)</span>
+        <span class="n">correlations</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">corr</span>
+
+        <span class="k">if</span> <span class="n">abs_corr</span> <span class="o">&gt;=</span> <span class="n">correlation_threshold</span><span class="p">:</span>
+            <span class="n">selected_features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;🟢 DIPILIH&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;🔴 TIDAK DIPILIH&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   </span><span class="si">{</span><span class="n">col</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2"> → korelasi = </span><span class="si">{</span><span class="n">corr</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">abs_corr</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">) </span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 7️⃣ Simpan hasil ke dictionary untuk visualisasi</span>
+    <span class="n">correlation_results</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;day</span><span class="si">{</span><span class="n">day</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;correlations&quot;</span><span class="p">:</span> <span class="n">correlations</span><span class="p">,</span>
+        <span class="s2">&quot;selected_features&quot;</span><span class="p">:</span> <span class="n">selected_features</span><span class="p">,</span>
+        <span class="s2">&quot;total_lag&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">lag_cols</span><span class="p">),</span>
+        <span class="s2">&quot;selected_lag&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_features</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># minus target</span>
+    <span class="p">}</span>
+
+    <span class="c1"># 8️⃣ Simpan hasil seleksi ke file baru</span>
+    <span class="n">df_selected</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">selected_features</span><span class="p">]</span>
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;day</span><span class="si">{</span><span class="n">day</span><span class="si">}</span><span class="s2">_selected.csv&quot;</span><span class="p">)</span>
+    <span class="n">df_selected</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">dropped</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">lag_cols</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">selected_features</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✅ Fitur terpilih (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_features</span><span class="p">)</span><span class="si">}</span><span class="s2"> kolom): </span><span class="si">{</span><span class="n">selected_features</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❎ Fitur di-drop (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dropped</span><span class="p">)</span><span class="si">}</span><span class="s2"> kolom): </span><span class="si">{</span><span class="n">dropped</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;💾 Disimpan ke: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># =====================================================</span>
+<span class="c1"># VISUALISASI KORELASI PER DATASET</span>
+<span class="c1"># =====================================================</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">correlation_results</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="n">corrs</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;correlations&quot;</span><span class="p">]</span>
+    <span class="n">lags</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">corrs</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">corrs</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">lags</span><span class="p">]</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;green&#39;</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">correlation_threshold</span> <span class="k">else</span> <span class="s1">&#39;red&#39;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="n">bars</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">lags</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">correlation_threshold</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;+</span><span class="si">{</span><span class="n">correlation_threshold</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=-</span><span class="n">correlation_threshold</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;-</span><span class="si">{</span><span class="n">correlation_threshold</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2"> | Lags Terpilih: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;selected_lag&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;total_lag&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Korelasi (Pearson)&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Lag Features&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+    <span class="c1"># Tambahkan nilai korelasi di atas bar</span>
+    <span class="k">for</span> <span class="n">bar</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bars</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">bar</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">bar</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span> <span class="o">+</span> <span class="n">bar</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> 
+                <span class="n">height</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.02</span> <span class="k">if</span> <span class="n">height</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">),</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">val</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> 
+                <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span> <span class="k">if</span> <span class="n">height</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="c1"># Hapus sumbu kosong jika dataset &lt; jumlah subplot</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">correlation_results</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="p">)):</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">delaxes</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>📂 Memproses: no2_results\day2.csv
+
+🔍 Korelasi tiap lag dengan NO2:
+   NO2_t-1    → korelasi = +0.4092 (40.9%) 🟢 DIPILIH
+   NO2_t-2    → korelasi = +0.3407 (34.1%) 🔴 TIDAK DIPILIH
+
+✅ Fitur terpilih (2 kolom): [&#39;NO2&#39;, &#39;NO2_t-1&#39;]
+❎ Fitur di-drop (1 kolom): [&#39;NO2_t-2&#39;]
+💾 Disimpan ke: no2_results\day2_selected.csv
+
+📂 Memproses: no2_results\day3.csv
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>🔍 Korelasi tiap lag dengan NO2:
+   NO2_t-1    → korelasi = +0.4084 (40.8%) 🟢 DIPILIH
+   NO2_t-2    → korelasi = +0.3404 (34.0%) 🔴 TIDAK DIPILIH
+   NO2_t-3    → korelasi = +0.2391 (23.9%) 🔴 TIDAK DIPILIH
+
+✅ Fitur terpilih (2 kolom): [&#39;NO2&#39;, &#39;NO2_t-1&#39;]
+❎ Fitur di-drop (2 kolom): [&#39;NO2_t-2&#39;, &#39;NO2_t-3&#39;]
+💾 Disimpan ke: no2_results\day3_selected.csv
+
+📂 Memproses: no2_results\day4.csv
+
+🔍 Korelasi tiap lag dengan NO2:
+   NO2_t-1    → korelasi = +0.4074 (40.7%) 🟢 DIPILIH
+   NO2_t-2    → korelasi = +0.3384 (33.8%) 🔴 TIDAK DIPILIH
+   NO2_t-3    → korelasi = +0.2386 (23.9%) 🔴 TIDAK DIPILIH
+   NO2_t-4    → korelasi = +0.2272 (22.7%) 🔴 TIDAK DIPILIH
+
+✅ Fitur terpilih (2 kolom): [&#39;NO2&#39;, &#39;NO2_t-1&#39;]
+❎ Fitur di-drop (3 kolom): [&#39;NO2_t-2&#39;, &#39;NO2_t-3&#39;, &#39;NO2_t-4&#39;]
+💾 Disimpan ke: no2_results\day4_selected.csv
+
+📂 Memproses: no2_results\day5.csv
+
+🔍 Korelasi tiap lag dengan NO2:
+   NO2_t-1    → korelasi = +0.4070 (40.7%) 🟢 DIPILIH
+   NO2_t-2    → korelasi = +0.3380 (33.8%) 🔴 TIDAK DIPILIH
+   NO2_t-3    → korelasi = +0.2380 (23.8%) 🔴 TIDAK DIPILIH
+   NO2_t-4    → korelasi = +0.2269 (22.7%) 🔴 TIDAK DIPILIH
+   NO2_t-5    → korelasi = +0.1907 (19.1%) 🔴 TIDAK DIPILIH
+
+✅ Fitur terpilih (2 kolom): [&#39;NO2&#39;, &#39;NO2_t-1&#39;]
+❎ Fitur di-drop (4 kolom): [&#39;NO2_t-2&#39;, &#39;NO2_t-3&#39;, &#39;NO2_t-4&#39;, &#39;NO2_t-5&#39;]
+💾 Disimpan ke: no2_results\day5_selected.csv
+</pre></div>
+</div>
+<img alt="../_images/bd9b923a4143648f352e27249c86caa5e0047d713289ac6d2853e6289577206f.png" src="../_images/bd9b923a4143648f352e27249c86caa5e0047d713289ac6d2853e6289577206f.png" />
+</div>
+</div>
+</section>
+<section id="untuk-yang-forecasting-3-hari">
+<h3>untuk yang forecasting 3 hari<a class="headerlink" href="#untuk-yang-forecasting-3-hari" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># 1️⃣ Folder input/output</span>
+<span class="n">input_folder</span> <span class="o">=</span> <span class="s2">&quot;no2_results&quot;</span>
+<span class="n">output_folder</span> <span class="o">=</span> <span class="s2">&quot;no2_results&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># 2️⃣ Target &amp; threshold</span>
+<span class="n">target_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NO2_t+1&quot;</span><span class="p">,</span> <span class="s2">&quot;NO2_t+2&quot;</span><span class="p">,</span> <span class="s2">&quot;NO2_t+3&quot;</span><span class="p">]</span>
+<span class="n">correlation_threshold</span> <span class="o">=</span> <span class="mf">0.3</span>
+
+<span class="c1"># 3️⃣ Dictionary untuk menyimpan hasil</span>
+<span class="n">correlation_results</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># 4️⃣ Loop untuk file forecasting (day2_forecast3.csv dst)</span>
+<span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]:</span>
+    <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_folder</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;day</span><span class="si">{</span><span class="n">day</span><span class="si">}</span><span class="s2">_forecast3.csv&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ File </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2"> tidak ditemukan, lewati...&quot;</span><span class="p">)</span>
+        <span class="k">continue</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📂 Memproses: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+    <span class="c1"># 5️⃣ Cek kolom lag dan target</span>
+    <span class="n">lag_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;NO2_t-&quot;</span><span class="p">)]</span>
+    <span class="n">available_targets</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">target_cols</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">lag_cols</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">available_targets</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Kolom lag atau target tidak ditemukan di </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">continue</span>
+
+    <span class="c1"># 6️⃣ Hitung korelasi lag terhadap tiap target</span>
+    <span class="n">correlations</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">selected_features</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🔍 Korelasi tiap lag dengan target masa depan:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">available_targets</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📈 Target: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">lag</span> <span class="ow">in</span> <span class="n">lag_cols</span><span class="p">:</span>
+            <span class="n">corr</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">lag</span><span class="p">])</span>
+            <span class="n">abs_corr</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">corr</span><span class="p">)</span>
+            <span class="n">correlations</span><span class="p">[(</span><span class="n">target</span><span class="p">,</span> <span class="n">lag</span><span class="p">)]</span> <span class="o">=</span> <span class="n">corr</span>
+
+            <span class="k">if</span> <span class="n">abs_corr</span> <span class="o">&gt;=</span> <span class="n">correlation_threshold</span><span class="p">:</span>
+                <span class="n">selected_features</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lag</span><span class="p">)</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;🟢 DIPILIH&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;🔴 TIDAK DIPILIH&quot;</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   </span><span class="si">{</span><span class="n">lag</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2"> → korelasi = </span><span class="si">{</span><span class="n">corr</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">abs_corr</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">) </span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 7️⃣ Simpan hasil seleksi</span>
+    <span class="n">selected_features</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">selected_features</span><span class="p">))</span>
+    <span class="n">df_selected</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">selected_features</span> <span class="o">+</span> <span class="n">available_targets</span><span class="p">]</span>
+
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;day</span><span class="si">{</span><span class="n">day</span><span class="si">}</span><span class="s2">_forecast3_selected.csv&quot;</span><span class="p">)</span>
+    <span class="n">df_selected</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">correlation_results</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;day</span><span class="si">{</span><span class="n">day</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;correlations&quot;</span><span class="p">:</span> <span class="n">correlations</span><span class="p">,</span>
+        <span class="s2">&quot;selected_features&quot;</span><span class="p">:</span> <span class="n">selected_features</span><span class="p">,</span>
+        <span class="s2">&quot;total_lag&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">lag_cols</span><span class="p">),</span>
+        <span class="s2">&quot;selected_lag&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_features</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✅ Fitur terpilih (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_features</span><span class="p">)</span><span class="si">}</span><span class="s2"> kolom): </span><span class="si">{</span><span class="n">selected_features</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;💾 Disimpan ke: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># =====================================================</span>
+<span class="c1"># VISUALISASI KORELASI PER DATASET</span>
+<span class="c1"># =====================================================</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">correlation_results</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="n">corrs</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;correlations&quot;</span><span class="p">]</span>
+    
+    <span class="c1"># Hitung rata-rata korelasi per lag (terhadap semua target)</span>
+    <span class="n">lag_to_corr</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">lag</span><span class="p">),</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">corrs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">lag_to_corr</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="n">avg_corr</span> <span class="o">=</span> <span class="p">{</span><span class="n">lag</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span> <span class="k">for</span> <span class="n">lag</span><span class="p">,</span> <span class="n">vals</span> <span class="ow">in</span> <span class="n">lag_to_corr</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="c1"># Siapkan data untuk plot</span>
+    <span class="n">lags</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">avg_corr</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">avg_corr</span><span class="p">[</span><span class="n">lag</span><span class="p">]</span> <span class="k">for</span> <span class="n">lag</span> <span class="ow">in</span> <span class="n">lags</span><span class="p">]</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;green&#39;</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">correlation_threshold</span> <span class="k">else</span> <span class="s1">&#39;red&#39;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="n">bars</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">lags</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">correlation_threshold</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;+</span><span class="si">{</span><span class="n">correlation_threshold</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=-</span><span class="n">correlation_threshold</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;-</span><span class="si">{</span><span class="n">correlation_threshold</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2"> | Lags Terpilih: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;selected_lag&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;total_lag&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Rata-rata Korelasi (terhadap 3 target)&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Lag Features&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">bar</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bars</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">bar</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">bar</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span> <span class="o">+</span> <span class="n">bar</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> 
+                <span class="n">height</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.02</span> <span class="k">if</span> <span class="n">height</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">),</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">val</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> 
+                <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span> <span class="k">if</span> <span class="n">height</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="c1"># Hapus subplot kosong jika dataset &lt; jumlah plot</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">correlation_results</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="p">)):</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">delaxes</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>📂 Memproses: no2_results\day2_forecast3.csv
+
+🔍 Korelasi tiap lag dengan target masa depan:
+
+📈 Target: NO2_t+1
+   NO2_t-1    → korelasi = +0.3414 (34.1%) 🟢 DIPILIH
+   NO2_t-2    → korelasi = +0.2386 (23.9%) 🔴 TIDAK DIPILIH
+
+📈 Target: NO2_t+2
+   NO2_t-1    → korelasi = +0.2381 (23.8%) 🔴 TIDAK DIPILIH
+   NO2_t-2    → korelasi = +0.2272 (22.7%) 🔴 TIDAK DIPILIH
+
+📈 Target: NO2_t+3
+   NO2_t-1    → korelasi = +0.2269 (22.7%) 🔴 TIDAK DIPILIH
+   NO2_t-2    → korelasi = +0.1907 (19.1%) 🔴 TIDAK DIPILIH
+
+✅ Fitur terpilih (1 kolom): [&#39;NO2_t-1&#39;]
+💾 Disimpan ke: no2_results\day2_forecast3_selected.csv
+
+📂 Memproses: no2_results\day3_forecast3.csv
+
+🔍 Korelasi tiap lag dengan target masa depan:
+
+📈 Target: NO2_t+1
+   NO2_t-1    → korelasi = +0.3395 (33.9%) 🟢 DIPILIH
+   NO2_t-2    → korelasi = +0.2381 (23.8%) 🔴 TIDAK DIPILIH
+   NO2_t-3    → korelasi = +0.2272 (22.7%) 🔴 TIDAK DIPILIH
+
+📈 Target: NO2_t+2
+   NO2_t-1    → korelasi = +0.2375 (23.7%) 🔴 TIDAK DIPILIH
+   NO2_t-2    → korelasi = +0.2269 (22.7%) 🔴 TIDAK DIPILIH
+   NO2_t-3    → korelasi = +0.1907 (19.1%) 🔴 TIDAK DIPILIH
+
+📈 Target: NO2_t+3
+   NO2_t-1    → korelasi = +0.2264 (22.6%) 🔴 TIDAK DIPILIH
+   NO2_t-2    → korelasi = +0.1905 (19.0%) 🔴 TIDAK DIPILIH
+   NO2_t-3    → korelasi = +0.2210 (22.1%) 🔴 TIDAK DIPILIH
+
+✅ Fitur terpilih (1 kolom): [&#39;NO2_t-1&#39;]
+💾 Disimpan ke: no2_results\day3_forecast3_selected.csv
+
+📂 Memproses: no2_results\day4_forecast3.csv
+
+🔍 Korelasi tiap lag dengan target masa depan:
+
+📈 Target: NO2_t+1
+   NO2_t-1    → korelasi = +0.3390 (33.9%) 🟢 DIPILIH
+   NO2_t-2    → korelasi = +0.2375 (23.7%) 🔴 TIDAK DIPILIH
+   NO2_t-3    → korelasi = +0.2269 (22.7%) 🔴 TIDAK DIPILIH
+   NO2_t-4    → korelasi = +0.1919 (19.2%) 🔴 TIDAK DIPILIH
+
+📈 Target: NO2_t+2
+   NO2_t-1    → korelasi = +0.2371 (23.7%) 🔴 TIDAK DIPILIH
+   NO2_t-2    → korelasi = +0.2265 (22.6%) 🔴 TIDAK DIPILIH
+   NO2_t-3    → korelasi = +0.1905 (19.1%) 🔴 TIDAK DIPILIH
+   NO2_t-4    → korelasi = +0.2236 (22.4%) 🔴 TIDAK DIPILIH
+
+📈 Target: NO2_t+3
+   NO2_t-1    → korelasi = +0.2283 (22.8%) 🔴 TIDAK DIPILIH
+   NO2_t-2    → korelasi = +0.1932 (19.3%) 🔴 TIDAK DIPILIH
+   NO2_t-3    → korelasi = +0.2220 (22.2%) 🔴 TIDAK DIPILIH
+   NO2_t-4    → korelasi = +0.1945 (19.5%) 🔴 TIDAK DIPILIH
+
+✅ Fitur terpilih (1 kolom): [&#39;NO2_t-1&#39;]
+💾 Disimpan ke: no2_results\day4_forecast3_selected.csv
+
+📂 Memproses: no2_results\day5_forecast3.csv
+
+🔍 Korelasi tiap lag dengan target masa depan:
+
+📈 Target: NO2_t+1
+   NO2_t-1    → korelasi = +0.3387 (33.9%) 🟢 DIPILIH
+   NO2_t-2    → korelasi = +0.2371 (23.7%) 🔴 TIDAK DIPILIH
+   NO2_t-3    → korelasi = +0.2265 (22.6%) 🔴 TIDAK DIPILIH
+   NO2_t-4    → korelasi = +0.1917 (19.2%) 🔴 TIDAK DIPILIH
+   NO2_t-5    → korelasi = +0.2245 (22.4%) 🔴 TIDAK DIPILIH
+
+📈 Target: NO2_t+2
+   NO2_t-1    → korelasi = +0.2409 (24.1%) 🔴 TIDAK DIPILIH
+   NO2_t-2    → korelasi = +0.2283 (22.8%) 🔴 TIDAK DIPILIH
+   NO2_t-3    → korelasi = +0.1932 (19.3%) 🔴 TIDAK DIPILIH
+   NO2_t-4    → korelasi = +0.2246 (22.5%) 🔴 TIDAK DIPILIH
+   NO2_t-5    → korelasi = +0.1964 (19.6%) 🔴 TIDAK DIPILIH
+
+📈 Target: NO2_t+3
+   NO2_t-1    → korelasi = +0.2277 (22.8%) 🔴 TIDAK DIPILIH
+   NO2_t-2    → korelasi = +0.1927 (19.3%) 🔴 TIDAK DIPILIH
+   NO2_t-3    → korelasi = +0.2215 (22.1%) 🔴 TIDAK DIPILIH
+   NO2_t-4    → korelasi = +0.1943 (19.4%) 🔴 TIDAK DIPILIH
+   NO2_t-5    → korelasi = +0.1931 (19.3%) 🔴 TIDAK DIPILIH
+
+✅ Fitur terpilih (1 kolom): [&#39;NO2_t-1&#39;]
+💾 Disimpan ke: no2_results\day5_forecast3_selected.csv
+</pre></div>
+</div>
+<img alt="../_images/ab0be4ac89b6a296352936d3bb79d4a641b5da2c34211c676c9e48c4e7724fc2.png" src="../_images/ab0be4ac89b6a296352936d3bb79d4a641b5da2c34211c676c9e48c4e7724fc2.png" />
 </div>
 </div>
 </section>
@@ -715,8 +1207,14 @@ Ringkasan hasil interpolasi:
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#missing-value">Missing Value</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier-dan-penanganannya">Deteksi Outlier dan penanganannya</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membentuk-data-supervised-menggunakan-2-3-4-5-hari-sebelumnya">Membentuk Data Supervised menggunakan 2,3,4,5 Hari sebelumnya</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memprediksi-3-hari-kedepan">Memprediksi 3 hari kedepan</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pemilihan-fitur-terbaik">Pemilihan Fitur terbaik</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filter-untuk-prediksi-satu-hari">filter untuk prediksi satu hari</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#untuk-yang-forecasting-3-hari">untuk yang forecasting 3 hari</a></li>
 </ul>
 </li>
 </ul>
