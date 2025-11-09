@@ -9,11 +9,23 @@ from audiorecorder import audiorecorder
 # ==========================
 # Load model & scaler
 # ==========================
-with open("model_KNN.pkl", "rb") as f:
-    model = pickle.load(f)
+def load_model_scaler():
+    base_dir = os.path.dirname(__file__)
+    model_path = os.path.join(base_dir, "model_KNN.pkl")
+    scaler_path = os.path.join(base_dir, "scaler.pkl")
 
-with open("scaler.pkl", "rb") as f:
-    scaler = pickle.load(f)
+    try:
+        with open(model_path, "rb") as f:
+            model = pickle.load(f)
+        with open(scaler_path, "rb") as f:
+            scaler = pickle.load(f)
+        st.success("✅ Model dan Scaler berhasil dimuat.")
+        return model, scaler
+    except Exception as e:
+        st.error(f"❌ Gagal memuat model atau scaler: {e}")
+        st.stop()
+
+model, scaler = load_model_scaler()
 
 # ==========================
 # Fungsi ekstraksi fitur
