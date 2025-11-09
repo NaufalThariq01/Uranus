@@ -9,7 +9,7 @@ from audiorecorder import audiorecorder
 # ==========================
 # Load model & scaler
 # ==========================
-with open("model.pkl", "rb") as f:
+with open("model_KNN.pkl", "rb") as f:
     model = pickle.load(f)
 
 with open("scaler.pkl", "rb") as f:
