@@ -40,76 +40,17 @@ model, scaler = load_model_scaler()
 # Fungsi Ekstraksi Fitur
 # ======================
 def extract_features(path):
-    y, sr = librosa.load(path, sr=SAMPLE_RATE)
+    y, sr = librosa.load(path, sr=48000)
     y = librosa.util.normalize(y)
-    y_harm, y_perc = librosa.effects.hpss(y)
 
-    # --- 1. Statistik dasar sinyal ---
-    mean = np.mean(y)
-    std = np.std(y)
-    var = np.var(y)
-    skew = np.mean((y - mean)**3) / (std**3 + 1e-6)
-    kurtosis = np.mean((y - mean)**4) / (std**4 + 1e-6)
-    rms = np.mean(librosa.feature.rms(y=y))
+    # --- Fitur yang diperlukan ---
     zcr = np.mean(librosa.feature.zero_crossing_rate(y))
-    
-    # --- 2. Energi ---
-    energy = y ** 2
-    energy_mean = np.mean(energy)
-    energy_std = np.std(energy)
-    
-    # --- 3. Rentang amplitudo ---
-    amplitude_range = np.max(y) - np.min(y)
-    
-    # --- 4. Spektrum ---
-    spec_centroid = librosa.feature.spectral_centroid(y=y, sr=sr)
-    spec_bandwidth = librosa.feature.spectral_bandwidth(y=y, sr=sr)
-    spec_contrast = librosa.feature.spectral_contrast(y=y, sr=sr)
-    spec_rolloff = librosa.feature.spectral_rolloff(y=y, sr=sr)
-    spec_flatness = librosa.feature.spectral_flatness(y=y)
-    
-    # --- 5. Chroma & MFCC ---
-    chroma = librosa.feature.chroma_stft(y=y, sr=sr)
     mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=5)
-    
-    # --- 6. Tempo & Onset ---
-    onset_env = librosa.onset.onset_strength(y=y, sr=sr)
-    try:
-        tempo = librosa.beat.tempo(onset_envelope=onset_env, sr=sr)[0]
-    except Exception:
-        tempo = 0.0
-    onset_rate = librosa.onset.onset_detect(y=y, sr=sr).shape[0]
-    
-    # --- 7. Autocorrelation lag ---
-    autocorr = np.correlate(y, y, mode='full')
-    autocorr_lag = np.argmax(autocorr[len(autocorr)//2:])
-    
-    # --- 8. Envelope ---
-    envelope = np.abs(librosa.onset.onset_strength(y=y, sr=sr))
-    envelope_mean = np.mean(envelope)
-    envelope_std = np.std(envelope)
-    
-    # --- 9. Durasi ---
-    duration = librosa.get_duration(y=y, sr=sr)
-    
-    # --- Gabungkan semua ke array fitur ---
-    features = [
-        mean, std, var, skew, kurtosis, rms, zcr,
-        energy_mean, energy_std, amplitude_range,
-        np.mean(spec_centroid), np.std(spec_centroid),
-        np.mean(spec_bandwidth), np.std(spec_bandwidth),
-        np.mean(spec_contrast), np.std(spec_contrast),
-        np.mean(spec_rolloff), np.std(spec_rolloff),
-        np.mean(spec_flatness), np.std(spec_flatness),
-        np.mean(chroma), np.std(chroma),
-        np.mean(mfcc[0]), np.mean(mfcc[1]), np.mean(mfcc[2]),
-        np.mean(mfcc[3]), np.mean(mfcc[4]),
-        np.std(mfcc[0]), np.std(mfcc[1]), np.std(mfcc[2]),
-        np.std(mfcc[3]), np.std(mfcc[4]),
-        duration, tempo, onset_rate, autocorr_lag,
-        envelope_mean, envelope_std
-    ]
-    
+    mfcc1_std = np.std(mfcc[0])
+    mfcc3_mean = np.mean(mfcc[2])
+
+    # Hanya 3 fitur sesuai hasil seleksi
+    features = [mfcc1_std, zcr, mfcc3_mean]
     return features
 
 # ======================
