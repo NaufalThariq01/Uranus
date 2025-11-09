@@ -7,4 +7,4 @@ seaborn
 scipy
 soundfile
 streamlit
-streamlit-webrtc
+streamlit-audiorecorder

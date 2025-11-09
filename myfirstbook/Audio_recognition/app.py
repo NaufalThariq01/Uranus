@@ -4,7 +4,7 @@ import librosa
 import pickle
 import os
 import soundfile as sf
-from audiorecorder import audiorecorder  # pip install streamlit-audiorecorder
+from audiorecorder import audiorecorder
 
 # ==========================
 # Load model & scaler
