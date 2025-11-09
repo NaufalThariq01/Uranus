@@ -38,85 +38,87 @@ model, scaler = load_model_scaler()
 # Fungsi Ekstraksi Fitur
 # ======================
 def extract_features(file_path):
-    try:
-        y, sr = librosa.load(file_path, sr=SAMPLE_RATE, mono=True)
-        if y is None or len(y) == 0:
-            raise ValueError("File audio kosong atau tidak valid.")
-    except Exception as e:
-        st.error(f"Gagal memuat file audio: {e}")
-        return [0]*50
+    y, sr = librosa.load(file_path, sr=SAMPLE_RATE, mono=True)
+    features = []
 
-    y = y / (np.max(np.abs(y)) + 1e-6)
-    f = []
+    # ----- 1. Statistik (10 fitur) -----
+    features.append(np.mean(y))                         # mean
+    features.append(np.std(y))                          # std
+    features.append(np.var(y))                          # var
+    features.append(np.mean((y - np.mean(y))**3)/(np.std(y)**3 + 1e-6))  # skew
+    features.append(np.mean((y - np.mean(y))**4)/(np.std(y)**4 + 1e-6))  # kurtosis
+    features.append(np.sqrt(np.mean(y**2)))            # RMS
+    features.append(np.mean(librosa.feature.zero_crossing_rate(y)))  # ZCR
 
-    # ======================
-    # Statistik
-    # ======================
-    f += [
-        np.mean(y), np.std(y), np.var(y),
-        np.mean((y - np.mean(y))**3) / (np.std(y)**3 + 1e-6),
-        np.mean((y - np.mean(y))**4) / (np.std(y)**4 + 1e-6),
-        np.sqrt(np.mean(y**2)),
-        np.mean(librosa.feature.zero_crossing_rate(y)),
-        np.mean(y**2), np.std(y**2),
-        np.max(y) - np.min(y)
-    ]
+    # Energy mean & std
+    energy = y**2
+    features.append(np.mean(energy))                   # energy_mean
+    features.append(np.std(energy))                    # energy_std
 
-    # ======================
-    # Spektral (pakai STFT agar aman)
-    # ======================
-    S = np.abs(librosa.stft(y))
-    feats = {
-        "centroid": librosa.feature.spectral_centroid,
-        "bandwidth": librosa.feature.spectral_bandwidth,
-        "contrast": librosa.feature.spectral_contrast,
-        "rolloff": librosa.feature.spectral_rolloff,
-        "flatness": librosa.feature.spectral_flatness,
-        "chroma": librosa.feature.chroma_stft
-    }
+    # Amplitude range (max-min)
+    features.append(np.max(y) - np.min(y))            # amplitude_range
 
-    for name, func in feats.items():
-        try:
-            if name in ["contrast", "chroma"]:
-                val = func(S=S, sr=sr)
-            else:
-                val = func(y=y, sr=sr)
-            f += [np.mean(val), np.std(val)]
-        except Exception as e:
-            st.warning(f"⚠️ Gagal ekstrak fitur {name}: {e}")
-            f += [0, 0]
+    # ----- 2. Spektral (20 fitur) -----
+    # Spectral centroid & bandwidth
+    spec_centroid = librosa.feature.spectral_centroid(y=y, sr=sr)
+    features.append(np.mean(spec_centroid))
+    features.append(np.std(spec_centroid))
 
-    # ======================
-    # MFCC
-    # ======================
-    try:
-        mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=5)
-        f += [np.mean(mfcc[i]) for i in range(5)]
-        f += [np.std(mfcc[i]) for i in range(5)]
-    except Exception as e:
-        st.warning(f"⚠️ Gagal ekstrak MFCC: {e}")
-        f += [0]*10
+    spec_bandwidth = librosa.feature.spectral_bandwidth(y=y, sr=sr)
+    features.append(np.mean(spec_bandwidth))
+    features.append(np.std(spec_bandwidth))
 
-    # ======================
-    # Temporal
-    # ======================
-    try:
-        onset_env = librosa.onset.onset_strength(y=y, sr=sr)
-        tempo = librosa.beat.tempo(onset_envelope=onset_env, sr=sr)
-        autocorr = np.correlate(y, y, mode='full')[len(y):]
-        f += [
-            librosa.get_duration(y=y, sr=sr),
-            float(tempo[0]),
-            np.mean(onset_env),
-            np.argmax(autocorr) + 1,
-            np.mean(np.abs(onset_env)),
-            np.std(np.abs(onset_env))
-        ]
-    except Exception as e:
-        st.warning(f"⚠️ Gagal ekstrak fitur temporal: {e}")
-        f += [0]*6
+    # Spectral contrast (7 bands → mean & std digabung)
+    spec_contrast = librosa.feature.spectral_contrast(y=y, sr=sr)
+    features.append(np.mean(spec_contrast))
+    features.append(np.std(spec_contrast))
 
-    return f
+    # Spectral rolloff
+    spec_rolloff = librosa.feature.spectral_rolloff(y=y, sr=sr)
+    features.append(np.mean(spec_rolloff))
+    features.append(np.std(spec_rolloff))
+
+    # Spectral flatness
+    spec_flatness = librosa.feature.spectral_flatness(y=y)
+    features.append(np.mean(spec_flatness))
+    features.append(np.std(spec_flatness))
+
+    # Chroma (12 bins → mean & std digabung)
+    chroma = librosa.feature.chroma_stft(y=y, sr=sr)
+    features.append(np.mean(chroma))
+    features.append(np.std(chroma))
+
+    # MFCC 5 koefisien → mean & std
+    mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=5)
+    for i in range(5):
+        features.append(np.mean(mfcc[i]))
+    for i in range(5):
+        features.append(np.std(mfcc[i]))
+
+    # ----- 3. Temporal (6 fitur) -----
+    # Duration
+    features.append(librosa.get_duration(y=y, sr=sr))
+
+    # Tempo
+    onset_env = librosa.onset.onset_strength(y=y, sr=sr)
+    tempo = librosa.beat.tempo(onset_envelope=onset_env, sr=sr)
+    features.append(float(tempo))
+
+    # Onset rate
+    features.append(np.mean(onset_env))
+
+    # Autocorrelation lag (puncak pertama di autocorr)
+    autocorr = np.correlate(y, y, mode='full')
+    mid = len(autocorr)//2
+    autocorr_lag = np.argmax(autocorr[mid+1:]) + 1
+    features.append(autocorr_lag)
+
+    # Envelope mean & std
+    envelope = np.abs(librosa.onset.onset_strength(y=y, sr=sr))
+    features.append(np.mean(envelope))
+    features.append(np.std(envelope))
+
+    return features
  
 # ======================
 # Fungsi Prediksi
