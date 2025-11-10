@@ -78,17 +78,22 @@ if st.button("Prediksi Sekarang"):
     X_input = np.array(inputs).reshape(1, -1)
 
     try:
-        # Scaling input dan prediksi
+        # Scaling input
         X_scaled = scaler.transform(X_input)
-        prediction = model.predict(X_scaled)
-        if isinstance(prediction, (np.ndarray, list)):
-            prediction = float(prediction[0])  # ambil elemen pertama dan pastikan float
-        else:
-            prediction = float(prediction)
 
+        # Prediksi
+        prediction = model.predict(X_scaled)
+
+        # Pastikan menjadi float tunggal dari array 1D/2D atau float
+        try:
+            prediction = float(prediction.item())  # item() aman untuk array 1D/2D
+        except AttributeError:
+            prediction = float(prediction)        # fallback jika sudah float
+
+        # Tampilkan hasil prediksi
         st.success(f"💡 Hasil prediksi kadar NO₂: **{prediction:.8f} mol/m²**")
 
-        # Tambah interpretasi kategori
+        # Tambah interpretasi kategori kualitas udara
         if prediction <= 0.000019:
             kategori = "🟢 RENDAH"
         elif 0.000019 < prediction <= 0.000035:
