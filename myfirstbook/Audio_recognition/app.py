@@ -14,7 +14,7 @@ import warnings
 warnings.filterwarnings('ignore')
 SAMPLE_RATE = 44100
 THRESHOLD = 0.4  # turunkan sementara untuk deteksi penyusup
-MIN_DURATION_SEC = 1.0  # minimal 1 detik
+MIN_DURATION_SEC = 1.0 
 
 # ======================
 # Load Model & Scaler
@@ -22,7 +22,7 @@ MIN_DURATION_SEC = 1.0  # minimal 1 detik
 @st.cache_resource
 def load_model_scaler():
     base_dir = os.path.dirname(__file__)
-    model_path = os.path.join(base_dir, "model_KNN.pkl")
+    model_path = os.path.join(base_dir, "model_RandomForest.pkl")
     scaler_path = os.path.join(base_dir, "scaler.pkl")
     try:
         with open(model_path, "rb") as f:
