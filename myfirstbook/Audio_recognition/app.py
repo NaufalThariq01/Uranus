@@ -4,7 +4,7 @@ import librosa
 import pickle
 import os
 import soundfile as sf
-from audiorecorder import audiorecorder
+from streamlit_mic_recorder import mic_recorder, speech_to_text
 
 # ==========================
 # Load model & scaler
@@ -61,14 +61,19 @@ def predict_audio(file_path):
 # ==========================
 st.title("🎙️ Voice Command Recognition")
 
-audio = audiorecorder("Tekan untuk merekam", "Rekam selesai")
+audio = mic_recorder(
+    start_prompt="🎤 Mulai Rekam",
+    stop_prompt="⏹️ Selesai Rekam",
+    just_once=True,
+    use_container_width=True
+)
 
-if len(audio) > 0:
+if audio is not None:
     # Simpan hasil rekaman
     path = "temp_upload.wav"
-    sf.write(path, audio.tobytes(), 44100, format="WAV")
+    sf.write(path, audio["bytes"], 44100, format="WAV")
 
-    st.audio(path)
+    st.audio(path, format="audio/wav")
 
     st.info("⏳ Memproses audio...")
     kategori, probs = predict_audio(path)
@@ -76,4 +81,5 @@ if len(audio) > 0:
     st.success(f"🎯 Hasil Prediksi: **{kategori}**")
     st.write("📊 Probabilitas:")
     for i, p in enumerate(probs):
-        st.write(f"{i}: {p:.2f}")
+        label = "Buka" if i == 0 else "Tutup"
+        st.write(f"- {label}: {p:.2f}")

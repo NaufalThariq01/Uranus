@@ -7,4 +7,4 @@ seaborn
 scipy
 soundfile
 streamlit
-streamlit-audiorecorder
+streamlit-mic-recorder
