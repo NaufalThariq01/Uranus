@@ -5,6 +5,7 @@ import soundfile as sf
 import pickle
 import streamlit as st
 from streamlit_mic_recorder import mic_recorder
+import matplotlib.pyplot as plt
 import warnings
 
 # ======================
@@ -12,8 +13,8 @@ import warnings
 # ======================
 warnings.filterwarnings('ignore')
 SAMPLE_RATE = 44100
-THRESHOLD = 0.6
-MIN_DURATION_SEC = 0.5  # Durasi minimal audio dalam detik
+THRESHOLD = 0.4  # turunkan sementara untuk deteksi penyusup
+MIN_DURATION_SEC = 1.0  # minimal 1 detik
 
 # ======================
 # Load Model & Scaler
@@ -42,10 +43,12 @@ model, scaler = load_model_scaler()
 def extract_features(path):
     y, sr = librosa.load(path, sr=SAMPLE_RATE)
     y = librosa.util.normalize(y)
+
     zcr = np.mean(librosa.feature.zero_crossing_rate(y))
     mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=5)
     mfcc1_std = np.std(mfcc[0])
     mfcc3_mean = np.mean(mfcc[2])
+
     return [mfcc1_std, zcr, mfcc3_mean]
 
 # ======================
@@ -88,8 +91,8 @@ audio = mic_recorder(
     use_container_width=True
 )
 
-# Simpan rekaman mic langsung ke file
 mic_path = os.path.join(os.getcwd(), "temp_mic.wav")
+
 if audio:
     data = None
     sr = SAMPLE_RATE
@@ -98,12 +101,15 @@ if audio:
         if "array" in audio:
             data = np.array(audio["array"], dtype=np.float32)
         elif "bytes" in audio and audio["bytes"]:
-            data = np.frombuffer(audio["bytes"], dtype=np.int16)
+            data = np.frombuffer(audio["bytes"], dtype=np.int16).astype(np.float32)
     elif isinstance(audio, np.ndarray):
-        data = audio
+        data = audio.astype(np.float32)
 
     if data is not None:
-        # Normalisasi
+        # Stereo -> mono
+        if data.ndim > 1:
+            data = data.mean(axis=1)
+        # Normalisasi aman
         max_val = np.max(np.abs(data))
         if max_val > 0:
             data = data / max_val
@@ -111,13 +117,20 @@ if audio:
         st.audio(mic_path)
         st.success("✅ Rekaman tersimpan. Tekan tombol Prediksi untuk memproses.")
 
+        # Tampilkan waveform
+        st.subheader("📈 Waveform Rekaman")
+        fig, ax = plt.subplots(figsize=(10, 2))
+        ax.plot(data, color='blue')
+        ax.set_xlabel("Samples")
+        ax.set_ylabel("Amplitude")
+        st.pyplot(fig)
+
 # --------------------
 # Tombol Prediksi
 # --------------------
 if st.button("🔍 Prediksi"):
     path = None
 
-    # Tentukan sumber audio
     if uploaded:
         path = os.path.join(os.getcwd(), "temp_upload.wav")
         with open(path, "wb") as f:
@@ -132,9 +145,14 @@ if st.button("🔍 Prediksi"):
 
     # Cek durasi minimal
     y, sr = librosa.load(path, sr=SAMPLE_RATE)
-    if len(y)/sr < MIN_DURATION_SEC:
+    duration = len(y)/sr
+    if duration < MIN_DURATION_SEC:
         st.warning("⚠️ Audio terlalu pendek, coba ulangi.")
         st.stop()
+
+    # Debug fitur
+    features = extract_features(path)
+    st.write("🔹 Fitur audio (mfcc1_std, zcr, mfcc3_mean):", features)
 
     # Prediksi
     label, probs = predict_audio(path)
