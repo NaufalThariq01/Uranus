@@ -69,9 +69,8 @@ audio = mic_recorder(
 )
 
 if audio is not None:
-    # Simpan hasil rekaman
     path = "temp_upload.wav"
-    sf.write(path, audio["bytes"], 44100, format="WAV")
+    sf.write(path, audio["array"], 44100, format="WAV")
 
     st.audio(path, format="audio/wav")
 
