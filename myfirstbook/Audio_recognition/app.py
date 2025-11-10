@@ -68,12 +68,48 @@ audio = mic_recorder(
     use_container_width=True
 )
 
-if audio is not None:
+if len(audio) > 0:
     path = "temp_upload.wav"
-    sf.write(path, audio["array"], 44100, format="WAV")
 
-    st.audio(path, format="audio/wav")
+    # --- Deteksi format audio yang dikembalikan ---
+    if isinstance(audio, np.ndarray):
+        data = audio
+        sr = 44100
 
+    elif isinstance(audio, dict):
+        if "array" in audio:
+            data = np.array(audio["array"], dtype=np.float32)
+            sr = audio.get("sample_rate", 44100)
+        elif "bytes" in audio:
+            data = np.frombuffer(audio["bytes"], dtype=np.int16)
+            sr = audio.get("sample_rate", 44100)
+        elif "data" in audio:
+            data = np.array(audio["data"], dtype=np.float32)
+            sr = audio.get("sample_rate", 44100)
+        else:
+            st.error("❌ Format audio tidak dikenali. Struktur: " + str(audio))
+            st.stop()
+
+    else:
+        try:
+            from pydub import AudioSegment
+            if isinstance(audio, AudioSegment):
+                audio.export(path, format="wav")
+                sr = 44100
+                data = None
+        except:
+            st.error("❌ Tidak dapat menulis file audio.")
+            st.stop()
+
+    # --- Tulis file ---
+    if data is not None:
+        if data.ndim == 1:
+            data = np.expand_dims(data, axis=1)
+        sf.write(path, data, sr, format="WAV")
+
+    st.audio(path)
+
+    # --- Prediksi ---
     st.info("⏳ Memproses audio...")
     kategori, probs = predict_audio(path)
 
