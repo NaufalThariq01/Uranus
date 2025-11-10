@@ -4,16 +4,16 @@ import librosa
 import soundfile as sf
 import pickle
 import streamlit as st
-from streamlit_webrtc import webrtc_streamer, AudioProcessorBase, RTCConfiguration
+from streamlit_mic_recorder import mic_recorder
 import warnings
 
 # ======================
 # Konfigurasi Global
 # ======================
 warnings.filterwarnings('ignore')
-SAMPLE_RATE = 48000
+SAMPLE_RATE = 44100
 THRESHOLD = 0.6
-MIN_DURATION_SEC = 0.5  
+MIN_DURATION_SEC = 0.5
 
 # ======================
 # Load Model & Scaler
@@ -73,65 +73,66 @@ def predict_audio(path):
 # UI Streamlit
 # ======================
 st.title("🎵 Identifikasi Suara: Buka / Tutup / Penyusup")
-st.write("Unggah file .wav atau rekam langsung dari microphone.")
+st.write("Unggah file .wav atau rekam suara dari microphone.")
 
 # --- Upload File ---
 uploaded = st.file_uploader("📂 Pilih file audio (.wav)", type=["wav"])
-if uploaded:
-    path = os.path.join(os.getcwd(), "temp_upload.wav")
-    with open(path, "wb") as f:
-        f.write(uploaded.getbuffer())
-    st.audio(uploaded, format="audio/wav")
-
-    label, probs = predict_audio(path)
-    st.subheader("🎯 Hasil Prediksi")
-    st.write(f"**Kategori:** {label}")
-    st.write("📊 Probabilitas:")
-    for l, p in zip(model.classes_, probs):
-        st.write(f"- {l}: {p:.2f}")
-    if label == "Penyusup":
-        st.warning("⚠️ Suara tidak dikenali!")
 
 # --- Rekam Mic ---
-st.header("🎤 Rekam dari Microphone")
-
-class AudioProcessor(AudioProcessorBase):
-    def recv_audio(self, frame):
-        data = frame.to_ndarray().flatten()
-        # Normalisasi
-        max_val = np.max(np.abs(data))
-        if max_val > 0:
-            data = data / max_val
-        temp_path = os.path.join(os.getcwd(), "temp_mic.wav")
-        sf.write(temp_path, data, SAMPLE_RATE)
-        return frame
-
-webrtc_streamer(
-    key="audio",
-    audio_processor_factory=AudioProcessor,
-    media_stream_constraints={"audio": True, "video": False},
-    rtc_configuration=RTCConfiguration({})
+st.subheader("🎤 Rekam dari Microphone")
+audio = mic_recorder(
+    start_prompt="Mulai Rekam",
+    stop_prompt="Selesai Rekam",
+    just_once=True,
+    use_container_width=True
 )
 
-if st.button("🔍 Deteksi dari Microphone"):
-    try:
-        temp_path = os.path.join(os.getcwd(), "temp_mic.wav")
-        if not os.path.exists(temp_path):
-            st.warning("⚠️ Belum ada rekaman dari microphone.")
-        else:
-            # cek durasi minimal
-            y, sr = librosa.load(temp_path, sr=SAMPLE_RATE)
-            if len(y)/sr < MIN_DURATION_SEC:
-                st.warning("⚠️ Rekaman terlalu pendek, coba ulangi.")
-            else:
-                st.audio(temp_path)
-                label, probs = predict_audio(temp_path)
-                st.subheader("🎯 Hasil Prediksi")
-                st.write(f"**Kategori:** {label}")
-                st.write("📊 Probabilitas:")
-                for l, p in zip(model.classes_, probs):
-                    st.write(f"- {l}: {p:.2f}")
-                if label == "Penyusup":
-                    st.warning("⚠️ Suara tidak dikenali!")
-    except Exception as e:
-        st.error(f"Terjadi error: {e}")
+# --- Tombol Prediksi ---
+if st.button("🔍 Prediksi"):
+    path = None
+    data = None
+    sr = SAMPLE_RATE
+
+    # Tentukan sumber audio
+    if uploaded:
+        path = os.path.join(os.getcwd(), "temp_upload.wav")
+        with open(path, "wb") as f:
+            f.write(uploaded.getbuffer())
+        st.audio(uploaded, format="audio/wav")
+
+    elif audio:
+        path = os.path.join(os.getcwd(), "temp_mic.wav")
+        if isinstance(audio, dict):
+            if "array" in audio:
+                data = np.array(audio["array"], dtype=np.float32)
+            elif "bytes" in audio and audio["bytes"]:
+                data = np.frombuffer(audio["bytes"], dtype=np.int16)
+        elif isinstance(audio, np.ndarray):
+            data = audio
+
+        if data is not None:
+            # Normalisasi
+            max_val = np.max(np.abs(data))
+            if max_val > 0:
+                data = data / max_val
+            sf.write(path, data, sr)
+            st.audio(path)
+
+    else:
+        st.warning("⚠️ Silakan upload file atau rekam dari microphone terlebih dahulu.")
+        st.stop()
+
+    # Cek durasi minimal
+    y, sr = librosa.load(path, sr=SAMPLE_RATE)
+    if len(y)/sr < MIN_DURATION_SEC:
+        st.warning("⚠️ Rekaman terlalu pendek, coba ulangi.")
+    else:
+        # Prediksi
+        label, probs = predict_audio(path)
+        st.subheader("🎯 Hasil Prediksi")
+        st.write(f"**Kategori:** {label}")
+        st.write("📊 Probabilitas:")
+        for l, p in zip(model.classes_, probs):
+            st.write(f"- {l}: {p:.2f}")
+        if label == "Penyusup":
+            st.warning("⚠️ Suara tidak dikenali!")
