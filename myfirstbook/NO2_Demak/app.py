@@ -78,8 +78,13 @@ if st.button("Prediksi Sekarang"):
     X_input = np.array(inputs).reshape(1, -1)
 
     try:
+        # Scaling input dan prediksi
         X_scaled = scaler.transform(X_input)
-        prediction = model.predict(X_scaled)[0]
+        prediction = model.predict(X_scaled)
+        if isinstance(prediction, (np.ndarray, list)):
+            prediction = float(prediction[0])  # ambil elemen pertama dan pastikan float
+        else:
+            prediction = float(prediction)
 
         st.success(f"💡 Hasil prediksi kadar NO₂: **{prediction:.8f} mol/m²**")
 
