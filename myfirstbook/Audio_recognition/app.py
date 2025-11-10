@@ -75,10 +75,14 @@ def predict_audio(path):
 st.title("🎵 Identifikasi Suara: Buka / Tutup / Penyusup")
 st.write("Unggah file .wav atau rekam suara dari microphone.")
 
-# --- Upload File ---
+# --------------------
+# Upload File
+# --------------------
 uploaded = st.file_uploader("📂 Pilih file audio (.wav)", type=["wav"])
 
-# --- Rekam Mic ---
+# --------------------
+# Rekam Mic
+# --------------------
 st.subheader("🎤 Rekam dari Microphone")
 audio = mic_recorder(
     start_prompt="Mulai Rekam",
@@ -87,7 +91,13 @@ audio = mic_recorder(
     use_container_width=True
 )
 
-# --- Tombol Prediksi ---
+# Status rekaman
+if audio:
+    st.info("✅ Rekaman selesai, tekan tombol Prediksi untuk memproses audio.")
+
+# --------------------
+# Tombol Prediksi
+# --------------------
 if st.button("🔍 Prediksi"):
     path = None
     data = None
