@@ -68,7 +68,7 @@ audio = mic_recorder(
     use_container_width=True
 )
 
-if len(audio) > 0:
+if audio is not None:
     path = "temp_upload.wav"
 
     # --- Deteksi format audio yang dikembalikan ---
