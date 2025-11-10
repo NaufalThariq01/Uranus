@@ -1,14 +1,24 @@
-import streamlit as st
+import os
 import numpy as np
 import librosa
-import pickle
-import os
 import soundfile as sf
-from streamlit_mic_recorder import mic_recorder
+import pickle
+import streamlit as st
+from streamlit_webrtc import webrtc_streamer, AudioProcessorBase, RTCConfiguration
+import warnings
 
-# ==========================
-# Load model & scaler
-# ==========================
+# ======================
+# Konfigurasi Global
+# ======================
+warnings.filterwarnings('ignore')
+SAMPLE_RATE = 48000
+THRESHOLD = 0.6
+MIN_DURATION_SEC = 0.5  
+
+# ======================
+# Load Model & Scaler
+# ======================
+@st.cache_resource
 def load_model_scaler():
     base_dir = os.path.dirname(__file__)
     model_path = os.path.join(base_dir, "model_KNN.pkl")
@@ -27,105 +37,101 @@ def load_model_scaler():
 
 model, scaler = load_model_scaler()
 
-# ==========================
-# Fungsi ekstraksi fitur
-# ==========================
-def extract_features(file_path):
-    y, sr = librosa.load(file_path, sr=None)
-    mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
+# ======================
+# Fungsi Ekstraksi Fitur
+# ======================
+def extract_features(path):
+    y, sr = librosa.load(path, sr=SAMPLE_RATE)
+    y = librosa.util.normalize(y)
+
     zcr = np.mean(librosa.feature.zero_crossing_rate(y))
+    mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=5)
     mfcc1_std = np.std(mfcc[0])
     mfcc3_mean = np.mean(mfcc[2])
-    return np.array([mfcc1_std, zcr, mfcc3_mean]).reshape(1, -1)
 
-# ==========================
-# Fungsi prediksi
-# ==========================
-def predict_audio(file_path):
-    features = extract_features(file_path)
-    X_scaled = scaler.transform(features)
+    return [mfcc1_std, zcr, mfcc3_mean]
+
+# ======================
+# Fungsi Prediksi
+# ======================
+def predict_audio(path):
+    X_new = np.array(extract_features(path)).reshape(1, -1)
+    X_scaled = scaler.transform(X_new)
     probs = model.predict_proba(X_scaled)[0]
-    label = model.predict(X_scaled)[0]
+    pred_idx = np.argmax(probs)
+    label_num = model.classes_[pred_idx]
 
-    if label == 0:
-        kategori = "Buka"
-    elif label == 1:
-        kategori = "Tutup"
-    else:
-        kategori = "Suara Tidak Dikenali"
+    label_map = {0: "Buka", 1: "Tutup"}
+    label = label_map.get(label_num, "unknown")
 
-    return kategori, probs
+    if max(probs) < THRESHOLD:
+        label = "Penyusup"
 
-# ==========================
+    return label, probs
+
+# ======================
 # UI Streamlit
-# ==========================
-st.title("🎙️ Voice Command Recognition")
+# ======================
+st.title("🎵 Identifikasi Suara: Buka / Tutup / Penyusup")
+st.write("Unggah file .wav atau rekam langsung dari microphone.")
 
-audio = mic_recorder(
-    start_prompt="🎤 Mulai Rekam",
-    stop_prompt="⏹️ Selesai Rekam",
-    just_once=True,
-    use_container_width=True
+# --- Upload File ---
+uploaded = st.file_uploader("📂 Pilih file audio (.wav)", type=["wav"])
+if uploaded:
+    path = os.path.join(os.getcwd(), "temp_upload.wav")
+    with open(path, "wb") as f:
+        f.write(uploaded.getbuffer())
+    st.audio(uploaded, format="audio/wav")
+
+    label, probs = predict_audio(path)
+    st.subheader("🎯 Hasil Prediksi")
+    st.write(f"**Kategori:** {label}")
+    st.write("📊 Probabilitas:")
+    for l, p in zip(model.classes_, probs):
+        st.write(f"- {l}: {p:.2f}")
+    if label == "Penyusup":
+        st.warning("⚠️ Suara tidak dikenali!")
+
+# --- Rekam Mic ---
+st.header("🎤 Rekam dari Microphone")
+
+class AudioProcessor(AudioProcessorBase):
+    def recv_audio(self, frame):
+        data = frame.to_ndarray().flatten()
+        # Normalisasi
+        max_val = np.max(np.abs(data))
+        if max_val > 0:
+            data = data / max_val
+        temp_path = os.path.join(os.getcwd(), "temp_mic.wav")
+        sf.write(temp_path, data, SAMPLE_RATE)
+        return frame
+
+webrtc_streamer(
+    key="audio",
+    audio_processor_factory=AudioProcessor,
+    media_stream_constraints={"audio": True, "video": False},
+    rtc_configuration=RTCConfiguration({})
 )
 
-# ==========================
-# Cek audio aman
-# ==========================
-if audio is not None:
-    path = "temp_upload.wav"
-    data = None
-    sr = 44100
-
-    if isinstance(audio, np.ndarray):
-        data = audio
-
-    elif isinstance(audio, dict):
-        if "array" in audio:
-            data = np.array(audio["array"], dtype=np.float32)
-            sr = audio.get("sample_rate", 44100)
-        elif "bytes" in audio and audio["bytes"]:
-            if isinstance(audio["bytes"], (bytes, bytearray)):
-                data = np.frombuffer(audio["bytes"], dtype=np.int16)
-            else:  # misal list
-                data = np.array(audio["bytes"], dtype=np.int16)
-            sr = audio.get("sample_rate", 44100)
-        elif "data" in audio:
-            data = np.array(audio["data"], dtype=np.float32)
-            sr = audio.get("sample_rate", 44100)
+if st.button("🔍 Deteksi dari Microphone"):
+    try:
+        temp_path = os.path.join(os.getcwd(), "temp_mic.wav")
+        if not os.path.exists(temp_path):
+            st.warning("⚠️ Belum ada rekaman dari microphone.")
         else:
-            st.error("❌ Format audio tidak dikenali. Struktur: " + str(audio))
-            st.stop()
-
-    else:
-        try:
-            from pydub import AudioSegment
-            if isinstance(audio, AudioSegment):
-                audio.export(path, format="wav")
-        except:
-            st.error("❌ Tidak dapat menulis file audio.")
-            st.stop()
-
-    # ==========================
-    # Tulis file WAV
-    # ==========================
-    if data is not None:
-        if data.ndim == 1:
-            data = np.expand_dims(data, axis=1)
-        sf.write(path, data, sr, format="WAV")
-
-    st.audio(path)
-
-    # ==========================
-    # Prediksi
-    # ==========================
-    st.info("⏳ Memproses audio...")
-    kategori, probs = predict_audio(path)
-
-    st.success(f"🎯 Hasil Prediksi: **{kategori}**")
-    st.write("📊 Probabilitas:")
-    for i, p in enumerate(probs):
-        label_text = "Buka" if i == 0 else "Tutup"
-        st.write(f"- {label_text}: {p:.2f}")
-
-else:
-    st.info("🔹 Tekan tombol rekam untuk memulai.")
+            # cek durasi minimal
+            y, sr = librosa.load(temp_path, sr=SAMPLE_RATE)
+            if len(y)/sr < MIN_DURATION_SEC:
+                st.warning("⚠️ Rekaman terlalu pendek, coba ulangi.")
+            else:
+                st.audio(temp_path)
+                label, probs = predict_audio(temp_path)
+                st.subheader("🎯 Hasil Prediksi")
+                st.write(f"**Kategori:** {label}")
+                st.write("📊 Probabilitas:")
+                for l, p in zip(model.classes_, probs):
+                    st.write(f"- {l}: {p:.2f}")
+                if label == "Penyusup":
+                    st.warning("⚠️ Suara tidak dikenali!")
+    except Exception as e:
+        st.error(f"Terjadi error: {e}")
