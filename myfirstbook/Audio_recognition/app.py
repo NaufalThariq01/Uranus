@@ -4,7 +4,7 @@ import librosa
 import pickle
 import os
 import soundfile as sf
-from streamlit_mic_recorder import mic_recorder, speech_to_text
+from streamlit_mic_recorder import mic_recorder
 
 # ==========================
 # Load model & scaler
@@ -46,14 +46,14 @@ def predict_audio(file_path):
     X_scaled = scaler.transform(features)
     probs = model.predict_proba(X_scaled)[0]
     label = model.predict(X_scaled)[0]
-    
+
     if label == 0:
         kategori = "Buka"
     elif label == 1:
         kategori = "Tutup"
     else:
         kategori = "Suara Tidak Dikenali"
-    
+
     return kategori, probs
 
 # ==========================
@@ -68,20 +68,26 @@ audio = mic_recorder(
     use_container_width=True
 )
 
+# ==========================
+# Cek audio aman
+# ==========================
 if audio is not None:
     path = "temp_upload.wav"
+    data = None
+    sr = 44100
 
-    # --- Deteksi format audio yang dikembalikan ---
     if isinstance(audio, np.ndarray):
         data = audio
-        sr = 44100
 
     elif isinstance(audio, dict):
         if "array" in audio:
             data = np.array(audio["array"], dtype=np.float32)
             sr = audio.get("sample_rate", 44100)
-        elif "bytes" in audio:
-            data = np.frombuffer(audio["bytes"], dtype=np.int16)
+        elif "bytes" in audio and audio["bytes"]:
+            if isinstance(audio["bytes"], (bytes, bytearray)):
+                data = np.frombuffer(audio["bytes"], dtype=np.int16)
+            else:  # misal list
+                data = np.array(audio["bytes"], dtype=np.int16)
             sr = audio.get("sample_rate", 44100)
         elif "data" in audio:
             data = np.array(audio["data"], dtype=np.float32)
@@ -95,13 +101,13 @@ if audio is not None:
             from pydub import AudioSegment
             if isinstance(audio, AudioSegment):
                 audio.export(path, format="wav")
-                sr = 44100
-                data = None
         except:
             st.error("❌ Tidak dapat menulis file audio.")
             st.stop()
 
-    # --- Tulis file ---
+    # ==========================
+    # Tulis file WAV
+    # ==========================
     if data is not None:
         if data.ndim == 1:
             data = np.expand_dims(data, axis=1)
@@ -109,12 +115,17 @@ if audio is not None:
 
     st.audio(path)
 
-    # --- Prediksi ---
+    # ==========================
+    # Prediksi
+    # ==========================
     st.info("⏳ Memproses audio...")
     kategori, probs = predict_audio(path)
 
     st.success(f"🎯 Hasil Prediksi: **{kategori}**")
     st.write("📊 Probabilitas:")
     for i, p in enumerate(probs):
-        label = "Buka" if i == 0 else "Tutup"
-        st.write(f"- {label}: {p:.2f}")
+        label_text = "Buka" if i == 0 else "Tutup"
+        st.write(f"- {label_text}: {p:.2f}")
+
+else:
+    st.info("🔹 Tekan tombol rekam untuk memulai.")
