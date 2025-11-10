@@ -13,7 +13,7 @@ import warnings
 warnings.filterwarnings('ignore')
 SAMPLE_RATE = 44100
 THRESHOLD = 0.6
-MIN_DURATION_SEC = 0.5
+MIN_DURATION_SEC = 0.5  # Durasi minimal audio dalam detik
 
 # ======================
 # Load Model & Scaler
@@ -23,7 +23,6 @@ def load_model_scaler():
     base_dir = os.path.dirname(__file__)
     model_path = os.path.join(base_dir, "model_KNN.pkl")
     scaler_path = os.path.join(base_dir, "scaler.pkl")
-
     try:
         with open(model_path, "rb") as f:
             model = pickle.load(f)
@@ -43,12 +42,10 @@ model, scaler = load_model_scaler()
 def extract_features(path):
     y, sr = librosa.load(path, sr=SAMPLE_RATE)
     y = librosa.util.normalize(y)
-
     zcr = np.mean(librosa.feature.zero_crossing_rate(y))
     mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=5)
     mfcc1_std = np.std(mfcc[0])
     mfcc3_mean = np.mean(mfcc[2])
-
     return [mfcc1_std, zcr, mfcc3_mean]
 
 # ======================
@@ -91,17 +88,34 @@ audio = mic_recorder(
     use_container_width=True
 )
 
-# Status rekaman
+# Simpan rekaman mic langsung ke file
+mic_path = os.path.join(os.getcwd(), "temp_mic.wav")
 if audio:
-    st.info("✅ Rekaman selesai, tekan tombol Prediksi untuk memproses audio.")
+    data = None
+    sr = SAMPLE_RATE
+
+    if isinstance(audio, dict):
+        if "array" in audio:
+            data = np.array(audio["array"], dtype=np.float32)
+        elif "bytes" in audio and audio["bytes"]:
+            data = np.frombuffer(audio["bytes"], dtype=np.int16)
+    elif isinstance(audio, np.ndarray):
+        data = audio
+
+    if data is not None:
+        # Normalisasi
+        max_val = np.max(np.abs(data))
+        if max_val > 0:
+            data = data / max_val
+        sf.write(mic_path, data, sr)
+        st.audio(mic_path)
+        st.success("✅ Rekaman tersimpan. Tekan tombol Prediksi untuk memproses.")
 
 # --------------------
 # Tombol Prediksi
 # --------------------
 if st.button("🔍 Prediksi"):
     path = None
-    data = None
-    sr = SAMPLE_RATE
 
     # Tentukan sumber audio
     if uploaded:
@@ -109,25 +123,9 @@ if st.button("🔍 Prediksi"):
         with open(path, "wb") as f:
             f.write(uploaded.getbuffer())
         st.audio(uploaded, format="audio/wav")
-
-    elif audio:
-        path = os.path.join(os.getcwd(), "temp_mic.wav")
-        if isinstance(audio, dict):
-            if "array" in audio:
-                data = np.array(audio["array"], dtype=np.float32)
-            elif "bytes" in audio and audio["bytes"]:
-                data = np.frombuffer(audio["bytes"], dtype=np.int16)
-        elif isinstance(audio, np.ndarray):
-            data = audio
-
-        if data is not None:
-            # Normalisasi
-            max_val = np.max(np.abs(data))
-            if max_val > 0:
-                data = data / max_val
-            sf.write(path, data, sr)
-            st.audio(path)
-
+    elif os.path.exists(mic_path):
+        path = mic_path
+        st.audio(path)
     else:
         st.warning("⚠️ Silakan upload file atau rekam dari microphone terlebih dahulu.")
         st.stop()
@@ -135,14 +133,15 @@ if st.button("🔍 Prediksi"):
     # Cek durasi minimal
     y, sr = librosa.load(path, sr=SAMPLE_RATE)
     if len(y)/sr < MIN_DURATION_SEC:
-        st.warning("⚠️ Rekaman terlalu pendek, coba ulangi.")
-    else:
-        # Prediksi
-        label, probs = predict_audio(path)
-        st.subheader("🎯 Hasil Prediksi")
-        st.write(f"**Kategori:** {label}")
-        st.write("📊 Probabilitas:")
-        for l, p in zip(model.classes_, probs):
-            st.write(f"- {l}: {p:.2f}")
-        if label == "Penyusup":
-            st.warning("⚠️ Suara tidak dikenali!")
+        st.warning("⚠️ Audio terlalu pendek, coba ulangi.")
+        st.stop()
+
+    # Prediksi
+    label, probs = predict_audio(path)
+    st.subheader("🎯 Hasil Prediksi")
+    st.write(f"**Kategori:** {label}")
+    st.write("📊 Probabilitas:")
+    for l, p in zip(model.classes_, probs):
+        st.write(f"- {l}: {p:.2f}")
+    if label == "Penyusup":
+        st.warning("⚠️ Suara tidak dikenali!")
