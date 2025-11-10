@@ -71,7 +71,7 @@ for i in range(n_features):
     )
     inputs.append(value)
 
-# ======================
+## ======================
 # 🔮 Prediksi
 # ======================
 if st.button("Prediksi Sekarang"):
@@ -84,19 +84,26 @@ if st.button("Prediksi Sekarang"):
         # Prediksi
         prediction = model.predict(X_scaled)
 
-        # Pastikan menjadi float tunggal dari array 1D/2D atau float
-        try:
-            prediction = float(prediction.item())  # item() aman untuk array 1D/2D
-        except AttributeError:
-            prediction = float(prediction)        # fallback jika sudah float
+        # ======================
+        # 🔹 Konversi prediksi menjadi float tunggal
+        # ======================
+        if isinstance(prediction, np.ndarray):
+            if prediction.ndim == 2:       # array 2D, ambil elemen pertama
+                prediction_value = float(prediction[0, 0])
+            else:                           # array 1D, ambil elemen pertama
+                prediction_value = float(prediction[0])
+        else:                               # sudah float tunggal
+            prediction_value = float(prediction)
 
         # Tampilkan hasil prediksi
-        st.success(f"💡 Hasil prediksi kadar NO₂: **{prediction:.8f} mol/m²**")
+        st.success(f"💡 Hasil prediksi kadar NO₂: **{prediction_value:.8f} mol/m²**")
 
-        # Tambah interpretasi kategori kualitas udara
-        if prediction <= 0.000019:
+        # ======================
+        # 🔹 Interpretasi kategori kualitas udara
+        # ======================
+        if prediction_value <= 0.000019:
             kategori = "🟢 RENDAH"
-        elif 0.000019 < prediction <= 0.000035:
+        elif 0.000019 < prediction_value <= 0.000035:
             kategori = "🟡 SEDANG"
         else:
             kategori = "🔴 TINGGI"
