@@ -86,7 +86,7 @@ def extract_features(y, sr=SAMPLE_RATE):
 # ============================================================
 @st.cache_resource
 def load_all():
-    model = pickle.load(open("model.pkl", "rb"))
+    model = pickle.load(open("model_KNN.pkl", "rb"))
     scaler = pickle.load(open("scaler.pkl", "rb"))
     selected_features = pickle.load(open("selected_features.pkl", "rb"))
     return model, scaler, selected_features
