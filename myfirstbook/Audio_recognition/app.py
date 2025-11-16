@@ -1,165 +1,165 @@
-import os
+import streamlit as st
+import pandas as pd
 import numpy as np
 import librosa
-import soundfile as sf
 import pickle
-import streamlit as st
+import soundfile as sf
 from streamlit_mic_recorder import mic_recorder
-import matplotlib.pyplot as plt
-import warnings
+from scipy.signal import resample
 
-# ======================
-# Konfigurasi Global
-# ======================
-warnings.filterwarnings('ignore')
-SAMPLE_RATE = 44100
-THRESHOLD = 0.4  # turunkan sementara untuk deteksi penyusup
-MIN_DURATION_SEC = 1.0 
+# ============================================================
+# Konfigurasi
+# ============================================================
+SAMPLE_RATE = 16000
 
-# ======================
-# Load Model & Scaler
-# ======================
+# ============================================================
+# Fungsi Ekstraksi Fitur (versi terbaru)
+# ============================================================
+def extract_features(y, sr=SAMPLE_RATE):
+    features = []
+
+    # 1. Basic stats
+    features += [
+        np.mean(y),
+        np.std(y),
+        np.var(y),
+        np.mean((y - np.mean(y))**3)/(np.std(y)**3 + 1e-6), 
+        np.mean((y - np.mean(y))**4)/(np.std(y)**4 + 1e-6),
+        np.sqrt(np.mean(y**2)),
+        np.mean(librosa.feature.zero_crossing_rate(y)),
+        np.std(librosa.feature.zero_crossing_rate(y)),
+        np.max(y) - np.min(y)
+    ]
+
+    # 2. Spectral features
+    spec_centroid = librosa.feature.spectral_centroid(y=y, sr=sr)
+    spec_bandwidth = librosa.feature.spectral_bandwidth(y=y, sr=sr)
+    spec_contrast = librosa.feature.spectral_contrast(y=y, sr=sr)
+    spec_rolloff = librosa.feature.spectral_rolloff(y=y, sr=sr)
+    spec_flatness = librosa.feature.spectral_flatness(y=y)
+    chroma = librosa.feature.chroma_stft(y=y, sr=sr)
+
+    features += [
+        np.mean(spec_centroid), np.std(spec_centroid),
+        np.mean(spec_bandwidth), np.std(spec_bandwidth),
+        np.mean(spec_contrast), np.std(spec_contrast),
+        np.mean(spec_rolloff), np.std(spec_rolloff),
+        np.mean(spec_flatness), np.std(spec_flatness),
+        np.mean(chroma), np.std(chroma)
+    ]
+
+    # 3. MFCC
+    mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
+    for i in range(13):
+        features.append(np.mean(mfcc[i]))
+    for i in range(13):
+        features.append(np.std(mfcc[i]))
+
+    # Delta MFCC
+    mfcc_delta = librosa.feature.delta(mfcc)
+    for i in range(13):
+        features.append(np.mean(mfcc_delta[i]))
+    for i in range(13):
+        features.append(np.std(mfcc_delta[i]))
+
+    # 4. Temporal / Energy
+    rms = librosa.feature.rms(y=y)
+    features.append(np.mean(rms))
+    features.append(np.std(rms))
+
+    onset_env = librosa.onset.onset_strength(y=y, sr=sr)
+    features.append(np.mean(onset_env))
+    features.append(np.std(onset_env))
+
+    tempo = librosa.beat.tempo(onset_envelope=onset_env, sr=sr)
+    features.append(float(tempo[0]))
+
+    autocorr = np.correlate(y, y, mode="full")
+    mid = len(autocorr) // 2
+    features.append(np.argmax(autocorr[mid+1:]) + 1)
+
+    return np.array(features)
+
+
+# ============================================================
+# Load model dan scaler + fitur terpilih
+# ============================================================
 @st.cache_resource
-def load_model_scaler():
-    base_dir = os.path.dirname(__file__)
-    model_path = os.path.join(base_dir, "model_RandomForest.pkl")
-    scaler_path = os.path.join(base_dir, "scaler.pkl")
-    try:
-        with open(model_path, "rb") as f:
-            model = pickle.load(f)
-        with open(scaler_path, "rb") as f:
-            scaler = pickle.load(f)
-        st.success("✅ Model dan Scaler berhasil dimuat.")
-        return model, scaler
-    except Exception as e:
-        st.error(f"❌ Gagal memuat model atau scaler: {e}")
-        st.stop()
+def load_all():
+    model = pickle.load(open("model.pkl", "rb"))
+    scaler = pickle.load(open("scaler.pkl", "rb"))
+    selected_features = pickle.load(open("selected_features.pkl", "rb"))
+    return model, scaler, selected_features
 
-model, scaler = load_model_scaler()
 
-# ======================
-# Fungsi Ekstraksi Fitur
-# ======================
-def extract_features(path):
-    y, sr = librosa.load(path, sr=SAMPLE_RATE)
-    y = librosa.util.normalize(y)
+model, scaler, selected_features = load_all()
 
-    zcr = np.mean(librosa.feature.zero_crossing_rate(y))
-    mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=5)
-    mfcc1_std = np.std(mfcc[0])
-    mfcc3_mean = np.mean(mfcc[2])
+# ============================================================
+# Streamlit UI
+# ============================================================
+st.title("🎤 Audio Command Recognition")
+st.write("Sistem klasifikasi suara dengan fitur audio + Machine Learning")
 
-    return [mfcc1_std, zcr, mfcc3_mean]
+tab1, tab2 = st.tabs(["🎙️ Rekam Suara", "📁 Upload File"])
 
-# ======================
-# Fungsi Prediksi
-# ======================
-def predict_audio(path):
-    X_new = np.array(extract_features(path)).reshape(1, -1)
-    X_scaled = scaler.transform(X_new)
-    probs = model.predict_proba(X_scaled)[0]
-    pred_idx = np.argmax(probs)
-    label_num = model.classes_[pred_idx]
+# ============================================================
+# TAB 1 — Microphone
+# ============================================================
+with tab1:
+    st.subheader("Rekam suara")
 
-    label_map = {0: "Buka", 1: "Tutup"}
-    label = label_map.get(label_num, "unknown")
+    audio_data = mic_recorder(
+        start_prompt="Mulai Rekam",
+        stop_prompt="Berhenti",
+        format="wav"
+    )
 
-    if max(probs) < THRESHOLD:
-        label = "Penyusup"
+    if audio_data:
+        st.audio(audio_data["bytes"], format="audio/wav")
 
-    return label, probs
+        # Load wav buffer
+        y, sr = sf.read(audio_data["bytes"])
 
-# ======================
-# UI Streamlit
-# ======================
-st.title("🎵 Identifikasi Suara: Buka / Tutup / Penyusup")
-st.write("Unggah file .wav atau rekam suara dari microphone.")
+        # Pastikan mono
+        if len(y.shape) == 2:
+            y = np.mean(y, axis=1)
 
-# --------------------
-# Upload File
-# --------------------
-uploaded = st.file_uploader("📂 Pilih file audio (.wav)", type=["wav"])
+        # Resample ke SAMPLE_RATE
+        if sr != SAMPLE_RATE:
+            y = librosa.resample(y, orig_sr=sr, target_sr=SAMPLE_RATE)
 
-# --------------------
-# Rekam Mic
-# --------------------
-st.subheader("🎤 Rekam dari Microphone")
-audio = mic_recorder(
-    start_prompt="Mulai Rekam",
-    stop_prompt="Selesai Rekam",
-    just_once=True,
-    use_container_width=True
-)
+        # Ekstraksi fitur
+        feats = extract_features(y).reshape(1, -1)
 
-mic_path = os.path.join(os.getcwd(), "temp_mic.wav")
+        # Pilih fitur yang sama seperti training
+        feats_df = pd.DataFrame(feats)
+        feats_df = feats_df.iloc[:, selected_features]
 
-if audio:
-    data = None
-    sr = SAMPLE_RATE
+        # Scaling
+        feats_scaled = scaler.transform(feats_df)
 
-    if isinstance(audio, dict):
-        if "array" in audio:
-            data = np.array(audio["array"], dtype=np.float32)
-        elif "bytes" in audio and audio["bytes"]:
-            data = np.frombuffer(audio["bytes"], dtype=np.int16).astype(np.float32)
-    elif isinstance(audio, np.ndarray):
-        data = audio.astype(np.float32)
+        # Prediksi
+        pred = model.predict(feats_scaled)[0]
+        st.success(f"🎯 Prediksi: **{pred}**")
 
-    if data is not None:
-        # Stereo -> mono
-        if data.ndim > 1:
-            data = data.mean(axis=1)
-        # Normalisasi aman
-        max_val = np.max(np.abs(data))
-        if max_val > 0:
-            data = data / max_val
-        sf.write(mic_path, data, sr)
-        st.audio(mic_path)
-        st.success("✅ Rekaman tersimpan. Tekan tombol Prediksi untuk memproses.")
+# ============================================================
+# TAB 2 — Upload file WAV
+# ============================================================
+with tab2:
+    st.subheader("Upload file WAV")
 
-        # Tampilkan waveform
-        st.subheader("📈 Waveform Rekaman")
-        fig, ax = plt.subplots(figsize=(10, 2))
-        ax.plot(data, color='blue')
-        ax.set_xlabel("Samples")
-        ax.set_ylabel("Amplitude")
-        st.pyplot(fig)
+    file = st.file_uploader("Pilih file WAV", type=['wav'])
 
-# --------------------
-# Tombol Prediksi
-# --------------------
-if st.button("🔍 Prediksi"):
-    path = None
+    if file:
+        st.audio(file, format="audio/wav")
 
-    if uploaded:
-        path = os.path.join(os.getcwd(), "temp_upload.wav")
-        with open(path, "wb") as f:
-            f.write(uploaded.getbuffer())
-        st.audio(uploaded, format="audio/wav")
-    elif os.path.exists(mic_path):
-        path = mic_path
-        st.audio(path)
-    else:
-        st.warning("⚠️ Silakan upload file atau rekam dari microphone terlebih dahulu.")
-        st.stop()
+        y, sr = librosa.load(file, sr=SAMPLE_RATE)
 
-    # Cek durasi minimal
-    y, sr = librosa.load(path, sr=SAMPLE_RATE)
-    duration = len(y)/sr
-    if duration < MIN_DURATION_SEC:
-        st.warning("⚠️ Audio terlalu pendek, coba ulangi.")
-        st.stop()
+        feats = extract_features(y).reshape(1, -1)
+        feats_df = pd.DataFrame(feats)
+        feats_df = feats_df.iloc[:, selected_features]
 
-    # Debug fitur
-    features = extract_features(path)
-    st.write("🔹 Fitur audio (mfcc1_std, zcr, mfcc3_mean):", features)
+        feats_scaled = scaler.transform(feats_df)
+        pred = model.predict(feats_scaled)[0]
 
-    # Prediksi
-    label, probs = predict_audio(path)
-    st.subheader("🎯 Hasil Prediksi")
-    st.write(f"**Kategori:** {label}")
-    st.write("📊 Probabilitas:")
-    for l, p in zip(model.classes_, probs):
-        st.write(f"- {l}: {p:.2f}")
-    if label == "Penyusup":
-        st.warning("⚠️ Suara tidak dikenali!")
+        st.success(f"🎯 Prediksi: **{pred}**")
