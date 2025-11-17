@@ -1,16 +1,18 @@
 import streamlit as st
-import pandas as pd
 import numpy as np
 import librosa
 import pickle
-import soundfile as sf
 from streamlit_mic_recorder import mic_recorder
 import os
 
+
+# ============================================================
+# Konfigurasi Global
+# ============================================================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+SAMPLE_RATE = 16000   # Sample rate dataset + training
 
-SAMPLE_RATE = 16000
 
 # ============================================================
 # Fungsi Ekstraksi Fitur
@@ -81,25 +83,30 @@ def extract_features(y, sr=SAMPLE_RATE):
     return np.array(features)
 
 
+# ============================================================
+# Load Model + Scaler
+# ============================================================
 def load_all():
-    model_path = os.path.join(BASE_DIR, "model_RandomForest.pkl")
-    scaler_path = os.path.join(BASE_DIR, "scaler.pkl")
-
-    model = pickle.load(open(model_path, "rb"))
-    scaler = pickle.load(open(scaler_path, "rb"))
-
+    model = pickle.load(open(os.path.join(BASE_DIR, "model_RandomForest.pkl"), "rb"))
+    scaler = pickle.load(open(os.path.join(BASE_DIR, "scaler.pkl"), "rb"))
     return model, scaler
 
 
 model, scaler = load_all()
 
 
+# ============================================================
+# UI Streamlit
+# ============================================================
 st.title("🎤 Audio Command Recognition")
 st.write("Klasifikasi suara menggunakan fitur audio + Machine Learning")
 
 tab1, tab2 = st.tabs(["🎙️ Rekam Suara", "📁 Upload File"])
 
 
+# ============================================================
+# TAB 1: Rekam Suara
+# ============================================================
 with tab1:
     st.subheader("Rekam suara")
 
@@ -112,31 +119,43 @@ with tab1:
     if audio_data:
         st.audio(audio_data["bytes"], format="audio/wav")
 
-        y, sr = sf.read(audio_data["bytes"])
+        # ======================================
+        # Decode audio bytes -> numpy int16
+        # ======================================
+        raw = audio_data["bytes"]
+        y = np.frombuffer(raw, dtype=np.int16).astype(np.float32)
 
-        if len(y.shape) == 2:
-            y = np.mean(y, axis=1)
+        # Normalisasi (-1 .. 1)
+        y = y / 32768.0
 
-        y = librosa.resample(y, orig_sr=sr, target_sr=SAMPLE_RATE)
+        # Resample dari mic 48k → 16k
+        y = librosa.resample(y, orig_sr=48000, target_sr=SAMPLE_RATE)
 
+        # Minimal panjang 1 detik
+        if len(y) < SAMPLE_RATE:
+            st.error("Rekaman terlalu pendek! Coba rekam minimal 1 detik.")
+            st.stop()
+
+        # Ekstraksi fitur
         feats = extract_features(y).reshape(1, -1)
-
         feats_scaled = scaler.transform(feats)
-
         pred = model.predict(feats_scaled)[0]
 
         st.success(f"🎯 Prediksi: **{pred}**")
 
 
-
+# ============================================================
+# TAB 2: Upload File WAV
+# ============================================================
 with tab2:
-    st.subheader("Upload file WAV")
+    st.subheader("Upload File WAV")
 
-    file = st.file_uploader("Pilih file", type=['wav'])
+    file = st.file_uploader("Pilih file WAV", type=['wav'])
 
     if file:
         st.audio(file, format="audio/wav")
 
+        # Load menggunakan librosa (normal)
         y, sr = librosa.load(file, sr=SAMPLE_RATE)
 
         feats = extract_features(y).reshape(1, -1)
