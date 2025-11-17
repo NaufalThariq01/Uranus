@@ -96,7 +96,7 @@ def extract_features(y, sr=SAMPLE_RATE):
     return np.array(features)
 
 def load_all():
-    model = pickle.load(open(os.path.join(BASE_DIR, "model_RandomForest.pkl"), "rb"))
+    model = pickle.load(open(os.path.join(BASE_DIR, "model_KNN.pkl"), "rb"))
     scaler = pickle.load(open(os.path.join(BASE_DIR, "scaler.pkl"), "rb"))
     return model, scaler
 
