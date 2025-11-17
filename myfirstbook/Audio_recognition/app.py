@@ -5,6 +5,10 @@ import librosa
 import pickle
 import soundfile as sf
 from streamlit_mic_recorder import mic_recorder
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 SAMPLE_RATE = 16000
 
@@ -78,9 +82,14 @@ def extract_features(y, sr=SAMPLE_RATE):
 
 
 def load_all():
-    model = pickle.load(open("model_RandomForest.pkl", "rb"))
-    scaler = pickle.load(open("scaler.pkl", "rb"))
+    model_path = os.path.join(BASE_DIR, "model_RandomForest.pkl")
+    scaler_path = os.path.join(BASE_DIR, "scaler.pkl")
+
+    model = pickle.load(open(model_path, "rb"))
+    scaler = pickle.load(open(scaler_path, "rb"))
+
     return model, scaler
+
 
 model, scaler = load_all()
 
