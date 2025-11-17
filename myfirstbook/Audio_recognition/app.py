@@ -14,31 +14,34 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SAMPLE_RATE = 16000   # Sample rate dataset + training
 
 
-# ============================================================
-# Fungsi Ekstraksi Fitur
-# ============================================================
 def extract_features(y, sr=SAMPLE_RATE):
     features = []
 
-    # --- Basic Stats ---
+    # =====================================
+    # 1. Basic Stats (9)
+    # =====================================
     features += [
         np.mean(y),
         np.std(y),
         np.var(y),
-        np.mean((y - np.mean(y))**3)/(np.std(y)**3 + 1e-6),
-        np.mean((y - np.mean(y))**4)/(np.std(y)**4 + 1e-6),
-        np.sqrt(np.mean(y**2)),
-        np.mean(librosa.feature.zero_crossing_rate(y)),
-        np.std(librosa.feature.zero_crossing_rate(y)),
-        np.max(y) - np.min(y)
+        np.mean((y - np.mean(y))**3)/(np.std(y)**3 + 1e-6),   # skew
+        np.mean((y - np.mean(y))**4)/(np.std(y)**4 + 1e-6),   # kurtosis
+        np.sqrt(np.mean(y**2)),                               # rms_global
     ]
 
-    # --- Spectral Features ---
-    spec_centroid = librosa.feature.spectral_centroid(y=y, sr=sr)
-    spec_bandwidth = librosa.feature.spectral_bandwidth(y=y, sr=sr)
+    zcr = librosa.feature.zero_crossing_rate(y)[0]
+    features.append(np.mean(zcr))
+    features.append(np.std(zcr))
+    features.append(np.max(y) - np.min(y))                    # amplitude_range
+
+    # =====================================
+    # 2. Spectral (12)
+    # =====================================
+    spec_centroid = librosa.feature.spectral_centroid(y=y, sr=sr)[0]
+    spec_bandwidth = librosa.feature.spectral_bandwidth(y=y, sr=sr)[0]
     spec_contrast = librosa.feature.spectral_contrast(y=y, sr=sr)
-    spec_rolloff = librosa.feature.spectral_rolloff(y=y, sr=sr)
-    spec_flatness = librosa.feature.spectral_flatness(y=y)
+    spec_rolloff = librosa.feature.spectral_rolloff(y=y, sr=sr)[0]
+    spec_flatness = librosa.feature.spectral_flatness(y=y)[0]
     chroma = librosa.feature.chroma_stft(y=y, sr=sr)
 
     features += [
@@ -50,22 +53,32 @@ def extract_features(y, sr=SAMPLE_RATE):
         np.mean(chroma), np.std(chroma)
     ]
 
-    # --- MFCC (13 mean + 13 std) ---
-    mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
-    for i in range(13):
+    # =====================================
+    # 3. MFCC: 40 coefficients (mean + std)
+    # =====================================
+    mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=40)
+
+    for i in range(40):
         features.append(np.mean(mfcc[i]))
-    for i in range(13):
+
+    for i in range(40):
         features.append(np.std(mfcc[i]))
 
-    # --- Delta MFCC ---
+    # =====================================
+    # 4. Delta MFCC 40 (mean + std)
+    # =====================================
     mfcc_delta = librosa.feature.delta(mfcc)
-    for i in range(13):
+
+    for i in range(40):
         features.append(np.mean(mfcc_delta[i]))
-    for i in range(13):
+
+    for i in range(40):
         features.append(np.std(mfcc_delta[i]))
 
-    # --- Energy / Temporal ---
-    rms = librosa.feature.rms(y=y)
+    # =====================================
+    # 5. RMS, Onset, Tempo, Autocorr Lag (5)
+    # =====================================
+    rms = librosa.feature.rms(y=y)[0]
     features.append(np.mean(rms))
     features.append(np.std(rms))
 
@@ -82,10 +95,6 @@ def extract_features(y, sr=SAMPLE_RATE):
 
     return np.array(features)
 
-
-# ============================================================
-# Load Model + Scaler
-# ============================================================
 def load_all():
     model = pickle.load(open(os.path.join(BASE_DIR, "model_RandomForest.pkl"), "rb"))
     scaler = pickle.load(open(os.path.join(BASE_DIR, "scaler.pkl"), "rb"))
@@ -95,18 +104,12 @@ def load_all():
 model, scaler = load_all()
 
 
-# ============================================================
-# UI Streamlit
-# ============================================================
 st.title("🎤 Audio Command Recognition")
 st.write("Klasifikasi suara menggunakan fitur audio + Machine Learning")
 
 tab1, tab2 = st.tabs(["🎙️ Rekam Suara", "📁 Upload File"])
 
 
-# ============================================================
-# TAB 1: Rekam Suara
-# ============================================================
 with tab1:
     st.subheader("Rekam suara")
 
