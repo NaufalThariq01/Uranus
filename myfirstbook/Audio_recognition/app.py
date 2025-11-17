@@ -77,7 +77,6 @@ def extract_features(y, sr=SAMPLE_RATE):
     return np.array(features)
 
 
-@st.cache_resource
 def load_all():
     model = pickle.load(open("model_RandomForest.pkl", "rb"))
     scaler = pickle.load(open("scaler.pkl", "rb"))
