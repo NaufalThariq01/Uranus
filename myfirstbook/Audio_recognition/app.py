@@ -76,9 +76,7 @@ def extract_features(y, sr=SAMPLE_RATE):
 
     return np.array(features)
 
-# ============================================================
-# Load model dan scaler
-# ============================================================
+
 @st.cache_resource
 def load_all():
     model = pickle.load(open("model_RandomForest.pkl", "rb"))
@@ -87,17 +85,13 @@ def load_all():
 
 model, scaler = load_all()
 
-# ============================================================
-# Streamlit UI
-# ============================================================
+
 st.title("🎤 Audio Command Recognition")
 st.write("Klasifikasi suara menggunakan fitur audio + Machine Learning")
 
 tab1, tab2 = st.tabs(["🎙️ Rekam Suara", "📁 Upload File"])
 
-# ============================================================
-# TAB 1 — Rekam Mic
-# ============================================================
+
 with tab1:
     st.subheader("Rekam suara")
 
@@ -110,30 +104,23 @@ with tab1:
     if audio_data:
         st.audio(audio_data["bytes"], format="audio/wav")
 
-        # Baca audio:
         y, sr = sf.read(audio_data["bytes"])
 
-        # Convert stereo → mono
         if len(y.shape) == 2:
             y = np.mean(y, axis=1)
 
-        # Resample
         y = librosa.resample(y, orig_sr=sr, target_sr=SAMPLE_RATE)
 
-        # Ekstraksi fitur
         feats = extract_features(y).reshape(1, -1)
 
-        # Scaling
         feats_scaled = scaler.transform(feats)
 
-        # Prediksi
         pred = model.predict(feats_scaled)[0]
 
         st.success(f"🎯 Prediksi: **{pred}**")
 
-# ============================================================
-# TAB 2 — Upload File WAV
-# ============================================================
+
+
 with tab2:
     st.subheader("Upload file WAV")
 
