@@ -1,0 +1,1095 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>K-Means Clustering &#8212; My sample book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Audio_recognition/k_means_clustering';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/profile.jpg" class="logo__image only-light" alt="My sample book - Home"/>
+    <script>document.write(`<img src="../_static/profile.jpg" class="logo__image only-dark" alt="My sample book - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Profil Saya
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Memahami Bisnis</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bisnis.html">Memahami Bisnis</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Data Understanding</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../data.html">Data Understanding</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Data Preprocessing</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../preprocessing.html">Data Preprocessing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../oversampling.html">Oversampling</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Permodelan</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../klasifikasi_ecoli.html">import Library</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">KNIME Workflow</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../Knime/Workflow_Pra%20UTS.html">Workflow Pra-UTS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Analisis Kualitas Udara (NO₂) - Kabupaten Demak</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../NO2_Demak/bussines_understanding.html">Business Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NO2_Demak/data_understanding.html">Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NO2_Demak/preprocessing.html">Data Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NO2_Demak/modelling.html">Modelling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NO2_Demak/app.html">Aplikasi Streamlit</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Audio Recognition - Perintah Buka Tutup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="bisnis_understanding.html">Bisnis Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_understanding.html">Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_preparation.html">Data Preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Data Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelling.html">Modelling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">Aplikasi Streamlit</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2FAudio_recognition/k_means_clustering.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/Audio_recognition/k_means_clustering.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>K-Means Clustering</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">Import Library</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#path-dataset">Path Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menampilkan-visual-amplitudo-data-mentah">Menampilkan Visual Amplitudo Data Mentah</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ektraksi-mfcc">Ektraksi MFCC</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ambil-1-data-baru">Ambil 1 Data baru</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-dynamic-time-wrapping-ke-data-lama">Hitung Dynamic Time Wrapping ke Data lama</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-semua-jarak-dtw-suara-baru-ke-seluruh-dataset">Hitung semua jarak DTW suara baru ke seluruh dataset</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="k-means-clustering">
+<h1>K-Means Clustering<a class="headerlink" href="#k-means-clustering" title="Link to this heading">#</a></h1>
+<section id="import-library">
+<h2>Import Library<a class="headerlink" href="#import-library" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">librosa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">silhouette_score</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dtw</span><span class="w"> </span><span class="kn">import</span> <span class="n">dtw</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Importing the dtw module. When using in academic works please cite:
+  T. Giorgino. Computing and Visualizing Dynamic Time Warping Alignments in R: The dtw Package.
+  J. Stat. Soft., doi:10.18637/jss.v031.i07.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="path-dataset">
+<h2>Path Dataset<a class="headerlink" href="#path-dataset" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DATASET_PERSON1</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;D:\KULIAH\SEMESTER 5\Program Saint Data\Uranus\myfirstbook\Audio_recognition\Dataset_Voice_pertama&quot;</span>
+<span class="n">DATASET_PERSON2</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;D:\KULIAH\SEMESTER 5\Program Saint Data\Uranus\myfirstbook\Audio_recognition\Dataset_Voice_kedua&quot;</span>
+
+<span class="n">SUBFOLDERS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Buka_wav&quot;</span><span class="p">,</span> <span class="s2">&quot;Tutup_wav&quot;</span><span class="p">]</span>    
+<span class="n">SUBFOLDERS_2</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Buka&quot;</span><span class="p">,</span> <span class="s2">&quot;Tutup&quot;</span><span class="p">]</span>          
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="menampilkan-visual-amplitudo-data-mentah">
+<h2>Menampilkan Visual Amplitudo Data Mentah<a class="headerlink" href="#menampilkan-visual-amplitudo-data-mentah" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">load_audio_from_folder</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="mi">16000</span><span class="p">):</span>
+    <span class="n">audio_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">folder_path</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.wav&quot;</span><span class="p">):</span>
+            <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+            <span class="n">y</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">)</span>
+            <span class="n">audio_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">file</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">audio_list</span>
+
+
+<span class="n">person1_audio</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">SUBFOLDERS</span><span class="p">:</span>
+    <span class="n">folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATASET_PERSON1</span><span class="p">,</span> <span class="n">sub</span><span class="p">)</span>
+    <span class="n">person1_audio</span><span class="p">[</span><span class="n">sub</span><span class="p">]</span> <span class="o">=</span> <span class="n">load_audio_from_folder</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+
+
+<span class="n">person2_audio</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">SUBFOLDERS_2</span><span class="p">:</span>
+    <span class="n">folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATASET_PERSON2</span><span class="p">,</span> <span class="n">sub</span><span class="p">)</span>
+    <span class="n">person2_audio</span><span class="p">[</span><span class="n">sub</span><span class="p">]</span> <span class="o">=</span> <span class="n">load_audio_from_folder</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_waveforms</span><span class="p">(</span><span class="n">audio_dict</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">category</span><span class="p">,</span> <span class="n">items</span> <span class="ow">in</span> <span class="n">audio_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">filename</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">category</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Samples&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Amplitude&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_waveforms</span><span class="p">(</span><span class="n">person1_audio</span><span class="p">,</span> <span class="s2">&quot;Person 1&quot;</span><span class="p">)</span>
+<span class="n">plot_waveforms</span><span class="p">(</span><span class="n">person2_audio</span><span class="p">,</span> <span class="s2">&quot;Person 2&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/8d1a250e8064dbd3dc5b0976b7d103cd179d47a105fa8764c27d4d161f4f4050.png" src="../_images/8d1a250e8064dbd3dc5b0976b7d103cd179d47a105fa8764c27d4d161f4f4050.png" />
+<img alt="../_images/7485c4d90b61ac95ef185eed0f128342fe85d15a20160668a9e6c404e60ce740.png" src="../_images/7485c4d90b61ac95ef185eed0f128342fe85d15a20160668a9e6c404e60ce740.png" />
+<img alt="../_images/4b4685c0e5d7d836a9d6b46159b576b32401853f00e03a9c2bb155b9003a872e.png" src="../_images/4b4685c0e5d7d836a9d6b46159b576b32401853f00e03a9c2bb155b9003a872e.png" />
+<img alt="../_images/5cbe335ca67611e41223a2d3cc313d5f1d9840ed413af8eaff03b977944feb75.png" src="../_images/5cbe335ca67611e41223a2d3cc313d5f1d9840ed413af8eaff03b977944feb75.png" />
+<img alt="../_images/a341a92aa152097c15ed23d94c3e7a74eeaed182ae8b2413828cb27f74b9bca4.png" src="../_images/a341a92aa152097c15ed23d94c3e7a74eeaed182ae8b2413828cb27f74b9bca4.png" />
+<img alt="../_images/8e49bfddcc3d47f541842bb29906796b6bfac8444d8fa98e19bd9e27f98a5c0f.png" src="../_images/8e49bfddcc3d47f541842bb29906796b6bfac8444d8fa98e19bd9e27f98a5c0f.png" />
+<img alt="../_images/115f03a9052c099fcc44a4673fc4348760407689cd281cd4fe5b31e9992e166c.png" src="../_images/115f03a9052c099fcc44a4673fc4348760407689cd281cd4fe5b31e9992e166c.png" />
+<img alt="../_images/dfedd357901fcc2ecfddbfa553aad79a97d5ad9fa7aa78b766870d4a7a5d14c0.png" src="../_images/dfedd357901fcc2ecfddbfa553aad79a97d5ad9fa7aa78b766870d4a7a5d14c0.png" />
+<img alt="../_images/d8a3650fa1c29c5dc19f08c97e10e8a1470df8bfb987c232017a4f460aea778c.png" src="../_images/d8a3650fa1c29c5dc19f08c97e10e8a1470df8bfb987c232017a4f460aea778c.png" />
+<img alt="../_images/f6b552550dfa7c8ee867ea7eccb9b17ea5c3ea12f0db4d626352590c11409a89.png" src="../_images/f6b552550dfa7c8ee867ea7eccb9b17ea5c3ea12f0db4d626352590c11409a89.png" />
+<img alt="../_images/c35608944ae8dcc117fe9e67360f15f844bd186433ea7e0fc98a565b2bbc2290.png" src="../_images/c35608944ae8dcc117fe9e67360f15f844bd186433ea7e0fc98a565b2bbc2290.png" />
+<img alt="../_images/c93241466dd9308e97b1d0609d204a39730f7fc8e1038e5db71a8c20f52d78f9.png" src="../_images/c93241466dd9308e97b1d0609d204a39730f7fc8e1038e5db71a8c20f52d78f9.png" />
+<img alt="../_images/e3bb817ec2e50c915ca04106a1025b0fd8efe25248f8dc660033f564647acfdf.png" src="../_images/e3bb817ec2e50c915ca04106a1025b0fd8efe25248f8dc660033f564647acfdf.png" />
+<img alt="../_images/c80d80269c510da030ecb5525007dde2f5176bc45b658fc5885735c68bc5f8f0.png" src="../_images/c80d80269c510da030ecb5525007dde2f5176bc45b658fc5885735c68bc5f8f0.png" />
+<img alt="../_images/62f948306317c3fc51d4208ced2ce589a9cd7b074e4fa7cbb681e9d79bb23af0.png" src="../_images/62f948306317c3fc51d4208ced2ce589a9cd7b074e4fa7cbb681e9d79bb23af0.png" />
+<img alt="../_images/8db0a5ab595f9065de960c0092fbc1e9df0571dd7e877440b2d8d8f0d80c39cd.png" src="../_images/8db0a5ab595f9065de960c0092fbc1e9df0571dd7e877440b2d8d8f0d80c39cd.png" />
+<img alt="../_images/43fbe3eee8ffb89c9a438f77ca52c8e9cb89578fa391270ad6347017783bb145.png" src="../_images/43fbe3eee8ffb89c9a438f77ca52c8e9cb89578fa391270ad6347017783bb145.png" />
+<img alt="../_images/4db9882b528957d50f87d1131c13586310a342a7d383db79391ec4f6676ec684.png" src="../_images/4db9882b528957d50f87d1131c13586310a342a7d383db79391ec4f6676ec684.png" />
+<img alt="../_images/7481373e4c3b2cf3ed1c82c80f662d9c44c288102ba37ae4bba6730d95087065.png" src="../_images/7481373e4c3b2cf3ed1c82c80f662d9c44c288102ba37ae4bba6730d95087065.png" />
+<img alt="../_images/e07c65deadd767683da74a9da3bd9956cea2a993ec372f524d3568f6029343c9.png" src="../_images/e07c65deadd767683da74a9da3bd9956cea2a993ec372f524d3568f6029343c9.png" />
+<img alt="../_images/31efe183bf47c0d2f7f5253d1073267aab4a08b7b53cd81032624a2cb5fbc642.png" src="../_images/31efe183bf47c0d2f7f5253d1073267aab4a08b7b53cd81032624a2cb5fbc642.png" />
+<img alt="../_images/6c3ffbfada573e40c258d1ace52a922b9025cf4762ded5bef8c8f50cfb530946.png" src="../_images/6c3ffbfada573e40c258d1ace52a922b9025cf4762ded5bef8c8f50cfb530946.png" />
+<img alt="../_images/0b55f9b8eb6a6ceadb51f346587e030f290f84330cb14063ff8971baeb7b8078.png" src="../_images/0b55f9b8eb6a6ceadb51f346587e030f290f84330cb14063ff8971baeb7b8078.png" />
+<img alt="../_images/0e96fd1391c1a93311c2e6a2d152019e1bffe0bf020f0a1fb94fca07ce835020.png" src="../_images/0e96fd1391c1a93311c2e6a2d152019e1bffe0bf020f0a1fb94fca07ce835020.png" />
+<img alt="../_images/6c6763cf64a138dea807b07279c79728a8e8a60407667a94db2a05643c0f58aa.png" src="../_images/6c6763cf64a138dea807b07279c79728a8e8a60407667a94db2a05643c0f58aa.png" />
+<img alt="../_images/6ad6f32ba682f2920b3a6bb99ae369ec5419dbe5e4e0c074fddff040cece4991.png" src="../_images/6ad6f32ba682f2920b3a6bb99ae369ec5419dbe5e4e0c074fddff040cece4991.png" />
+<img alt="../_images/e25e21412a6dfe2627cedbc165b24d18fdab89a57c0f325545d09b0bdd7fb1f1.png" src="../_images/e25e21412a6dfe2627cedbc165b24d18fdab89a57c0f325545d09b0bdd7fb1f1.png" />
+<img alt="../_images/4be0955e787dff19962a40d3d8a1faa12cad32c4f573d61c3d6ad5add100c4d7.png" src="../_images/4be0955e787dff19962a40d3d8a1faa12cad32c4f573d61c3d6ad5add100c4d7.png" />
+<img alt="../_images/6194c1f6db0e5e2c1e104ceb87f095f45dd7bf1c27235123ba4fc49de026ed7e.png" src="../_images/6194c1f6db0e5e2c1e104ceb87f095f45dd7bf1c27235123ba4fc49de026ed7e.png" />
+<img alt="../_images/78c173589b33d60f98ced08c26d88081504d7b0bde7147aa4a10ae730103a7d3.png" src="../_images/78c173589b33d60f98ced08c26d88081504d7b0bde7147aa4a10ae730103a7d3.png" />
+<img alt="../_images/63ce7441080952304b9022ee01395aa7f1e6a111ad157ad2103a350730fc0368.png" src="../_images/63ce7441080952304b9022ee01395aa7f1e6a111ad157ad2103a350730fc0368.png" />
+<img alt="../_images/ae2f56eb2045fe3a76e36632004b0a85845af54a13d1d19f926eb2baa46810f7.png" src="../_images/ae2f56eb2045fe3a76e36632004b0a85845af54a13d1d19f926eb2baa46810f7.png" />
+<img alt="../_images/f853e7b1e4dbdacf071f1741277ac99393bb53b4e737dfe13a9dc9c3ec241ad6.png" src="../_images/f853e7b1e4dbdacf071f1741277ac99393bb53b4e737dfe13a9dc9c3ec241ad6.png" />
+<img alt="../_images/6209fd92858fb8ca03f95efc2bbc46df297a6a34d24923e9d3f254530fa24ffb.png" src="../_images/6209fd92858fb8ca03f95efc2bbc46df297a6a34d24923e9d3f254530fa24ffb.png" />
+<img alt="../_images/522af676c7fb0a0bb0fa62e3b9c11627b5c97fa98623d515af4e6d18173e91ec.png" src="../_images/522af676c7fb0a0bb0fa62e3b9c11627b5c97fa98623d515af4e6d18173e91ec.png" />
+<img alt="../_images/6f4d184b0134689ed3025ef84e8ad921d06309800ffcb0b5e540cc99ba4e44f1.png" src="../_images/6f4d184b0134689ed3025ef84e8ad921d06309800ffcb0b5e540cc99ba4e44f1.png" />
+<img alt="../_images/06d9eb4d07647ce2642cf9e2ed04fa8e9cba153f8acf462a17150fdf685c3845.png" src="../_images/06d9eb4d07647ce2642cf9e2ed04fa8e9cba153f8acf462a17150fdf685c3845.png" />
+<img alt="../_images/e0c848255571d36ff2457ec1e54f32586d82047c318065dc023c515ca697df72.png" src="../_images/e0c848255571d36ff2457ec1e54f32586d82047c318065dc023c515ca697df72.png" />
+<img alt="../_images/91bb23aedaf0e5e3514132c8f5c7521ed26cf8f962103627f2d99c6bb4190e44.png" src="../_images/91bb23aedaf0e5e3514132c8f5c7521ed26cf8f962103627f2d99c6bb4190e44.png" />
+<img alt="../_images/f87d8472f4b20fb62e2404930c11ca020812e748dd0284a020224f009d89daeb.png" src="../_images/f87d8472f4b20fb62e2404930c11ca020812e748dd0284a020224f009d89daeb.png" />
+<img alt="../_images/367d2249357f0b737a2cf089926d39e7ed976022d720351990433ee60d9e360a.png" src="../_images/367d2249357f0b737a2cf089926d39e7ed976022d720351990433ee60d9e360a.png" />
+<img alt="../_images/83418bb0e8329c983d8a40f92ff8ca92d47ae11890321274e440cf2c53ffbac1.png" src="../_images/83418bb0e8329c983d8a40f92ff8ca92d47ae11890321274e440cf2c53ffbac1.png" />
+<img alt="../_images/44c643ad89ec0d9fb8160611c9f401d0c9cab33c45c7d8460ee2d278c619d180.png" src="../_images/44c643ad89ec0d9fb8160611c9f401d0c9cab33c45c7d8460ee2d278c619d180.png" />
+<img alt="../_images/e141319b10c2c7acb645bd02a9cb8537d2cc365e07299c8a84de372307d37cc5.png" src="../_images/e141319b10c2c7acb645bd02a9cb8537d2cc365e07299c8a84de372307d37cc5.png" />
+<img alt="../_images/6c613ea6d85b87736326e4de524944ca56fa3416a32c5c693f8326eb90bd71a6.png" src="../_images/6c613ea6d85b87736326e4de524944ca56fa3416a32c5c693f8326eb90bd71a6.png" />
+<img alt="../_images/92dfb84de90d4c5aa73c82e6a29b39a2996e20f99dfdd4c9104b1049fc0762c5.png" src="../_images/92dfb84de90d4c5aa73c82e6a29b39a2996e20f99dfdd4c9104b1049fc0762c5.png" />
+<img alt="../_images/ca91f3b248fd3c62587e310f5a1f2a2df53181925e26a67ef614e71aeeaa6823.png" src="../_images/ca91f3b248fd3c62587e310f5a1f2a2df53181925e26a67ef614e71aeeaa6823.png" />
+<img alt="../_images/d2ea676201626c61ea0f29dce1a32b21f350b1d717095a09b019240f26bbef2b.png" src="../_images/d2ea676201626c61ea0f29dce1a32b21f350b1d717095a09b019240f26bbef2b.png" />
+<img alt="../_images/61fd91199badaf3e8c25ab467add3574bd575380bffc2eac2d0b7d8d45ddf3c3.png" src="../_images/61fd91199badaf3e8c25ab467add3574bd575380bffc2eac2d0b7d8d45ddf3c3.png" />
+<img alt="../_images/c770cc97641b2c2e1cee6cc9a4c21f668292e6d8aef7246f6b5ea9be9be19ed4.png" src="../_images/c770cc97641b2c2e1cee6cc9a4c21f668292e6d8aef7246f6b5ea9be9be19ed4.png" />
+<img alt="../_images/717d0b0536ae37ff01e488d365e3795f788b890df2d301db5b413e9439bc9b35.png" src="../_images/717d0b0536ae37ff01e488d365e3795f788b890df2d301db5b413e9439bc9b35.png" />
+<img alt="../_images/6ab31279cc33d1d8df9735fdc9596b17754a436cd5d0c2b2ab09ebd1ad70cd45.png" src="../_images/6ab31279cc33d1d8df9735fdc9596b17754a436cd5d0c2b2ab09ebd1ad70cd45.png" />
+<img alt="../_images/ecf82bbf05a109c0177cd24fc5456371170b52cf02bedeb4267b7247fd6b84d6.png" src="../_images/ecf82bbf05a109c0177cd24fc5456371170b52cf02bedeb4267b7247fd6b84d6.png" />
+<img alt="../_images/2957bab51a4c7c25b92ce7cce867b76988db4a868c03920e8b09d0d57d64eae3.png" src="../_images/2957bab51a4c7c25b92ce7cce867b76988db4a868c03920e8b09d0d57d64eae3.png" />
+<img alt="../_images/bea6851d25a9cea4f68997348a89041c829282fc44ba536eee632fe1b99dcb56.png" src="../_images/bea6851d25a9cea4f68997348a89041c829282fc44ba536eee632fe1b99dcb56.png" />
+<img alt="../_images/7a0ebe819f3c5f1380040ea36b949bad03d83ecb430aa759412cb4f80b4a74e0.png" src="../_images/7a0ebe819f3c5f1380040ea36b949bad03d83ecb430aa759412cb4f80b4a74e0.png" />
+<img alt="../_images/bd062055b48364182bfd8cec65f8c5afa822e17d4ddf851dda8ccb346428b89c.png" src="../_images/bd062055b48364182bfd8cec65f8c5afa822e17d4ddf851dda8ccb346428b89c.png" />
+<img alt="../_images/e2c70ac1004bc39ff68b8200b37a132f21eab9b38454d3f30841f32cf4da78d4.png" src="../_images/e2c70ac1004bc39ff68b8200b37a132f21eab9b38454d3f30841f32cf4da78d4.png" />
+<img alt="../_images/b0f98240765324c86a38154d95dfa366c69f21cec486dbfdbf79dee84711d921.png" src="../_images/b0f98240765324c86a38154d95dfa366c69f21cec486dbfdbf79dee84711d921.png" />
+<img alt="../_images/6e3b6c4f4f1cd64863536af737ea2f5eeadb1bbf643cfc087f51a4930e6da334.png" src="../_images/6e3b6c4f4f1cd64863536af737ea2f5eeadb1bbf643cfc087f51a4930e6da334.png" />
+<img alt="../_images/d8c313d8558cf824a903568e015492e90c1c1396b72028b7814c0cbb1cc86813.png" src="../_images/d8c313d8558cf824a903568e015492e90c1c1396b72028b7814c0cbb1cc86813.png" />
+<img alt="../_images/0e108778ccdfdc9dd0e50bb9a4f02051a7a192a05ecd5203640ebda2e08c7d7e.png" src="../_images/0e108778ccdfdc9dd0e50bb9a4f02051a7a192a05ecd5203640ebda2e08c7d7e.png" />
+<img alt="../_images/497dcc39aea18d6ea4c0e337ede1e53f8d520cd00b2c3d7b253d81eecfa7a61a.png" src="../_images/497dcc39aea18d6ea4c0e337ede1e53f8d520cd00b2c3d7b253d81eecfa7a61a.png" />
+<img alt="../_images/c646f53fa7a9bbdfd1f58d74d3efb17d4ad513f716853f949b418ef91aa18fcd.png" src="../_images/c646f53fa7a9bbdfd1f58d74d3efb17d4ad513f716853f949b418ef91aa18fcd.png" />
+<img alt="../_images/f2a26e9d1368f0c8d04a939d1fea1c16c8f715bec929eaee3923efeb325738e0.png" src="../_images/f2a26e9d1368f0c8d04a939d1fea1c16c8f715bec929eaee3923efeb325738e0.png" />
+<img alt="../_images/2462902c66f3f2ee961b9b4cbefebf56b9ff0b929e10392ec55441944fab77a9.png" src="../_images/2462902c66f3f2ee961b9b4cbefebf56b9ff0b929e10392ec55441944fab77a9.png" />
+<img alt="../_images/7a5b4abfa7b2804c7be5ac476aa18cf6a8105f696b4942d7be02793399ffc2d3.png" src="../_images/7a5b4abfa7b2804c7be5ac476aa18cf6a8105f696b4942d7be02793399ffc2d3.png" />
+<img alt="../_images/0bee5f870843876ec4fbed5551c3a396954bb88fcb34d0a0fc14585e0e31ee06.png" src="../_images/0bee5f870843876ec4fbed5551c3a396954bb88fcb34d0a0fc14585e0e31ee06.png" />
+<img alt="../_images/2eb63f1b9cfba29c60ef7190334f66c65ecab6fbfca023520a12374680db28da.png" src="../_images/2eb63f1b9cfba29c60ef7190334f66c65ecab6fbfca023520a12374680db28da.png" />
+<img alt="../_images/ed124119847a32d45c5518c3d7f88efa8f742969af2c5142ff9198b8661aa192.png" src="../_images/ed124119847a32d45c5518c3d7f88efa8f742969af2c5142ff9198b8661aa192.png" />
+<img alt="../_images/6243961f1359dccf6a696be2e2b45124c8734c167dca2ba8e718f0e3681e65f9.png" src="../_images/6243961f1359dccf6a696be2e2b45124c8734c167dca2ba8e718f0e3681e65f9.png" />
+<img alt="../_images/15dec3e1296146252a042c29f74f31cf80ed1e8083ccd206ce16ca07f582e4a4.png" src="../_images/15dec3e1296146252a042c29f74f31cf80ed1e8083ccd206ce16ca07f582e4a4.png" />
+<img alt="../_images/af7677abbe68987b459f4a70f5b217c61c1f276b5e032cf44af92d0e99f4b4cb.png" src="../_images/af7677abbe68987b459f4a70f5b217c61c1f276b5e032cf44af92d0e99f4b4cb.png" />
+<img alt="../_images/414052c6efc8ed52a2720846013b1a3410853a909d25011f58fc96e2bd35b832.png" src="../_images/414052c6efc8ed52a2720846013b1a3410853a909d25011f58fc96e2bd35b832.png" />
+<img alt="../_images/c1961ae0c145bb4db1df4804adbb98e2e5540ed32b94978ef1957be9bc018a0f.png" src="../_images/c1961ae0c145bb4db1df4804adbb98e2e5540ed32b94978ef1957be9bc018a0f.png" />
+<img alt="../_images/08c4b8d6733b1691745bb04c5609706712c1a30e3cebd6ef8e9de6840a49b487.png" src="../_images/08c4b8d6733b1691745bb04c5609706712c1a30e3cebd6ef8e9de6840a49b487.png" />
+<img alt="../_images/e6c70f9de4a1dccd2982cde283ac929ddeb2797a3ec05348173db81f6c5a11e9.png" src="../_images/e6c70f9de4a1dccd2982cde283ac929ddeb2797a3ec05348173db81f6c5a11e9.png" />
+<img alt="../_images/b4223af67003194103299e201f547e1b5a103548dcfea770a469ffbec7bdcef8.png" src="../_images/b4223af67003194103299e201f547e1b5a103548dcfea770a469ffbec7bdcef8.png" />
+<img alt="../_images/6ae39ce8c03b45db2ec5687b0ffd452697f73d18a3cc4800124a16ef29bd91f0.png" src="../_images/6ae39ce8c03b45db2ec5687b0ffd452697f73d18a3cc4800124a16ef29bd91f0.png" />
+<img alt="../_images/334f5d86b9042a38e0dcff0b9abc332360cc5a0b4b7ff49d99763361890a1c0f.png" src="../_images/334f5d86b9042a38e0dcff0b9abc332360cc5a0b4b7ff49d99763361890a1c0f.png" />
+<img alt="../_images/915f79eedddfb3e6fe28af512b81ba9a1eda4b7d624b5f9eac1cbf4aa21a3a4d.png" src="../_images/915f79eedddfb3e6fe28af512b81ba9a1eda4b7d624b5f9eac1cbf4aa21a3a4d.png" />
+<img alt="../_images/4cbf4027be4abd11c66a6b5c9ef0256c6dfb5013ff369c98e0107a48fb348cdd.png" src="../_images/4cbf4027be4abd11c66a6b5c9ef0256c6dfb5013ff369c98e0107a48fb348cdd.png" />
+<img alt="../_images/0742d44257c726c4a1703fb6893beefb3abbeb372ab87dc88e23e7e6259e500f.png" src="../_images/0742d44257c726c4a1703fb6893beefb3abbeb372ab87dc88e23e7e6259e500f.png" />
+<img alt="../_images/74cd31c9bd2a03081da928e5946fc7a530283099b0ad04fc011ee637cdfd8bdc.png" src="../_images/74cd31c9bd2a03081da928e5946fc7a530283099b0ad04fc011ee637cdfd8bdc.png" />
+<img alt="../_images/0229018b5f5b40365fc4637edd4a9a90d61fadbddf3e059b64b8c2632556a55c.png" src="../_images/0229018b5f5b40365fc4637edd4a9a90d61fadbddf3e059b64b8c2632556a55c.png" />
+<img alt="../_images/1a2d54fbf55f9e15084866491261392a9296281fe0a4e5639e4da57333424f79.png" src="../_images/1a2d54fbf55f9e15084866491261392a9296281fe0a4e5639e4da57333424f79.png" />
+<img alt="../_images/4dd5356576cc8364baa97d8a9d6b557b95451e99dbd475fd38dd506ce166c6a8.png" src="../_images/4dd5356576cc8364baa97d8a9d6b557b95451e99dbd475fd38dd506ce166c6a8.png" />
+<img alt="../_images/6b4ac3a01110846e508331642be103adc5fb01005133c0df489d87b21d23037e.png" src="../_images/6b4ac3a01110846e508331642be103adc5fb01005133c0df489d87b21d23037e.png" />
+<img alt="../_images/4af247abcc4f7b39029906810fc7f3f45beea2a215691b4d06eb3a9464643da4.png" src="../_images/4af247abcc4f7b39029906810fc7f3f45beea2a215691b4d06eb3a9464643da4.png" />
+<img alt="../_images/60e3d2008f6bfefe65a2490b098ad862b7effa673b57b7ded48b8252d4f86a97.png" src="../_images/60e3d2008f6bfefe65a2490b098ad862b7effa673b57b7ded48b8252d4f86a97.png" />
+<img alt="../_images/a780d0870b6b752f7448d7a2828e0b1d7dc5958b3db43e7c83b1cb5cd702670b.png" src="../_images/a780d0870b6b752f7448d7a2828e0b1d7dc5958b3db43e7c83b1cb5cd702670b.png" />
+<img alt="../_images/dab0bd60666ae19d77ee269d8bcdb0558a96fc1c6d2bfd3e17a51ebdc0ed8718.png" src="../_images/dab0bd60666ae19d77ee269d8bcdb0558a96fc1c6d2bfd3e17a51ebdc0ed8718.png" />
+<img alt="../_images/e76b85cbda776d4aefb6c64f5877e95b5f351ca490eb4d063afcf221b53a2766.png" src="../_images/e76b85cbda776d4aefb6c64f5877e95b5f351ca490eb4d063afcf221b53a2766.png" />
+<img alt="../_images/da7a4de174882ddb830b5fd49f3296ba1cd3defe8cce9296f5f8822c37cb0ff1.png" src="../_images/da7a4de174882ddb830b5fd49f3296ba1cd3defe8cce9296f5f8822c37cb0ff1.png" />
+<img alt="../_images/f1c0d8d54ae40da4988250601999ce71048a005bc23306140d7233cf73c57a64.png" src="../_images/f1c0d8d54ae40da4988250601999ce71048a005bc23306140d7233cf73c57a64.png" />
+<img alt="../_images/05a022c91333f0c6b5161e248956374c5f3c4be0e29ac127dfcc9cfa9013b30b.png" src="../_images/05a022c91333f0c6b5161e248956374c5f3c4be0e29ac127dfcc9cfa9013b30b.png" />
+<img alt="../_images/93df09f67e0d5a1e232e4c1a335c0f3f0a0d7c5775a395659874f969f4cb50c4.png" src="../_images/93df09f67e0d5a1e232e4c1a335c0f3f0a0d7c5775a395659874f969f4cb50c4.png" />
+<img alt="../_images/71ee064530a05cea5987ff61cf41e2b9db66de90076f56d60efe394f003b6e2d.png" src="../_images/71ee064530a05cea5987ff61cf41e2b9db66de90076f56d60efe394f003b6e2d.png" />
+<img alt="../_images/e7c6507f31c4404df71ce7730592c8479aad8da5a015b1266129857619aeade4.png" src="../_images/e7c6507f31c4404df71ce7730592c8479aad8da5a015b1266129857619aeade4.png" />
+<img alt="../_images/6349fa27988bd19652ba34f9559d72bde226638fb43ae978f3d498c9cbf1f3f6.png" src="../_images/6349fa27988bd19652ba34f9559d72bde226638fb43ae978f3d498c9cbf1f3f6.png" />
+<img alt="../_images/bab281810f21e31199579dd55f830f367359c2b55d204553c3ab073314c1bb41.png" src="../_images/bab281810f21e31199579dd55f830f367359c2b55d204553c3ab073314c1bb41.png" />
+<img alt="../_images/b30a846e26581e1c094e1a6080778eccf45884e51d7205f506fc4205809802af.png" src="../_images/b30a846e26581e1c094e1a6080778eccf45884e51d7205f506fc4205809802af.png" />
+<img alt="../_images/aee3358e2a17370b5d0eb78c8d49593f0ef9d089428d28d0a8ea8aa774ed7cfe.png" src="../_images/aee3358e2a17370b5d0eb78c8d49593f0ef9d089428d28d0a8ea8aa774ed7cfe.png" />
+<img alt="../_images/8712efdd293f092669ba7406551ed17485c178ce933fd16cfbbfdc723d0d9f2b.png" src="../_images/8712efdd293f092669ba7406551ed17485c178ce933fd16cfbbfdc723d0d9f2b.png" />
+<img alt="../_images/c14dabd005e98ce9e9353e51af8860b258bd32219b1d8595bcb0271eb0ad4edb.png" src="../_images/c14dabd005e98ce9e9353e51af8860b258bd32219b1d8595bcb0271eb0ad4edb.png" />
+<img alt="../_images/c1b76ea1ec3f18b590d460f52f201fbb5803c6de2b9648c50d74fc7a44c89119.png" src="../_images/c1b76ea1ec3f18b590d460f52f201fbb5803c6de2b9648c50d74fc7a44c89119.png" />
+<img alt="../_images/72347320422e07f3ada8596deddec30f752bebf2e152d2074546a49b7b016b59.png" src="../_images/72347320422e07f3ada8596deddec30f752bebf2e152d2074546a49b7b016b59.png" />
+<img alt="../_images/496386cb58b8dec45be043f55329f8fa969df10a96ef55b0b3be40f9c09fe5f0.png" src="../_images/496386cb58b8dec45be043f55329f8fa969df10a96ef55b0b3be40f9c09fe5f0.png" />
+<img alt="../_images/41e5be2b73244cb582e9aa4dc85b380c560b846749480e12ddd68c1df674dea2.png" src="../_images/41e5be2b73244cb582e9aa4dc85b380c560b846749480e12ddd68c1df674dea2.png" />
+<img alt="../_images/2d1d4853d31852972cfd97779b90ce3d3890b7d1d78e39f4920fa20de9be98d7.png" src="../_images/2d1d4853d31852972cfd97779b90ce3d3890b7d1d78e39f4920fa20de9be98d7.png" />
+<img alt="../_images/32a3f6b7b0bb415b66a94c36375835007bb5262644a00825877e30320b732dc4.png" src="../_images/32a3f6b7b0bb415b66a94c36375835007bb5262644a00825877e30320b732dc4.png" />
+<img alt="../_images/313ee91d130441ec05b048b8a60618f1dbe5ab73457b3735bfb17ee35dccaccd.png" src="../_images/313ee91d130441ec05b048b8a60618f1dbe5ab73457b3735bfb17ee35dccaccd.png" />
+<img alt="../_images/ffcd29468a5060afde2468185c830866d4dc27de5edd1375bfdcbd1f3e9460e6.png" src="../_images/ffcd29468a5060afde2468185c830866d4dc27de5edd1375bfdcbd1f3e9460e6.png" />
+<img alt="../_images/9f03b1d79f5a38f40dad169ed5bf1b29bc869a6460da8e4d79abaf855fa25db3.png" src="../_images/9f03b1d79f5a38f40dad169ed5bf1b29bc869a6460da8e4d79abaf855fa25db3.png" />
+<img alt="../_images/86f564c42f09b6a4aaf4d96031042e29cbebfaa929849c26481e8c484fe091d0.png" src="../_images/86f564c42f09b6a4aaf4d96031042e29cbebfaa929849c26481e8c484fe091d0.png" />
+<img alt="../_images/0bb9b42fba1f2e3f7735a7a2c0c292d54c00e3935e3857fe2d206c1f7e9d1719.png" src="../_images/0bb9b42fba1f2e3f7735a7a2c0c292d54c00e3935e3857fe2d206c1f7e9d1719.png" />
+<img alt="../_images/c0deae93d84b705815d1827fe2be21732da426d77b41ab88658e32999b1cbb42.png" src="../_images/c0deae93d84b705815d1827fe2be21732da426d77b41ab88658e32999b1cbb42.png" />
+<img alt="../_images/00e94f2bfa8a95abe03f98760ea18d60d2085616505248dfd99bc85c958b6885.png" src="../_images/00e94f2bfa8a95abe03f98760ea18d60d2085616505248dfd99bc85c958b6885.png" />
+<img alt="../_images/38c25b06d9626c3e182edf611be610e06054df0d3cdb2d4a5172b2c932f46064.png" src="../_images/38c25b06d9626c3e182edf611be610e06054df0d3cdb2d4a5172b2c932f46064.png" />
+<img alt="../_images/031b4d0f4ca393a14652ad27cb3d556f8fc0e636f9256edc81f4b1d5e63de674.png" src="../_images/031b4d0f4ca393a14652ad27cb3d556f8fc0e636f9256edc81f4b1d5e63de674.png" />
+<img alt="../_images/295e61e4972fcca014c76cc6f465d4d6975b7d9da32e9e04c5510b34b3c20af0.png" src="../_images/295e61e4972fcca014c76cc6f465d4d6975b7d9da32e9e04c5510b34b3c20af0.png" />
+<img alt="../_images/c51bdf641123dc100affb94fbfa7160016aba416776257c2ed4889d07c5d2fd4.png" src="../_images/c51bdf641123dc100affb94fbfa7160016aba416776257c2ed4889d07c5d2fd4.png" />
+<img alt="../_images/0bea9e0a540340c9088a01ab798608d7f0f5a1a27daf36b9f6ece88408cb2acb.png" src="../_images/0bea9e0a540340c9088a01ab798608d7f0f5a1a27daf36b9f6ece88408cb2acb.png" />
+<img alt="../_images/c8aed70e058121daf2779434209ca7f6dcb0dbc4c3e7da75c53d7017c3d86fa4.png" src="../_images/c8aed70e058121daf2779434209ca7f6dcb0dbc4c3e7da75c53d7017c3d86fa4.png" />
+<img alt="../_images/99c42194950f290d178603b3b757cbf54fbd4c781bdb498b14f44623a62236af.png" src="../_images/99c42194950f290d178603b3b757cbf54fbd4c781bdb498b14f44623a62236af.png" />
+<img alt="../_images/8b52952e9da89ae5d99f9b88f6ac0d46d147861102db85b017c2182649c46829.png" src="../_images/8b52952e9da89ae5d99f9b88f6ac0d46d147861102db85b017c2182649c46829.png" />
+<img alt="../_images/840dcd1d125728b637670bfa8d096cb1219ffacbe9088a23f6fea0cb11875247.png" src="../_images/840dcd1d125728b637670bfa8d096cb1219ffacbe9088a23f6fea0cb11875247.png" />
+<img alt="../_images/3c9d11048edc8b5431f91e6eecd71dad37478013020ba0a7a93569dbd3ce834b.png" src="../_images/3c9d11048edc8b5431f91e6eecd71dad37478013020ba0a7a93569dbd3ce834b.png" />
+<img alt="../_images/34648b6db3115404c2edbe6daabd0e2f12450d66528bc79642ba8021afbfca79.png" src="../_images/34648b6db3115404c2edbe6daabd0e2f12450d66528bc79642ba8021afbfca79.png" />
+<img alt="../_images/04c7b6b44e7d2d283564b4a0ef7c510aef82811df8b16acfadd88bf6d1edbeac.png" src="../_images/04c7b6b44e7d2d283564b4a0ef7c510aef82811df8b16acfadd88bf6d1edbeac.png" />
+<img alt="../_images/ef7b0c30bf523c48bb413d6299f7158799ef6f164ff1e3b5db2f2e30669a6a7c.png" src="../_images/ef7b0c30bf523c48bb413d6299f7158799ef6f164ff1e3b5db2f2e30669a6a7c.png" />
+<img alt="../_images/5a0beeb23215ec0b5e1d54a4fa979a7005cb2f026b2d6e89dff9045555a15ec1.png" src="../_images/5a0beeb23215ec0b5e1d54a4fa979a7005cb2f026b2d6e89dff9045555a15ec1.png" />
+<img alt="../_images/0a301e702c4840ba67738c03dde59bbfae850be3f24a751f80e41bebd518e232.png" src="../_images/0a301e702c4840ba67738c03dde59bbfae850be3f24a751f80e41bebd518e232.png" />
+<img alt="../_images/e931cfa01afb0df54518ada0165af403540f25ec4c0b957408ead097d2c3fb95.png" src="../_images/e931cfa01afb0df54518ada0165af403540f25ec4c0b957408ead097d2c3fb95.png" />
+<img alt="../_images/a4b53ca484fe0dc90438977ba836ae143f35e0b3d3cc9dfe45cf5b0058a3f00d.png" src="../_images/a4b53ca484fe0dc90438977ba836ae143f35e0b3d3cc9dfe45cf5b0058a3f00d.png" />
+<img alt="../_images/6183ee9415c18ec30621da6a84a46ba26d6249d3c40e482cf6b23f6ea8aac4af.png" src="../_images/6183ee9415c18ec30621da6a84a46ba26d6249d3c40e482cf6b23f6ea8aac4af.png" />
+<img alt="../_images/751dd9b980308e03f886fbe3fbc1ce513349edaf066dfaeda4350f6398c908ad.png" src="../_images/751dd9b980308e03f886fbe3fbc1ce513349edaf066dfaeda4350f6398c908ad.png" />
+<img alt="../_images/ad1a37c11b9fba2f07718550d32365149199d9f9807cc0e25bb846a4e9e0d917.png" src="../_images/ad1a37c11b9fba2f07718550d32365149199d9f9807cc0e25bb846a4e9e0d917.png" />
+<img alt="../_images/229e0484a51d950532abcafd0ddf6c690d5bcd60df82d81d5ee9542849f0e70e.png" src="../_images/229e0484a51d950532abcafd0ddf6c690d5bcd60df82d81d5ee9542849f0e70e.png" />
+<img alt="../_images/7885ef0d46e5b3ee31fb951d211038fdb24845e0b8360ce31c325c4222a9f038.png" src="../_images/7885ef0d46e5b3ee31fb951d211038fdb24845e0b8360ce31c325c4222a9f038.png" />
+<img alt="../_images/181baada8052fa2598cc6b71866ef09917029593507a8360f72f3ec9f093c19a.png" src="../_images/181baada8052fa2598cc6b71866ef09917029593507a8360f72f3ec9f093c19a.png" />
+<img alt="../_images/209fb31773eff996d72bd064b9811593db939c43df59c0e93ad0e2bf06abed41.png" src="../_images/209fb31773eff996d72bd064b9811593db939c43df59c0e93ad0e2bf06abed41.png" />
+<img alt="../_images/1ad19a990d2530c7bb5aac4bde92f7ce9da5aaaa394138d1bc8ce1f45c2d3aed.png" src="../_images/1ad19a990d2530c7bb5aac4bde92f7ce9da5aaaa394138d1bc8ce1f45c2d3aed.png" />
+<img alt="../_images/0ab26ba78818c46bf57c3fb6bfeddce6b5957171b385b976d758f243e7972873.png" src="../_images/0ab26ba78818c46bf57c3fb6bfeddce6b5957171b385b976d758f243e7972873.png" />
+<img alt="../_images/f2aa33b504486fbdf4807a759e50c26079b99b76eaef6a4f59aae0a0e3a4d723.png" src="../_images/f2aa33b504486fbdf4807a759e50c26079b99b76eaef6a4f59aae0a0e3a4d723.png" />
+<img alt="../_images/e0ef22c0080f9ccd4d6d18c6d9aa255d545be038f8b5347ee1efc40c4f5b5951.png" src="../_images/e0ef22c0080f9ccd4d6d18c6d9aa255d545be038f8b5347ee1efc40c4f5b5951.png" />
+<img alt="../_images/2d7f25bad02d856c74c62ad489da957eaeea0b8177d184326e1286d47073ec64.png" src="../_images/2d7f25bad02d856c74c62ad489da957eaeea0b8177d184326e1286d47073ec64.png" />
+<img alt="../_images/cfc87ef6ba9d79b86f0bfa453674abcbe2810a378ca5e46e14a28f5ee0d88a27.png" src="../_images/cfc87ef6ba9d79b86f0bfa453674abcbe2810a378ca5e46e14a28f5ee0d88a27.png" />
+<img alt="../_images/9800ab67f714481dc95fa2480e48e8ebbd77d23c3eae24a6fc66639d1f032bdb.png" src="../_images/9800ab67f714481dc95fa2480e48e8ebbd77d23c3eae24a6fc66639d1f032bdb.png" />
+<img alt="../_images/99bfe24481e62dd50b9768c7b4fead0013ac816c8e15f4e7daf97e1b58fba239.png" src="../_images/99bfe24481e62dd50b9768c7b4fead0013ac816c8e15f4e7daf97e1b58fba239.png" />
+<img alt="../_images/3c03b91a9acb2f4882011191331e8279dcd33a8584bbe519eccaab25eb58f7c3.png" src="../_images/3c03b91a9acb2f4882011191331e8279dcd33a8584bbe519eccaab25eb58f7c3.png" />
+<img alt="../_images/4d715b0c2054942055ee7997dfc898e38b8351d61b6fe3b30c31c209decc80dc.png" src="../_images/4d715b0c2054942055ee7997dfc898e38b8351d61b6fe3b30c31c209decc80dc.png" />
+<img alt="../_images/59b29860d96219a8e70ab1454a0cec10a99ddd43acfc75346a62d1623e8a9063.png" src="../_images/59b29860d96219a8e70ab1454a0cec10a99ddd43acfc75346a62d1623e8a9063.png" />
+<img alt="../_images/2532fe9b13209c8dcbfa19bc223443e9351fafcd762fad4fef6057ebceaa5e15.png" src="../_images/2532fe9b13209c8dcbfa19bc223443e9351fafcd762fad4fef6057ebceaa5e15.png" />
+<img alt="../_images/9189909544c0c7ea721d4e8141cb14f1b742be5a6000a3e86c0b8d0af605649e.png" src="../_images/9189909544c0c7ea721d4e8141cb14f1b742be5a6000a3e86c0b8d0af605649e.png" />
+<img alt="../_images/6056c289e2335324be0fb9976ee33b4e69c836a01baad915c2a643bf86d6030e.png" src="../_images/6056c289e2335324be0fb9976ee33b4e69c836a01baad915c2a643bf86d6030e.png" />
+<img alt="../_images/12b2c50b229ee18d2ad4580fd78641090c1d1d154849fc8d666836ce2da4682d.png" src="../_images/12b2c50b229ee18d2ad4580fd78641090c1d1d154849fc8d666836ce2da4682d.png" />
+<img alt="../_images/42d0026e0733c4f173960149d283af78834ee4a3e2b851c428601a6492047a01.png" src="../_images/42d0026e0733c4f173960149d283af78834ee4a3e2b851c428601a6492047a01.png" />
+<img alt="../_images/03cc0e1bfa47c9555ca1f77d3dcf190635af93ae2c5bcf1095fc8e143220d71b.png" src="../_images/03cc0e1bfa47c9555ca1f77d3dcf190635af93ae2c5bcf1095fc8e143220d71b.png" />
+<img alt="../_images/bf44ac1967d4f24a07e35f708a7accbcf213e4a0793536cffc35464dba4ff63d.png" src="../_images/bf44ac1967d4f24a07e35f708a7accbcf213e4a0793536cffc35464dba4ff63d.png" />
+<img alt="../_images/adb4becb6c25e7842956ce76e1de51801c9f981f145d59b53dfd32770fe99c32.png" src="../_images/adb4becb6c25e7842956ce76e1de51801c9f981f145d59b53dfd32770fe99c32.png" />
+<img alt="../_images/fb4e38f83f776c7b881e7c86f592dd954885256cc08559d5a425b9153e1bf901.png" src="../_images/fb4e38f83f776c7b881e7c86f592dd954885256cc08559d5a425b9153e1bf901.png" />
+<img alt="../_images/fd656a67d4eac923503900b5ad27c8c04cb9b06acbae48baab64becdebd9665f.png" src="../_images/fd656a67d4eac923503900b5ad27c8c04cb9b06acbae48baab64becdebd9665f.png" />
+<img alt="../_images/db3e2401d452319b625e24dff77505eb41054d8621527789faf6c64b8f399cf0.png" src="../_images/db3e2401d452319b625e24dff77505eb41054d8621527789faf6c64b8f399cf0.png" />
+<img alt="../_images/c26624d602514f2cdf6330b6089c27df3a6fe2dee1eae0bcb9b5642f8de5c9a9.png" src="../_images/c26624d602514f2cdf6330b6089c27df3a6fe2dee1eae0bcb9b5642f8de5c9a9.png" />
+<img alt="../_images/0e92317e962e7e35117606417a79af09973d2c93264cd77126ee181a69b293cd.png" src="../_images/0e92317e962e7e35117606417a79af09973d2c93264cd77126ee181a69b293cd.png" />
+<img alt="../_images/cef74c3cb2619ba733e12d8a4291375f09a9e42636716c3100be50c4873dac59.png" src="../_images/cef74c3cb2619ba733e12d8a4291375f09a9e42636716c3100be50c4873dac59.png" />
+<img alt="../_images/eaf8e1704a0112575f105794d0b856df4e5946858853ac147ce4af19c88b4ec4.png" src="../_images/eaf8e1704a0112575f105794d0b856df4e5946858853ac147ce4af19c88b4ec4.png" />
+<img alt="../_images/ffca4a564994bf73e0f5d94d4624ab6583c2d299319fa509e579923f5341880f.png" src="../_images/ffca4a564994bf73e0f5d94d4624ab6583c2d299319fa509e579923f5341880f.png" />
+<img alt="../_images/716d957f168c35f27157696851135432f0d1367a31cd4a4164939c0758eab00b.png" src="../_images/716d957f168c35f27157696851135432f0d1367a31cd4a4164939c0758eab00b.png" />
+<img alt="../_images/950b1b77945c696e76e0e4a873e28bbba27bb70b7dbbbde4d670d5d5e473bf4e.png" src="../_images/950b1b77945c696e76e0e4a873e28bbba27bb70b7dbbbde4d670d5d5e473bf4e.png" />
+<img alt="../_images/4adcaf05dfabeaec11da748914ac5242679a02c58611532b7a1efdd6ff653cba.png" src="../_images/4adcaf05dfabeaec11da748914ac5242679a02c58611532b7a1efdd6ff653cba.png" />
+<img alt="../_images/33c1b12c2abe4810eba57e5b477423e19796465e8107759b7e2f758180d6a1dd.png" src="../_images/33c1b12c2abe4810eba57e5b477423e19796465e8107759b7e2f758180d6a1dd.png" />
+<img alt="../_images/a6834b434560a7424a4eee3e6c5d6573bfed1607478895f494334aaf16a62a1f.png" src="../_images/a6834b434560a7424a4eee3e6c5d6573bfed1607478895f494334aaf16a62a1f.png" />
+<img alt="../_images/dc557418a27b2252da83e85c8da9e8aa9451b6381ed743795ca20a1fd5726fa7.png" src="../_images/dc557418a27b2252da83e85c8da9e8aa9451b6381ed743795ca20a1fd5726fa7.png" />
+<img alt="../_images/103b63c4eab3b4d14e2cb7e361e7135e001d3feba87f0b2729cdfba2f7804120.png" src="../_images/103b63c4eab3b4d14e2cb7e361e7135e001d3feba87f0b2729cdfba2f7804120.png" />
+<img alt="../_images/996d0339bb728d6c457c1582958c782c016270e848c2cda08d6b8aece267b0fb.png" src="../_images/996d0339bb728d6c457c1582958c782c016270e848c2cda08d6b8aece267b0fb.png" />
+<img alt="../_images/14d5f62ce993217a1174342a7c16ba289c85914eadb3d593ca71a14ba9b62378.png" src="../_images/14d5f62ce993217a1174342a7c16ba289c85914eadb3d593ca71a14ba9b62378.png" />
+<img alt="../_images/fdee447b9e7e18c25baa7a9d2e4d2a88f813b79d27acb737405b5ed651490508.png" src="../_images/fdee447b9e7e18c25baa7a9d2e4d2a88f813b79d27acb737405b5ed651490508.png" />
+<img alt="../_images/190e9426b4bf5de0bbc9368864d1c6e1478decc4fa00a5c39e073bc8b1e3feff.png" src="../_images/190e9426b4bf5de0bbc9368864d1c6e1478decc4fa00a5c39e073bc8b1e3feff.png" />
+<img alt="../_images/f32db391432e9d0d0db5e18446848f420a77e9d3b5781eec452c590302475763.png" src="../_images/f32db391432e9d0d0db5e18446848f420a77e9d3b5781eec452c590302475763.png" />
+<img alt="../_images/ba8177fbf151151e1a2f8acd86dd568a19549acb40a090248eb6484cdfe20a20.png" src="../_images/ba8177fbf151151e1a2f8acd86dd568a19549acb40a090248eb6484cdfe20a20.png" />
+<img alt="../_images/70141ae973f096d6176876ab21fb8950805d4e86d0c6843a9adda0fee2545d18.png" src="../_images/70141ae973f096d6176876ab21fb8950805d4e86d0c6843a9adda0fee2545d18.png" />
+<img alt="../_images/102f6adb2f3ce3b6c4f74c99ae3b8da26ed90c0979d8051b49a993a55ae41789.png" src="../_images/102f6adb2f3ce3b6c4f74c99ae3b8da26ed90c0979d8051b49a993a55ae41789.png" />
+<img alt="../_images/d1ac3c5f116542a00f4fd68bfbb65b644088480959299444de40c464f7e1b64c.png" src="../_images/d1ac3c5f116542a00f4fd68bfbb65b644088480959299444de40c464f7e1b64c.png" />
+<img alt="../_images/9cedb032cd0e5fdf105e289c6d3485e1bd6687bfab44b3c4d37c472d83b73dfc.png" src="../_images/9cedb032cd0e5fdf105e289c6d3485e1bd6687bfab44b3c4d37c472d83b73dfc.png" />
+<img alt="../_images/b01e860529fb850ef08f23793e993a230689189f6db73e0791ac336b8dac83f3.png" src="../_images/b01e860529fb850ef08f23793e993a230689189f6db73e0791ac336b8dac83f3.png" />
+<img alt="../_images/63764e422b13b21adb7bade655b557d96ab2b42c116f007d29b4ab9c65fa1b17.png" src="../_images/63764e422b13b21adb7bade655b557d96ab2b42c116f007d29b4ab9c65fa1b17.png" />
+<img alt="../_images/d7cce024aecfbfb79dfd8b59a787dba677abb9f06d69a08b629cdb477c836b6d.png" src="../_images/d7cce024aecfbfb79dfd8b59a787dba677abb9f06d69a08b629cdb477c836b6d.png" />
+<img alt="../_images/b8214c6bacb90c025df465c95833c91944373df0c7ac9ac64a2885538d61dfaa.png" src="../_images/b8214c6bacb90c025df465c95833c91944373df0c7ac9ac64a2885538d61dfaa.png" />
+<img alt="../_images/dcca3589ed3101e111bad44430b5cb8ec467836367aaeb2ca503ea33bcf8d638.png" src="../_images/dcca3589ed3101e111bad44430b5cb8ec467836367aaeb2ca503ea33bcf8d638.png" />
+<img alt="../_images/dd36a402297c862bfb3e0b02a785500ae6b718847879e048da977612ac753565.png" src="../_images/dd36a402297c862bfb3e0b02a785500ae6b718847879e048da977612ac753565.png" />
+<img alt="../_images/38208dd76bb30db9552c9b729a3f137f0b7ba49727f35c117fe87b5bcf563c0d.png" src="../_images/38208dd76bb30db9552c9b729a3f137f0b7ba49727f35c117fe87b5bcf563c0d.png" />
+<img alt="../_images/ebe4058ccdbea247f53ec36968885b577860c5ed5e1dab51b6c8d0e3619c8c3f.png" src="../_images/ebe4058ccdbea247f53ec36968885b577860c5ed5e1dab51b6c8d0e3619c8c3f.png" />
+<img alt="../_images/0b3241ff62e9fe396685d073893f196087f5535b8561786b821a89b10e983112.png" src="../_images/0b3241ff62e9fe396685d073893f196087f5535b8561786b821a89b10e983112.png" />
+<img alt="../_images/86147a1f0891f2c6f49ed37270f472a7f63e3943ed845e68579b72f7b997ace0.png" src="../_images/86147a1f0891f2c6f49ed37270f472a7f63e3943ed845e68579b72f7b997ace0.png" />
+<img alt="../_images/e7548d85733eb82e30494b79adc6f7646cdbc0410fbe44606d1eac4fcdc379e9.png" src="../_images/e7548d85733eb82e30494b79adc6f7646cdbc0410fbe44606d1eac4fcdc379e9.png" />
+</div>
+</div>
+</section>
+<section id="ektraksi-mfcc">
+<h2>Ektraksi MFCC<a class="headerlink" href="#ektraksi-mfcc" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sr</span> <span class="o">=</span> <span class="mi">16000</span>
+<span class="n">n_mfcc</span> <span class="o">=</span> <span class="mi">13</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_mfcc_matrix</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="mi">16000</span><span class="p">,</span> <span class="n">n_mfcc</span><span class="o">=</span><span class="mi">13</span><span class="p">):</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">)</span>
+    <span class="n">mfcc</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">mfcc</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">n_mfcc</span><span class="o">=</span><span class="n">n_mfcc</span><span class="p">)</span>  
+    <span class="k">return</span> <span class="n">mfcc</span><span class="o">.</span><span class="n">T</span>     
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mfcc_dataset</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;buka&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;tutup&quot;</span><span class="p">:</span> <span class="p">[]</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">SUBFOLDERS</span><span class="p">:</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATASET_PERSON1</span><span class="p">,</span> <span class="n">sub</span><span class="p">)</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;buka&quot;</span> <span class="k">if</span> <span class="s2">&quot;Buka&quot;</span> <span class="ow">in</span> <span class="n">sub</span> <span class="k">else</span> <span class="s2">&quot;tutup&quot;</span>
+    
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">full</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.wav&quot;</span><span class="p">):</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">full</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+            <span class="n">mfcc_dataset</span><span class="p">[</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_mfcc_matrix</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">SUBFOLDERS_2</span><span class="p">:</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATASET_PERSON2</span><span class="p">,</span> <span class="n">sub</span><span class="p">)</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;buka&quot;</span> <span class="k">if</span> <span class="s2">&quot;Buka&quot;</span> <span class="ow">in</span> <span class="n">sub</span> <span class="k">else</span> <span class="s2">&quot;tutup&quot;</span>
+    
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">full</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.wav&quot;</span><span class="p">):</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">full</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+            <span class="n">mfcc_dataset</span><span class="p">[</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_mfcc_matrix</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Jumlah Data Buka:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">mfcc_dataset</span><span class="p">[</span><span class="s2">&quot;buka&quot;</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Jumlah Data Tutup:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">mfcc_dataset</span><span class="p">[</span><span class="s2">&quot;tutup&quot;</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah Data Buka: 99
+Jumlah Data Tutup: 98
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="ambil-1-data-baru">
+<h2>Ambil 1 Data baru<a class="headerlink" href="#ambil-1-data-baru" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_file</span> <span class="o">=</span> <span class="s2">&quot;rekaman_baru.wav&quot;</span>
+<span class="n">mfcc_new</span> <span class="o">=</span> <span class="n">get_mfcc_matrix</span><span class="p">(</span><span class="n">new_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\user\AppData\Local\Temp\ipykernel_17732\240347203.py:5: UserWarning: PySoundFile failed. Trying audioread instead.
+  y, _ = librosa.load(filepath, sr=sr)
+C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\librosa\core\audio.py:184: FutureWarning: librosa.core.audio.__audioread_load
+	Deprecated as of librosa version 0.10.0.
+	It will be removed in librosa version 1.0.
+  y, sr_native = __audioread_load(path, offset, duration, dtype)
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">-------------------------------------------------------------------------</span>
+<span class="ne">LibsndfileError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\librosa\core\audio.py:176,</span> in <span class="ni">load</span><span class="nt">(path, sr, mono, offset, duration, dtype, res_type)</span>
+<span class="g g-Whitespace">    </span><span class="mi">175</span> <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">176</span>     <span class="n">y</span><span class="p">,</span> <span class="n">sr_native</span> <span class="o">=</span> <span class="n">__soundfile_load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">178</span> <span class="k">except</span> <span class="n">sf</span><span class="o">.</span><span class="n">SoundFileRuntimeError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">179</span>     <span class="c1"># If soundfile failed, try audioread instead</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\librosa\core\audio.py:209,</span> in <span class="ni">__soundfile_load</span><span class="nt">(path, offset, duration, dtype)</span>
+<span class="g g-Whitespace">    </span><span class="mi">207</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">208</span>     <span class="c1"># Otherwise, create the soundfile object</span>
+<span class="ne">--&gt; </span><span class="mi">209</span>     <span class="n">context</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">SoundFile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">211</span> <span class="k">with</span> <span class="n">context</span> <span class="k">as</span> <span class="n">sf_desc</span><span class="p">:</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\soundfile.py:690,</span> in <span class="ni">SoundFile.__init__</span><span class="nt">(self, file, mode, samplerate, channels, subtype, endian, format, closefd, compression_level, bitrate_mode)</span>
+<span class="g g-Whitespace">    </span><span class="mi">688</span> <span class="bp">self</span><span class="o">.</span><span class="n">_info</span> <span class="o">=</span> <span class="n">_create_info_struct</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">689</span>                                  <span class="nb">format</span><span class="p">,</span> <span class="n">subtype</span><span class="p">,</span> <span class="n">endian</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">690</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">mode_int</span><span class="p">,</span> <span class="n">closefd</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">691</span> <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span><span class="o">.</span><span class="n">issuperset</span><span class="p">(</span><span class="s1">&#39;r+&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">seekable</span><span class="p">():</span>
+<span class="g g-Whitespace">    </span><span class="mi">692</span>     <span class="c1"># Move write position to 0 (like in Python file objects)</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\soundfile.py:1265,</span> in <span class="ni">SoundFile._open</span><span class="nt">(self, file, mode_int, closefd)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1264</span>     <span class="n">err</span> <span class="o">=</span> <span class="n">_snd</span><span class="o">.</span><span class="n">sf_error</span><span class="p">(</span><span class="n">file_ptr</span><span class="p">)</span>
+<span class="ne">-&gt; </span><span class="mi">1265</span>     <span class="k">raise</span> <span class="n">LibsndfileError</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;Error opening </span><span class="si">{0!r}</span><span class="s2">: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+<span class="g g-Whitespace">   </span><span class="mi">1266</span> <span class="k">if</span> <span class="n">mode_int</span> <span class="o">==</span> <span class="n">_snd</span><span class="o">.</span><span class="n">SFM_WRITE</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1267</span>     <span class="c1"># Due to a bug in libsndfile version &lt;= 1.0.25, frames != 0</span>
+<span class="g g-Whitespace">   </span><span class="mi">1268</span>     <span class="c1"># when opening a named pipe in SFM_WRITE mode.</span>
+<span class="g g-Whitespace">   </span><span class="mi">1269</span>     <span class="c1"># See http://github.com/erikd/libsndfile/issues/77.</span>
+
+<span class="ne">LibsndfileError</span>: Error opening &#39;rekaman_baru.wav&#39;: System error.
+
+<span class="n">During</span> <span class="n">handling</span> <span class="n">of</span> <span class="n">the</span> <span class="n">above</span> <span class="n">exception</span><span class="p">,</span> <span class="n">another</span> <span class="n">exception</span> <span class="n">occurred</span><span class="p">:</span>
+
+<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">new_file</span> <span class="o">=</span> <span class="s2">&quot;rekaman_baru.wav&quot;</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">mfcc_new</span> <span class="o">=</span> <span class="n">get_mfcc_matrix</span><span class="p">(</span><span class="n">new_file</span><span class="p">)</span>
+
+<span class="nn">Cell In[5], line 5,</span> in <span class="ni">get_mfcc_matrix</span><span class="nt">(filepath, sr, n_mfcc)</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_mfcc_matrix</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="mi">16000</span><span class="p">,</span> <span class="n">n_mfcc</span><span class="o">=</span><span class="mi">13</span><span class="p">):</span>
+<span class="ne">----&gt; </span><span class="mi">5</span>     <span class="n">y</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="n">mfcc</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">mfcc</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">n_mfcc</span><span class="o">=</span><span class="n">n_mfcc</span><span class="p">)</span>  
+<span class="g g-Whitespace">      </span><span class="mi">7</span>     <span class="k">return</span> <span class="n">mfcc</span><span class="o">.</span><span class="n">T</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\librosa\core\audio.py:184,</span> in <span class="ni">load</span><span class="nt">(path, sr, mono, offset, duration, dtype, res_type)</span>
+<span class="g g-Whitespace">    </span><span class="mi">180</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">PurePath</span><span class="p">)):</span>
+<span class="g g-Whitespace">    </span><span class="mi">181</span>     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">182</span>         <span class="s2">&quot;PySoundFile failed. Trying audioread instead.&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span>
+<span class="g g-Whitespace">    </span><span class="mi">183</span>     <span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">184</span>     <span class="n">y</span><span class="p">,</span> <span class="n">sr_native</span> <span class="o">=</span> <span class="n">__audioread_load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">185</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">186</span>     <span class="k">raise</span> <span class="n">exc</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\decorator.py:235,</span> in <span class="ni">decorate.&lt;locals&gt;.fun</span><span class="nt">(*args, **kw)</span>
+<span class="g g-Whitespace">    </span><span class="mi">233</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">kwsyntax</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">234</span>     <span class="n">args</span><span class="p">,</span> <span class="n">kw</span> <span class="o">=</span> <span class="n">fix</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kw</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">235</span> <span class="k">return</span> <span class="n">caller</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="p">(</span><span class="n">extras</span> <span class="o">+</span> <span class="n">args</span><span class="p">),</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\librosa\util\decorators.py:63,</span> in <span class="ni">deprecated.&lt;locals&gt;.__wrapper</span><span class="nt">(func, *args, **kwargs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">54</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;Warn the user, and then proceed.&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">     </span><span class="mi">55</span> <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">56</span>     <span class="s2">&quot;</span><span class="si">{:s}</span><span class="s2">.</span><span class="si">{:s}</span><span class="se">\n\t</span><span class="s2">Deprecated as of librosa version </span><span class="si">{:s}</span><span class="s2">.&quot;</span>
+<span class="g g-Whitespace">     </span><span class="mi">57</span>     <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">It will be removed in librosa version </span><span class="si">{:s}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">61</span>     <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>  <span class="c1"># Would be 2, but the decorator adds a level</span>
+<span class="g g-Whitespace">     </span><span class="mi">62</span> <span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">63</span> <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\librosa\core\audio.py:240,</span> in <span class="ni">__audioread_load</span><span class="nt">(path, offset, duration, dtype)</span>
+<span class="g g-Whitespace">    </span><span class="mi">237</span>     <span class="n">reader</span> <span class="o">=</span> <span class="n">path</span>
+<span class="g g-Whitespace">    </span><span class="mi">238</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">239</span>     <span class="c1"># If the input was not an audioread object, try to open it</span>
+<span class="ne">--&gt; </span><span class="mi">240</span>     <span class="n">reader</span> <span class="o">=</span> <span class="n">audioread</span><span class="o">.</span><span class="n">audio_open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">242</span> <span class="k">with</span> <span class="n">reader</span> <span class="k">as</span> <span class="n">input_file</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">243</span>     <span class="n">sr_native</span> <span class="o">=</span> <span class="n">input_file</span><span class="o">.</span><span class="n">samplerate</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\audioread\__init__.py:126,</span> in <span class="ni">audio_open</span><span class="nt">(path, backends)</span>
+<span class="g g-Whitespace">    </span><span class="mi">124</span> <span class="k">for</span> <span class="n">BackendClass</span> <span class="ow">in</span> <span class="n">backends</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">125</span>     <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">126</span>         <span class="k">return</span> <span class="n">BackendClass</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">127</span>     <span class="k">except</span> <span class="n">DecodeError</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">128</span>         <span class="k">pass</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\audioread\rawread.py:59,</span> in <span class="ni">RawAudioFile.__init__</span><span class="nt">(self, filename)</span>
+<span class="g g-Whitespace">     </span><span class="mi">58</span> <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="ne">---&gt; </span><span class="mi">59</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_fh</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">61</span>     <span class="k">try</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">62</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="o">=</span> <span class="n">aifc</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fh</span><span class="p">)</span>
+
+<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;rekaman_baru.wav&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="hitung-dynamic-time-wrapping-ke-data-lama">
+<h2>Hitung Dynamic Time Wrapping ke Data lama<a class="headerlink" href="#hitung-dynamic-time-wrapping-ke-data-lama" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">compute_dtw_distance</span><span class="p">(</span><span class="n">mfcc1</span><span class="p">,</span> <span class="n">mfcc2</span><span class="p">):</span>
+    <span class="n">dist</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">dtw</span><span class="p">(</span><span class="n">mfcc1</span><span class="p">,</span> <span class="n">mfcc2</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">dist</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dtw_buka</span> <span class="o">=</span> <span class="p">[</span><span class="n">compute_dtw_distance</span><span class="p">(</span><span class="n">mfcc_new</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span> <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">mfcc_dataset</span><span class="p">[</span><span class="s2">&quot;buka&quot;</span><span class="p">]]</span>
+<span class="n">dtw_tutup</span> <span class="o">=</span> <span class="p">[</span><span class="n">compute_dtw_distance</span><span class="p">(</span><span class="n">mfcc_new</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span> <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">mfcc_dataset</span><span class="p">[</span><span class="s2">&quot;tutup&quot;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="hitung-semua-jarak-dtw-suara-baru-ke-seluruh-dataset">
+<h2>Hitung semua jarak DTW suara baru ke seluruh dataset<a class="headerlink" href="#hitung-semua-jarak-dtw-suara-baru-ke-seluruh-dataset" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_mfcc</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">all_labels</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;buka&quot;</span><span class="p">,</span> <span class="s2">&quot;tutup&quot;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">mf</span> <span class="ow">in</span> <span class="n">mfcc_dataset</span><span class="p">[</span><span class="n">label</span><span class="p">]:</span>
+        <span class="n">all_mfcc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span>
+        <span class="n">all_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">compute_all_dtw</span><span class="p">(</span><span class="n">mfcc_new</span><span class="p">,</span> <span class="n">all_mfcc</span><span class="p">,</span> <span class="n">all_labels</span><span class="p">):</span>
+    <span class="n">distances</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">mf</span><span class="p">,</span> <span class="n">lbl</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">all_mfcc</span><span class="p">,</span> <span class="n">all_labels</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">compute_dtw_distance</span><span class="p">(</span><span class="n">mfcc_new</span><span class="p">,</span> <span class="n">mf</span><span class="p">)</span>
+        <span class="n">distances</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">d</span><span class="p">,</span> <span class="n">lbl</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">distances</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">classify_dtw_knn</span><span class="p">(</span><span class="n">mfcc_new</span><span class="p">,</span> <span class="n">all_mfcc</span><span class="p">,</span> <span class="n">all_labels</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">distances</span> <span class="o">=</span> <span class="n">compute_all_dtw</span><span class="p">(</span><span class="n">mfcc_new</span><span class="p">,</span> <span class="n">all_mfcc</span><span class="p">,</span> <span class="n">all_labels</span><span class="p">)</span>
+
+    <span class="n">distances</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">top_k</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:</span><span class="n">k</span><span class="p">]</span>
+
+    <span class="n">votes</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;buka&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;tutup&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">dist</span><span class="p">,</span> <span class="n">lbl</span> <span class="ow">in</span> <span class="n">top_k</span><span class="p">:</span>
+        <span class="n">votes</span><span class="p">[</span><span class="n">lbl</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Top-K distances:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">top_k</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">votes</span><span class="p">[</span><span class="s2">&quot;buka&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">votes</span><span class="p">[</span><span class="s2">&quot;tutup&quot;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="s2">&quot;buka&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;tutup&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./Audio_recognition"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">Import Library</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#path-dataset">Path Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menampilkan-visual-amplitudo-data-mentah">Menampilkan Visual Amplitudo Data Mentah</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ektraksi-mfcc">Ektraksi MFCC</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ambil-1-data-baru">Ambil 1 Data baru</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-dynamic-time-wrapping-ke-data-lama">Hitung Dynamic Time Wrapping ke Data lama</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hitung-semua-jarak-dtw-suara-baru-ke-seluruh-dataset">Hitung semua jarak DTW suara baru ke seluruh dataset</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Moh Naufal Thariq
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
