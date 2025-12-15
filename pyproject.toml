@@ -6,7 +6,7 @@ authors = [
     {name = "NaufalThariq01",email = "Aissyah78@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.13"
 dependencies = [
     "jupyter-book (>=1.0.4.post1,<2.0.0)",
     "ipykernel (>=6.30.1,<7.0.0)",
