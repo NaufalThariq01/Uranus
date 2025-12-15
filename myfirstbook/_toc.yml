@@ -65,7 +65,7 @@ parts:
         title: Modelling
       - file: Audio_recognition/app
         title: Aplikasi Streamlit
-  - caption: Klasifikasi_Colposocpy 
+  - caption: Klasifikasi_Colposcopy 
     chapters:
       - file: Klasifikasi_Colposcopy/bussines_understanding
         title: Bisnis Understanding
