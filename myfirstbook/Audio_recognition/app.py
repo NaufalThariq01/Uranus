@@ -24,9 +24,9 @@ def extract_features(y, sr=SAMPLE_RATE):
         np.mean(y),
         np.std(y),
         np.var(y),
-        np.mean((y - np.mean(y))**3)/(np.std(y)**3 + 1e-6),   # skew
-        np.mean((y - np.mean(y))**4)/(np.std(y)**4 + 1e-6),   # kurtosis
-        np.sqrt(np.mean(y**2)),                               # rms_global
+        np.mean((y - np.mean(y))**3)/(np.std(y)**3 + 1e-6),   
+        np.mean((y - np.mean(y))**4)/(np.std(y)**4 + 1e-6),   
+        np.sqrt(np.mean(y**2)),                             
     ]
 
     zcr = librosa.feature.zero_crossing_rate(y)[0]

@@ -26,8 +26,8 @@ nbclient.exceptions.CellTimeoutError: A cell timed out while it was being execut
 The message was: Cell execution timed out.
 Here is a preview of the cell contents:
 -------------------
-['# ==========================', '# Proses ekstraksi untuk semua file', '# ==========================', 'data_rows = []', 'labels = []']
+['import pandas as pd', '', 'data_rows = []', 'labels = []', '']
 ...
-['df = pd.DataFrame(data_rows, columns=columns)', "df['label'] = labels", '', 'df.to_csv(OUTPUT_CSV, index=False)', 'print(f"\\n✅ Ekstraksi fitur selesai, tersimpan di: {OUTPUT_CSV}")']
+['', 'OUTPUT_CSV = r"D:\\KULIAH\\SEMESTER 5\\Program Saint Data\\Uranus\\myfirstbook\\Audio_recognition\\features_audio.csv"', 'df.to_csv(OUTPUT_CSV, index=False)', '', 'print(f"\\n✅ Fitur disimpan ke {OUTPUT_CSV}")']
 -------------------
 

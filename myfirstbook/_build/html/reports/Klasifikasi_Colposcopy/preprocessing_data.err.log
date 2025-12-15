@@ -1,0 +1,154 @@
+Traceback (most recent call last):
+  File "C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\jupyter_core\utils\__init__.py", line 154, in wrapped
+    asyncio.get_running_loop()
+RuntimeError: no running event loop
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\jupyter_cache\executors\utils.py", line 58, in single_nb_execution
+    executenb(
+  File "C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\nbclient\client.py", line 1319, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\jupyter_core\utils\__init__.py", line 158, in wrapped
+    return loop.run_until_complete(inner)
+  File "C:\Users\user\AppData\Local\Programs\Python\Python310\lib\asyncio\base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\nbclient\client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\nbclient\client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "C:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\nbclient\client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+train_idx, val_idx = next(skf.split(X_norm, y_all))
+
+X_train = X_norm[train_idx]
+X_val   = X_norm[val_idx]
+y_train = y_all[train_idx]
+y_val   = y_all[val_idx]
+
+rocket = MiniRocket(
+    num_kernels=1000,
+    random_state=42
+)
+
+rocket.fit(X_train)
+
+X_train_rocket = rocket.transform(X_train)
+X_val_rocket   = rocket.transform(X_val)
+
+print("X_train_rocket shape:", X_train_rocket.shape)
+print("X_val_rocket shape:", X_val_rocket.shape)
+------------------
+
+
+[1;31m-------------------------------------------------------------------------[0m
+[1;31mAssertionError[0m                          Traceback (most recent call last)
+[1;31mAssertionError[0m: Sizes of $278binary_subscr.10, $288binary_subscr.16 do not match on c:\Users\user\AppData\Local\Programs\Python\Python310\lib\site-packages\sktime\transformations\panel\rocket\_minirocket_numba.py (710)
+
+The above exception was the direct cause of the following exception:
+
+[1;31mSystemError[0m                             Traceback (most recent call last)
+Cell [1;32mIn[7], line 16[0m
+[0;32m     13[0m rocket[38;5;241m.[39mfit(X_train)
+[0;32m     15[0m X_train_rocket [38;5;241m=[39m rocket[38;5;241m.[39mtransform(X_train)
+[1;32m---> 16[0m X_val_rocket   [38;5;241m=[39m [43mrocket[49m[38;5;241;43m.[39;49m[43mtransform[49m[43m([49m[43mX_val[49m[43m)[49m
+[0;32m     18[0m [38;5;28mprint[39m([38;5;124m"[39m[38;5;124mX_train_rocket shape:[39m[38;5;124m"[39m, X_train_rocket[38;5;241m.[39mshape)
+[0;32m     19[0m [38;5;28mprint[39m([38;5;124m"[39m[38;5;124mX_val_rocket shape:[39m[38;5;124m"[39m, X_val_rocket[38;5;241m.[39mshape)
+
+File [1;32m~\AppData\Local\Programs\Python\Python310\lib\site-packages\sktime\transformations\base.py:575[0m, in [0;36mBaseTransformer.transform[1;34m(self, X, y)[0m
+[0;32m    572[0m     Xt [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39m_transform(X[38;5;241m=[39mX_inner, y[38;5;241m=[39my_inner)
+[0;32m    573[0m [38;5;28;01melse[39;00m:
+[0;32m    574[0m     [38;5;66;03m# otherwise we call the vectorized version of predict[39;00m
+[1;32m--> 575[0m     Xt [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_vectorize[49m[43m([49m[38;5;124;43m"[39;49m[38;5;124;43mtransform[39;49m[38;5;124;43m"[39;49m[43m,[49m[43m [49m[43mX[49m[38;5;241;43m=[39;49m[43mX_inner[49m[43m,[49m[43m [49m[43my[49m[38;5;241;43m=[39;49m[43my_inner[49m[43m)[49m
+[0;32m    577[0m [38;5;66;03m# obtain configs to control input and output control[39;00m
+[0;32m    578[0m configs [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39mget_config()
+
+File [1;32m~\AppData\Local\Programs\Python\Python310\lib\site-packages\sktime\transformations\base.py:1348[0m, in [0;36mBaseTransformer._vectorize[1;34m(self, methodname, **kwargs)[0m
+[0;32m   1339[0m     transformers_ [38;5;241m=[39m X[38;5;241m.[39mvectorize_est(
+[0;32m   1340[0m         transformers_,
+[0;32m   1341[0m         method[38;5;241m=[39m[38;5;124m"[39m[38;5;124mfit[39m[38;5;124m"[39m,
+[1;32m   (...)[0m
+[0;32m   1344[0m         [38;5;241m*[39m[38;5;241m*[39mkwargs,
+[0;32m   1345[0m     )
+[0;32m   1347[0m [38;5;66;03m# transform the i-th series/panel with the i-th stored transformer[39;00m
+[1;32m-> 1348[0m Xts [38;5;241m=[39m X[38;5;241m.[39mvectorize_est(
+[0;32m   1349[0m     transformers_,
+[0;32m   1350[0m     method[38;5;241m=[39mmethodname,
+[0;32m   1351[0m     return_type[38;5;241m=[39m[38;5;124m"[39m[38;5;124mlist[39m[38;5;124m"[39m,
+[0;32m   1352[0m     backend[38;5;241m=[39m[38;5;28mself[39m[38;5;241m.[39mget_config()[[38;5;124m"[39m[38;5;124mbackend:parallel[39m[38;5;124m"[39m],
+[0;32m   1353[0m     backend_params[38;5;241m=[39m[38;5;28mself[39m[38;5;241m.[39mget_config()[[38;5;124m"[39m[38;5;124mbackend:parallel:params[39m[38;5;124m"[39m],
+[0;32m   1354[0m     [38;5;241m*[39m[38;5;241m*[39mkwargs,
+[0;32m   1355[0m )
+[0;32m   1356[0m Xt [38;5;241m=[39m X[38;5;241m.[39mreconstruct(Xts, overwrite_index[38;5;241m=[39m[38;5;28;01mFalse[39;00m)
+[0;32m   1358[0m [38;5;28;01mreturn[39;00m Xt
+
+File [1;32m~\AppData\Local\Programs\Python\Python310\lib\site-packages\sktime\datatypes\_vectorize.py:630[0m, in [0;36mVectorizedDF.vectorize_est[1;34m(self, estimator, method, args, args_rowvec, return_type, rowname_default, colname_default, varname_of_self, backend, backend_params, **kwargs)[0m
+[0;32m    616[0m vec_zip [38;5;241m=[39m [38;5;28mzip[39m(
+[0;32m    617[0m     [38;5;28mself[39m[38;5;241m.[39mitems(),
+[0;32m    618[0m     explode(args, iterate_as[38;5;241m=[39miterate_as, iterate_cols[38;5;241m=[39miterate_cols),
+[0;32m    619[0m     explode(args_rowvec, iterate_as[38;5;241m=[39miterate_as, iterate_cols[38;5;241m=[39m[38;5;28;01mFalse[39;00m),
+[0;32m    620[0m     estimators,
+[0;32m    621[0m )
+[0;32m    623[0m meta [38;5;241m=[39m {
+[0;32m    624[0m     [38;5;124m"[39m[38;5;124mmethod[39m[38;5;124m"[39m: method,
+[0;32m    625[0m     [38;5;124m"[39m[38;5;124mvarname_of_self[39m[38;5;124m"[39m: varname_of_self,
+[0;32m    626[0m     [38;5;124m"[39m[38;5;124mrowname_default[39m[38;5;124m"[39m: rowname_default,
+[0;32m    627[0m     [38;5;124m"[39m[38;5;124mcolname_default[39m[38;5;124m"[39m: colname_default,
+[0;32m    628[0m }
+[1;32m--> 630[0m ret [38;5;241m=[39m [43mparallelize[49m[43m([49m
+[0;32m    631[0m [43m    [49m[43mfun[49m[38;5;241;43m=[39;49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_vectorize_est_single[49m[43m,[49m
+[0;32m    632[0m [43m    [49m[38;5;28;43miter[39;49m[38;5;241;43m=[39;49m[43mvec_zip[49m[43m,[49m
+[0;32m    633[0m [43m    [49m[43mmeta[49m[38;5;241;43m=[39;49m[43mmeta[49m[43m,[49m
+[0;32m    634[0m [43m    [49m[43mbackend[49m[38;5;241;43m=[39;49m[43mbackend[49m[43m,[49m
+[0;32m    635[0m [43m    [49m[43mbackend_params[49m[38;5;241;43m=[39;49m[43mbackend_params[49m[43m,[49m
+[0;32m    636[0m [43m[49m[43m)[49m
+[0;32m    638[0m [38;5;28;01mif[39;00m return_type [38;5;241m==[39m [38;5;124m"[39m[38;5;124mpd.DataFrame[39m[38;5;124m"[39m:
+[0;32m    639[0m     df_long [38;5;241m=[39m pd[38;5;241m.[39mDataFrame(ret)
+
+File [1;32m~\AppData\Local\Programs\Python\Python310\lib\site-packages\sktime\utils\parallel.py:72[0m, in [0;36mparallelize[1;34m(fun, iter, meta, backend, backend_params)[0m
+[0;32m     69[0m backend_name [38;5;241m=[39m backend_dict[backend]
+[0;32m     70[0m para_fun [38;5;241m=[39m para_dict[backend_name]
+[1;32m---> 72[0m ret [38;5;241m=[39m [43mpara_fun[49m[43m([49m
+[0;32m     73[0m [43m    [49m[43mfun[49m[38;5;241;43m=[39;49m[43mfun[49m[43m,[49m[43m [49m[38;5;28;43miter[39;49m[38;5;241;43m=[39;49m[38;5;28;43miter[39;49m[43m,[49m[43m [49m[43mmeta[49m[38;5;241;43m=[39;49m[43mmeta[49m[43m,[49m[43m [49m[43mbackend[49m[38;5;241;43m=[39;49m[43mbackend[49m[43m,[49m[43m [49m[43mbackend_params[49m[38;5;241;43m=[39;49m[43mbackend_params[49m
+[0;32m     74[0m [43m[49m[43m)[49m
+[0;32m     75[0m [38;5;28;01mreturn[39;00m ret
+
+File [1;32m~\AppData\Local\Programs\Python\Python310\lib\site-packages\sktime\utils\parallel.py:92[0m, in [0;36m_parallelize_none[1;34m(fun, iter, meta, backend, backend_params)[0m
+[0;32m     90[0m [38;5;28;01mdef[39;00m[38;5;250m [39m[38;5;21m_parallelize_none[39m(fun, [38;5;28miter[39m, meta, backend, backend_params):
+[0;32m     91[0m [38;5;250m    [39m[38;5;124;03m"""Execute loop via simple sequential list comprehension."""[39;00m
+[1;32m---> 92[0m     ret [38;5;241m=[39m [fun(x, meta[38;5;241m=[39mmeta) [38;5;28;01mfor[39;00m x [38;5;129;01min[39;00m [38;5;28miter[39m]
+[0;32m     93[0m     [38;5;28;01mreturn[39;00m ret
+
+File [1;32m~\AppData\Local\Programs\Python\Python310\lib\site-packages\sktime\utils\parallel.py:92[0m, in [0;36m<listcomp>[1;34m(.0)[0m
+[0;32m     90[0m [38;5;28;01mdef[39;00m[38;5;250m [39m[38;5;21m_parallelize_none[39m(fun, [38;5;28miter[39m, meta, backend, backend_params):
+[0;32m     91[0m [38;5;250m    [39m[38;5;124;03m"""Execute loop via simple sequential list comprehension."""[39;00m
+[1;32m---> 92[0m     ret [38;5;241m=[39m [[43mfun[49m[43m([49m[43mx[49m[43m,[49m[43m [49m[43mmeta[49m[38;5;241;43m=[39;49m[43mmeta[49m[43m)[49m [38;5;28;01mfor[39;00m x [38;5;129;01min[39;00m [38;5;28miter[39m]
+[0;32m     93[0m     [38;5;28;01mreturn[39;00m ret
+
+File [1;32m~\AppData\Local\Programs\Python\Python310\lib\site-packages\sktime\datatypes\_vectorize.py:679[0m, in [0;36mVectorizedDF._vectorize_est_single[1;34m(self, vec_tuple, meta)[0m
+[0;32m    676[0m     args_i[varname_of_self] [38;5;241m=[39m group
+[0;32m    678[0m est_i_method [38;5;241m=[39m [38;5;28mgetattr[39m(est_i, method)
+[1;32m--> 679[0m est_i_result [38;5;241m=[39m est_i_method([38;5;241m*[39m[38;5;241m*[39margs_i)
+[0;32m    681[0m [38;5;28;01mif[39;00m group_name [38;5;129;01mis[39;00m [38;5;28;01mNone[39;00m:
+[0;32m    682[0m     group_name [38;5;241m=[39m rowname_default
+
+File [1;32m~\AppData\Local\Programs\Python\Python310\lib\site-packages\sktime\transformations\base.py:572[0m, in [0;36mBaseTransformer.transform[1;34m(self, X, y)[0m
+[0;32m    569[0m X_inner, y_inner, metadata [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39m_check_X_y(X[38;5;241m=[39mX, y[38;5;241m=[39my, return_metadata[38;5;241m=[39m[38;5;28;01mTrue[39;00m)
+[0;32m    571[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m [38;5;28misinstance[39m(X_inner, VectorizedDF):
+[1;32m--> 572[0m     Xt [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_transform[49m[43m([49m[43mX[49m[38;5;241;43m=[39;49m[43mX_inner[49m[43m,[49m[43m [49m[43my[49m[38;5;241;43m=[39;49m[43my_inner[49m[43m)[49m
+[0;32m    573[0m [38;5;28;01melse[39;00m:
+[0;32m    574[0m     [38;5;66;03m# otherwise we call the vectorized version of predict[39;00m
+[0;32m    575[0m     Xt [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39m_vectorize([38;5;124m"[39m[38;5;124mtransform[39m[38;5;124m"[39m, X[38;5;241m=[39mX_inner, y[38;5;241m=[39my_inner)
+
+File [1;32m~\AppData\Local\Programs\Python\Python310\lib\site-packages\sktime\transformations\panel\rocket\_minirocket.py:157[0m, in [0;36mMiniRocket._transform[1;34m(self, X, y)[0m
+[0;32m    155[0m     n_jobs [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39mn_jobs
+[0;32m    156[0m set_num_threads(n_jobs)
+[1;32m--> 157[0m X_ [38;5;241m=[39m [43m_transform[49m[43m([49m[43mX[49m[43m,[49m[43m [49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mparameters[49m[43m)[49m
+[0;32m    158[0m set_num_threads(prev_threads)
+[0;32m    159[0m [38;5;28;01mreturn[39;00m pd[38;5;241m.[39mDataFrame(X_)
+
+[1;31mSystemError[0m: _PyEval_EvalFrameDefault returned a result with an exception set
+

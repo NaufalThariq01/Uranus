@@ -489,20 +489,26 @@ document.write(`
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="c1"># =====================================</span>
-<span class="c1"># 📂 Load Dataset Bersih</span>
+<span class="c1"># 📂 Load Dataset</span>
 <span class="c1"># =====================================</span>
-<span class="n">train_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;train_features_clean.csv&#39;</span><span class="p">)</span>
-<span class="n">val_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;val_features_clean.csv&#39;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;features_audio.csv&#39;</span><span class="p">)</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">train_df</span><span class="p">,</span> <span class="n">val_df</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Pastikan kolom &#39;label&#39; ada</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 
 <span class="c1"># Pisahkan fitur dan label</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>
 
-<span class="c1"># Split data train-test (stratify untuk jaga proporsi)</span>
+<span class="c1"># =====================================</span>
+<span class="c1"># 🔀 Split data train-test</span>
+<span class="c1"># =====================================</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
-    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>   <span class="c1"># menjaga proporsi kelas</span>
 <span class="p">)</span>
 
 <span class="c1"># Normalisasi untuk model yang sensitif terhadap skala</span>
@@ -609,27 +615,39 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Evaluasi Model ===
-KNN Accuracy          : 1.00 | CV (5-fold) : 0.94
-Random Forest Accuracy: 0.97 | CV (5-fold) : 0.92
-Naive Bayes Accuracy  : 1.00 | CV (5-fold) : 0.93
-
-🏆 Model terbaik: KNN dengan akurasi 1.00
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index([&#39;mean&#39;, &#39;std&#39;, &#39;var&#39;, &#39;skew&#39;, &#39;kurtosis&#39;, &#39;rms_global&#39;, &#39;zcr_mean&#39;,
+       &#39;zcr_std&#39;, &#39;amplitude_range&#39;, &#39;spec_centroid_mean&#39;,
+       ...
+       &#39;mfcc_delta_38_std&#39;, &#39;mfcc_delta_39_std&#39;, &#39;mfcc_delta_40_std&#39;,
+       &#39;rms_mean&#39;, &#39;rms_std&#39;, &#39;onset_mean&#39;, &#39;onset_std&#39;, &#39;tempo&#39;,
+       &#39;autocorr_lag&#39;, &#39;label&#39;],
+      dtype=&#39;object&#39;, length=188)
 </pre></div>
 </div>
-<img alt="../_images/7b5513a99fbc434df6baea0957e0fdf6eeead452e6284a0089a7cf83dbaba858.png" src="../_images/7b5513a99fbc434df6baea0957e0fdf6eeead452e6284a0089a7cf83dbaba858.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Evaluasi Model ===
+KNN Accuracy          : 1.00 | CV (5-fold) : 0.99
+Random Forest Accuracy: 1.00 | CV (5-fold) : 0.99
+Naive Bayes Accuracy  : 0.95 | CV (5-fold) : 0.96
+
+🏆 Model terbaik: RandomForest dengan akurasi 1.00
+</pre></div>
+</div>
+<img alt="../_images/8bf42ac7b717d19463c128b319dbe2d37a1f13c480fecc4ccf9423e6c3126ac2.png" src="../_images/8bf42ac7b717d19463c128b319dbe2d37a1f13c480fecc4ccf9423e6c3126ac2.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Classification Report ===
               precision    recall  f1-score   support
 
-           0       1.00      1.00      1.00        18
-           1       1.00      1.00      1.00        19
+ harits_Buka       1.00      1.00      1.00        10
+harits_Tutup       1.00      1.00      1.00        10
+ naufal_Buka       1.00      1.00      1.00        10
+naufal_Tutup       1.00      1.00      1.00        10
 
-    accuracy                           1.00        37
-   macro avg       1.00      1.00      1.00        37
-weighted avg       1.00      1.00      1.00        37
-
-
-✅ Semua model dan scaler berhasil disimpan ke file .pkl
+    accuracy                           1.00        40
+   macro avg       1.00      1.00      1.00        40
+weighted avg       1.00      1.00      1.00        40
+</pre></div>
+</div>
+<img alt="../_images/c76e02dde11fcb7b1d369b5960a41f215552ba65598994758fbcea1989c51af9.png" src="../_images/c76e02dde11fcb7b1d369b5960a41f215552ba65598994758fbcea1989c51af9.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ Semua model dan scaler berhasil disimpan ke file .pkl
 </pre></div>
 </div>
 </div>
