@@ -1,10 +1,14 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
+import os
 from tensorflow.keras.models import load_model
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
-model = load_model("colposcopy_lstm_model.h5")
+model_path = os.path.join(dir_path, "colposcopy_lstm_model.h5")
+
+model = load_model(model_path)
 
 CLASS_NAMES = [
     "Atrophy",
