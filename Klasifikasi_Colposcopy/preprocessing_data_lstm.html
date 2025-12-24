@@ -240,12 +240,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../Audio_recognition/modelling.html">Modelling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Audio_recognition/app.html">Aplikasi Streamlit</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Klasifikasi_Colposocpy</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Klasifikasi_Colposcopy</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="bussines_understanding.html">Bisnis Understanding</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Data_understanding.html">Data Understanding</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Data Preprocessing</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Preprocessing Data</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="modelling_lstm.html">Modelling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">Aplikasi Streamlit</a></li>
 </ul>
 
     </div>
@@ -441,13 +443,18 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Preprocessing Data</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">Import Library</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#path">Path</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mendeteksi-missing-value">Mendeteksi Missing Value</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gabungkan-data">Gabungkan Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#split-data">Split Data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#normalisasi-data">Normalisasi Data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reshape-data-time-series-ke-format-lstm">Reshape Data Time series ke Format LSTM</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#encoding-class">Encoding class</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#label">Label</a></li>
+</ul>
+
             </nav>
         </div>
     </div>
@@ -468,8 +475,6 @@ document.write(`
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sktime.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_from_tsfile_to_dataframe</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.utils.class_weight</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_class_weight</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow.keras.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_categorical</span>
 </pre></div>
 </div>
 </div>
@@ -498,86 +503,79 @@ Val path   : D:\KULIAH\SEMESTER 5\Program Saint Data\Uranus\myfirstbook\Klasifik
 </div>
 </div>
 </section>
-<section id="mendeteksi-missing-value">
-<h2>Mendeteksi Missing Value<a class="headerlink" href="#mendeteksi-missing-value" title="Link to this heading">#</a></h2>
+<section id="gabungkan-data">
+<h2>Gabungkan Data<a class="headerlink" href="#gabungkan-data" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">check_missing</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-    <span class="n">missing_per_series</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">ts</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
-    <span class="n">total_missing</span> <span class="o">=</span> <span class="n">missing_per_series</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">missing_per_series</span><span class="p">,</span> <span class="n">total_missing</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">))</span>   
 
-<span class="n">missing_train</span><span class="p">,</span> <span class="n">total_missing_train</span> <span class="o">=</span> <span class="n">check_missing</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
-<span class="n">missing_test</span><span class="p">,</span> <span class="n">total_missing_test</span> <span class="o">=</span> <span class="n">check_missing</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">y_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>  
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total missing values in TRAIN :&quot;</span><span class="p">,</span> <span class="n">total_missing_train</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total missing values in TEST  :&quot;</span><span class="p">,</span> <span class="n">total_missing_test</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Missing per instance (TRAIN):&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">missing_train</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;X_all shape:&quot;</span><span class="p">,</span> <span class="n">X_all</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;y_all shape:&quot;</span><span class="p">,</span> <span class="n">y_all</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Distribusi kelas:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y_all</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total missing values in TRAIN : 0
-Total missing values in TEST  : 0
-
-Missing per instance (TRAIN):
-0    0
-1    0
-2    0
-3    0
-4    0
-dtype: int64
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\user\AppData\Local\Temp\ipykernel_15980\2666175583.py:2: FutureWarning: DataFrame.applymap has been deprecated. Use DataFrame.map instead.
-  missing_per_series = df.applymap(lambda ts: np.isnan(ts).sum())
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>X_all shape: (200, 1)
+y_all shape: (200,)
+Distribusi kelas: (array([&#39;0&#39;, &#39;1&#39;, &#39;2&#39;, &#39;3&#39;, &#39;4&#39;, &#39;5&#39;], dtype=&#39;&lt;U1&#39;), array([15, 24, 20, 48, 37, 56], dtype=int64))
 </pre></div>
 </div>
 </div>
 </div>
 <p>tidak ada data kosong(missing value) di data train maupun test</p>
 </section>
+<section id="split-data">
+<h2>Split Data<a class="headerlink" href="#split-data" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X_all</span><span class="p">,</span>
+    <span class="n">y_all</span><span class="p">,</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">stratify</span><span class="o">=</span><span class="n">y_all</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 <section id="normalisasi-data">
 <h2>Normalisasi Data<a class="headerlink" href="#normalisasi-data" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">minmax_normalize_series</span><span class="p">(</span><span class="n">ts</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Min-Max normalization for a single time series</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">ts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-    <span class="n">min_val</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-    <span class="n">max_val</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">minmax_norm_array_object</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="n">X_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span>
-    
-    <span class="k">return</span> <span class="p">(</span><span class="n">ts</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">min_v</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">max_v</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
+        <span class="k">if</span> <span class="n">max_v</span> <span class="o">-</span> <span class="n">min_v</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">X_norm</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ts</span> <span class="o">-</span> <span class="n">min_v</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_v</span> <span class="o">-</span> <span class="n">min_v</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">X_norm</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">normalize_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Apply min-max normalization to all time series in a DataFrame</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="n">minmax_normalize_series</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">X_norm</span>
 
 
+<span class="n">X_train_norm</span> <span class="o">=</span> <span class="n">minmax_norm_array_object</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_test_norm</span>  <span class="o">=</span> <span class="n">minmax_norm_array_object</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
-<span class="n">X_train_norm</span> <span class="o">=</span> <span class="n">normalize_dataframe</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
-<span class="n">X_test_norm</span>  <span class="o">=</span> <span class="n">normalize_dataframe</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Normalisasi selesai.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;X_train_norm shape:&quot;</span><span class="p">,</span> <span class="n">X_train_norm</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;X_test_norm shape :&quot;</span><span class="p">,</span> <span class="n">X_test_norm</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Normalisasi selesai.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\user\AppData\Local\Temp\ipykernel_15980\3514053908.py:19: FutureWarning: DataFrame.applymap has been deprecated. Use DataFrame.map instead.
-  return df.applymap(minmax_normalize_series)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>X_train_norm shape: (160, 1)
+X_test_norm shape : (40, 1)
 </pre></div>
 </div>
 </div>
@@ -588,51 +586,42 @@ dtype: int64
 <h2>Reshape Data Time series ke Format LSTM<a class="headerlink" href="#reshape-data-time-series-ke-format-lstm" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">df_to_lstm_input</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert DataFrame (with time series in cells)</span>
-<span class="sd">    into 3D numpy array for LSTM</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-    
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">nested_to_lstm_input</span><span class="p">(</span><span class="n">X_nested</span><span class="p">):</span>
+      
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">X_nested</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+
     <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
-    
+
     <span class="k">return</span> <span class="n">X</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train_lstm</span> <span class="o">=</span> <span class="n">nested_to_lstm_input</span><span class="p">(</span><span class="n">X_train_norm</span><span class="p">)</span>
+<span class="n">X_test_lstm</span>  <span class="o">=</span> <span class="n">nested_to_lstm_input</span><span class="p">(</span><span class="n">X_test_norm</span><span class="p">)</span>
 
-
-<span class="n">X_train_lstm</span> <span class="o">=</span> <span class="n">df_to_lstm_input</span><span class="p">(</span><span class="n">X_train_norm</span><span class="p">)</span>
-<span class="n">X_test_lstm</span>  <span class="o">=</span> <span class="n">df_to_lstm_input</span><span class="p">(</span><span class="n">X_test_norm</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape X_train_lstm:&quot;</span><span class="p">,</span> <span class="n">X_train_lstm</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape X_test_lstm :&quot;</span><span class="p">,</span> <span class="n">X_test_lstm</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;X_train_lstm shape:&quot;</span><span class="p">,</span> <span class="n">X_train_lstm</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;X_test_lstm shape :&quot;</span><span class="p">,</span> <span class="n">X_test_lstm</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shape X_train_lstm: (99, 180, 1)
-Shape X_test_lstm : (101, 180, 1)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>X_train_lstm shape: (160, 180, 1)
+X_test_lstm shape : (40, 180, 1)
 </pre></div>
 </div>
 </div>
 </div>
 </section>
-<section id="encoding-class">
-<h2>Encoding class<a class="headerlink" href="#encoding-class" title="Link to this heading">#</a></h2>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="label">
+<h1>Label<a class="headerlink" href="#label" title="Link to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_classes</span> <span class="o">=</span> <span class="mi">6</span>
-
-<span class="n">y_train_enc</span> <span class="o">=</span> <span class="n">to_categorical</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">)</span>
-<span class="n">y_test_enc</span>  <span class="o">=</span> <span class="n">to_categorical</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span>  <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape y_train_enc:&quot;</span><span class="p">,</span> <span class="n">y_train_enc</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape y_test_enc :&quot;</span><span class="p">,</span> <span class="n">y_test_enc</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shape y_train_enc: (99, 6)
-Shape y_test_enc : (101, 6)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_train_final</span> <span class="o">=</span> <span class="n">y_train</span>
+<span class="n">y_test_final</span>  <span class="o">=</span> <span class="n">y_test</span>
 </pre></div>
 </div>
 </div>
@@ -644,24 +633,21 @@ Shape y_test_enc : (101, 6)
 <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span>
     <span class="s2">&quot;colposcopy_lstm_data.npz&quot;</span><span class="p">,</span>
     <span class="n">X_train_lstm</span><span class="o">=</span><span class="n">X_train_lstm</span><span class="p">,</span>
-    <span class="n">y_train</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>              
-    <span class="n">y_train_enc</span><span class="o">=</span><span class="n">y_train_enc</span><span class="p">,</span>
+    <span class="n">y_train</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
     <span class="n">X_test_lstm</span><span class="o">=</span><span class="n">X_test_lstm</span><span class="p">,</span>
-    <span class="n">y_test</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span>                
-    <span class="n">y_test_enc</span><span class="o">=</span><span class="n">y_test_enc</span>
+    <span class="n">y_test</span><span class="o">=</span><span class="n">y_test</span>
 <span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data preprocessing lengkap berhasil disimpan&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data preprocessing berhasil disimpan&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data preprocessing lengkap berhasil disimpan
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data preprocessing berhasil disimpan
 </pre></div>
 </div>
 </div>
 </div>
-</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -728,13 +714,18 @@ Shape y_test_enc : (101, 6)
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Preprocessing Data</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">Import Library</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#path">Path</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mendeteksi-missing-value">Mendeteksi Missing Value</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gabungkan-data">Gabungkan Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#split-data">Split Data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#normalisasi-data">Normalisasi Data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reshape-data-time-series-ke-format-lstm">Reshape Data Time series ke Format LSTM</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#encoding-class">Encoding class</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#label">Label</a></li>
+</ul>
+
   </nav></div>
 
 </div></div>
